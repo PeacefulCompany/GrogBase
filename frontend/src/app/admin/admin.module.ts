@@ -11,6 +11,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 import { MatDialogModule } from "@angular/material/dialog";
+import { SharedModule } from '../_shared/shared.module';
 
 
 @NgModule({
@@ -21,6 +22,8 @@ import { MatDialogModule } from "@angular/material/dialog";
   imports: [
     CommonModule,
     AdminRoutingModule,
+
+    SharedModule,
 
     MatCardModule,
     MatButtonModule,

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Winery } from 'src/app/_types';
 
 @Component({
@@ -8,4 +8,14 @@ import { Winery } from 'src/app/_types';
 })
 export class WineryComponent {
   @Input() winery!: Winery;
+
+  @Output() onEdit = new EventEmitter<Winery>();
+  @Output() onDelete = new EventEmitter<Winery>();
+
+  editClicked() {
+    this.onEdit.emit(this.winery);
+  }
+  deleteClicked() {
+    this.onDelete.emit(this.winery);
+  }
 }

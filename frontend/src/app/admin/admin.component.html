@@ -1,6 +1,8 @@
 <div class="wineries">
 <ng-container *ngFor="let winery of wineries">
   <app-winery
+    (onEdit)="editWinery($event)"
+    (onDelete)="deleteWinery($event)"
     [winery]="winery"
     ></app-winery>
   <mat-divider>

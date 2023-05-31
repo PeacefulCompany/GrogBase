@@ -8,8 +8,8 @@
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-actions align="end">
-    <button mat-button>Edit</button>
-    <button mat-icon-button color="warn">
+    <button mat-button (click)="editClicked()">Edit</button>
+    <button mat-icon-button color="warn" (click)="deleteClicked()">
       <mat-icon>delete</mat-icon>
     </button>
   </mat-card-actions>

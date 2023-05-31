@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { SortBy, SortOrder, Winery } from '../_types';
+import { SortBy, Winery } from '../_types';
 import { faker } from "@faker-js/faker";
-
 
 function generateWinery(): Winery {
   return {
@@ -35,5 +34,11 @@ export class WineryService {
     });
 
     return of(arr);
+  }
+  update(winery: Winery) {
+    alert("update: " + JSON.stringify(winery));
+  }
+  delete(winery: Winery) {
+    alert("delete: " + winery.id);
   }
 }

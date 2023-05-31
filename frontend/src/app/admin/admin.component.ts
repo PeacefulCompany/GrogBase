@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { WineryService } from '../_services/winery.service';
+import { WineryEditorComponent } from '../_shared/winery-editor/winery-editor.component';
 import { Winery } from '../_types';
 
 @Component({
@@ -10,14 +11,26 @@ import { Winery } from '../_types';
 })
 export class AdminPage {
   wineries: Winery[] = [];
-  @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private wineryService: WineryService) {
+  constructor(
+    private wineryService: WineryService,
+    private dialogService: MatDialog
+  ) {
     this.wineryService.getAll()
     .subscribe(res => this.wineries = res);
   }
-  onSort(sortState: any) {
-    sortState = sortState as Sort;
-    alert(sortState.direction);
+
+  editWinery(winery: Winery) {
+    const ref = this.dialogService.open(WineryEditorComponent, {
+      data: winery,
+      width: "75%",
+      minHeight: "75%"
+    });
+    ref.afterClosed().subscribe(data => {
+      if(!data) return;
+      this.wineryService.update(data);
+    })
+  }
+  deleteWinery(winery: Winery) {
+    this.wineryService.delete(winery);
   }
 }
