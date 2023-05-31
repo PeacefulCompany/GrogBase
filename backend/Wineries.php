@@ -44,32 +44,30 @@
 	{
 		if($input_json['order'] == "DESC" || $input_json['order'] == "ASC")//validate order parameter
 		{
-			$order = $input_json['sort'];
+			$order = $input_json['order'];
 		}
 	}
 	else
 	{
 		$order = "DESC";	//default order value
 	}
-
+	
 	$return_pars = $input_json['return'];
-
+	
 	//This function's purpose is to return all records with specified fields from the return array
 	//This output is then sorted if required and ordered accordingly.
-	//Returns a php array of records
+	//Returns a json object
 	function getReturnRecords($return_pars, $sort, $order, $search, $limit, $fuzzy)
 	{	
 		$placeholders = implode(", ", array_fill(0, count($return_pars), "?"));//set placeholers string eg: ?,?,?,?
 		$query = "SELECT " . $placeholders . " FROM wineries";
-
-		if($return_pars == "*")	//if wildcard is specified set that is the SQL parameter
-		{
-			$params = "*";
-		}
-		else
-		{
-			$params = implode(",",$return_pars);
-		}
+		$types = str_repeat("s", count($return_pars));
+		
+		//The below if is actually pretty useless but not sure
+		// if($return_pars[0] == "*")	
+		// {
+		// 	$return  = "*";
+		// }
 		
 		if (isset($search)) {
 			$query .= ' WHERE ';
@@ -103,10 +101,18 @@
 		}
 
 		//Any code below this comment expectes the query to be have finished building
-		$stmt = $GLOBALS['conn']->prepare($query);
-		$types = str_repeat("s", count($return_pars));
+		$stmt = $GLOBALS['conn']->prepare($query); //prepare the statements
 		$stmt->bind_param($types, ...$return_pars);
+		$stmt->execute();
 
-		$result = $GLOBALS['conn']->query($query);
+		$result = $stmt->get_result();
+
+		$data = array();
+		while($row = $result->fetch_assoc())
+		{
+			$data[] = $row;
+		}
+		$out = array('status' => 'success','data' => $data);
+		echo json_encode($out);
 	}
 ?>
