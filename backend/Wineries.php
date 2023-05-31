@@ -70,19 +70,24 @@
 		// }
 		
 		if (isset($search)) {
+			$search_pars = array();
 			$query .= ' WHERE ';
 			foreach ($search as $key => $value) {
 				if ($fuzzy === true) {
-					$query .=  $key . ' LIKE %' . $value . '% AND '; // Add each search param to the query
+					$query .= '? LIKE %?% AND ';
 				} else {
-					$query .=  $key . ' LIKE ' . $value . ' AND '; // Add each search param to the query
+					$query .= '? LIKE ? AND ';
 				}
+				$types .= 'ss';
+				array_push($search_pars, $key, $value); //Add parameters for when stmnt is preapred
 			}
 			$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
 		}
 
 		if (isset($limit)) { // IF the limit param is specified
-			$query .= 'LIMIT ' . $limit; //Add limit clause to the query
+			if (is_numeric($limit)) {
+				$query .= 'LIMIT ' . $limit; //Add limit clause to the query
+			}
 		}
 
 		if(isset($sort))	//If sort is not null it will load the sort conditions
@@ -102,7 +107,7 @@
 
 		//Any code below this comment expectes the query to be have finished building
 		$stmt = $GLOBALS['conn']->prepare($query); //prepare the statements
-		$stmt->bind_param($types, ...$return_pars);
+		$stmt->bind_param($types, ...$return_pars, ...$search_pars);
 		$stmt->execute();
 
 		$result = $stmt->get_result();
