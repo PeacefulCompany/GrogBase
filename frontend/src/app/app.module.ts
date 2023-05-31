@@ -6,17 +6,22 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginModule } from './login/login.module';
+import { SignupModule } from './signup/signup.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-
-    MatButtonModule
+    LoginModule,
+    MatButtonModule,
+    SignupModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
