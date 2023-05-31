@@ -17,11 +17,16 @@ mat-sidenav-content
     gap: 1rem
 
 mat-sidenav-content.Wines
-    display: flex
-    flex-direction: row
-    flex-wrap: wrap
-    overflow-y: auto  
-    gap:1rem
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  gap: 1rem
+  overflow-y: auto
+  max-height: 90vh
+  padding-left: 10vw
+  padding-top: 1vh
+  width: 90vw
+
 
 mat-sidenav-container
   height:90vh
@@ -30,6 +35,12 @@ mat-sidenav-container
 mat-card
   width: fit-content
   min-width: 20vw
+
+mat-card.Wines
+  width: fit-content
+  min-width: 15vw
+
+
 
 ::-webkit-scrollbar 
   width: 8px
