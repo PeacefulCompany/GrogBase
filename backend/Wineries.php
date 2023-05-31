@@ -29,6 +29,11 @@
 	{
 		$sort = $input_json['sort']; 
 	}
+	if (isset($input_json['fuzzy'])) {
+		$fuzzy = $input_json['fuzzy'];
+	} else {
+		$fuzzy = true;
+	}
 	else
 	{
 		$sort = null;	//getReturnRecords handles a null sort parameter
@@ -51,7 +56,7 @@
 	//This function's purpose is to return all records with specified fields from the return array
 	//This output is then sorted if required and ordered accordingly.
 	//Returns a php array of records
-	function getReturnRecords($return_pars, $sort, $order)
+	function getReturnRecords($return_pars, $sort, $order, $search, $limit)
 	{	
 		$placeholders = implode(", ", array_fill(0, count($return_pars), "?"));//set placeholers string eg: ?,?,?,?
 		$query = "SELECT " . $placeholders . " FROM wineries";
@@ -68,13 +73,17 @@
 		if (isset($search)) {
 			$query .= ' WHERE ';
 			foreach ($search as $key => $value) {
-				$query .= ' ' . $key . ' %LIKE% ' . $value . ' AND '; // Add each search param to the query
+				if ($fuzzy === true) {
+					$query .=  $key . ' LIKE %' . $value . '% AND '; // Add each search param to the query
+				} else {
+					$query .=  $key . ' LIKE ' . $value . ' AND '; // Add each search param to the query
+				}
 			}
-			$query = substr($query, 0, strlen($query) - 5); //Remove the final extra AND clause
+			$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
 		}
 
 		if (isset($limit)) { // IF the limit param is specified
-			$query .= ' LIMIT ' . $limit . ' '; //Add limit clause to the query
+			$query .= 'LIMIT ' . $limit; //Add limit clause to the query
 		}
 
 		if(isset($sort))	//If sort is not null it will load the sort conditions
