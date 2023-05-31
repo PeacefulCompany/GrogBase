@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { WineService } from '../_services/wine.service';
 import { WineryService } from '../_services/winery.service';
+import { WineEditorComponent } from '../_shared/wine-editor/wine-editor.component';
 import { WineryEditorComponent } from '../_shared/winery-editor/winery-editor.component';
 import { Winery, Wine } from '../_types';
 
@@ -41,9 +42,17 @@ export class AdminPage {
   }
 
   editWine(wine: Wine) {
-    alert("edit: " + wine.id);
+    const ref = this.dialogService.open(WineEditorComponent, {
+      data: wine,
+      width: "75%",
+      minHeight: "75%"
+    });
+    ref.afterClosed().subscribe(data => {
+      if(!data) return;
+      this.wineService.update(data);
+    })
   }
   deleteWine(wine: Wine) {
-    alert("delete: " + wine.id);
+    this.wineService.delete(wine);
   }
 }

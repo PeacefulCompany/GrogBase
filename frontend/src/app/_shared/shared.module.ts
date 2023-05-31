@@ -7,12 +7,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 
 import { WineryEditorComponent } from './winery-editor/winery-editor.component';
+import { WineEditorComponent } from './wine-editor/wine-editor.component';
 
 @NgModule({
   declarations: [
-    WineryEditorComponent
+    WineryEditorComponent,
+    WineEditorComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +25,8 @@ import { WineryEditorComponent } from './winery-editor/winery-editor.component';
     MatDialogModule,
     MatInputModule,
     MatGridListModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSelectModule
   ]
 })
 export class SharedModule { }

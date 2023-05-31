@@ -33,4 +33,11 @@ export class WineService {
 
     return of(arr);
   }
+
+  update(wine: Wine) {
+    alert("update wine: " + JSON.stringify(wine));
+  }
+  delete(wine: Wine) {
+    alert("delete wine: " + JSON.stringify(wine));
+  }
 }
