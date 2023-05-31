@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { SortBy, Winery } from '../_types';
+import { SearchOptions, SortBy, Winery } from '../_types';
 import { faker } from "@faker-js/faker";
 
 function generateWinery(): Winery {
@@ -16,6 +16,21 @@ function generateWinery(): Winery {
   }
 }
 
+/**
+  * Represents generic options regarding the
+  * data that is to be returned from the API.
+  *
+  * Note: as of the time of the last commit,
+  * wineries may not have any null values. This
+  * is to facilitate the sorting of mock data
+  * and can be changed to allow for the correct
+  * specification of return parameters
+  */
+export interface WineryOptions {
+  sortBy?: SortBy<Winery>,
+  return?: keyof Winery[]
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,10 +38,17 @@ export class WineryService {
 
   constructor() { }
 
-  getAll(sortBy?: SortBy<Winery>): Observable<Winery[]> {
+  /**
+    * Retrieves all entries from the database with
+    * no filtering applied
+    * @param options Optional return parameters
+    * @return The array of wineries
+    */
+  getAll(options?: WineryOptions): Observable<Winery[]> {
     let arr = faker.helpers.multiple(generateWinery, {
       count: 10
     });
+    const sortBy = options?.sortBy;
     if(sortBy) arr = arr.sort((a, b) => {
       if(a[sortBy.key] < b[sortBy.key]) return -1;
       if(a[sortBy.key] > b[sortBy.key]) return 1;
@@ -35,10 +57,36 @@ export class WineryService {
 
     return of(arr);
   }
-  update(winery: Winery) {
+
+  /**
+    * Updates the data of a winery
+    * @param winery The winery to update
+    * @return Whether the update was successful
+    */
+  update(winery: Winery): Observable<boolean> {
     alert("update: " + JSON.stringify(winery));
+    return of(true);
   }
-  delete(winery: Winery) {
+
+  /**
+    * Updates the data of a winery
+    * @param winery The winery to update
+    * @return Whether the update was successful
+    */
+  delete(winery: Winery): Observable<boolean> {
     alert("delete: " + winery.id);
+    return of(true);
+  }
+
+  /*
+    * @param term The search term
+    * @return The array of wineries
+    */
+  search(search: SearchOptions<Winery>, options?: WineryOptions): Observable<Winery[]> {
+    let arr = faker.helpers.multiple(generateWinery, {
+      count: 10
+    });
+
+    return of(arr);
   }
 }
