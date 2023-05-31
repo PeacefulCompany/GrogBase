@@ -20,7 +20,7 @@ export class LoginService {
       password: password
     }
 
-    const response = await this.http.post<loginResponse>(this.URL, loginRequest).toPromise();
+    const response = await this.http.post<loginResponse<{apikey:string}>>(this.URL, loginRequest).toPromise();
 
     console.log(response);
 

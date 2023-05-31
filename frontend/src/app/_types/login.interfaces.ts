@@ -3,7 +3,7 @@ export interface loginRequest{
   password: string;
 }
 
-export interface loginResponse{
+export interface loginResponse<T>{
   status: string;
-  data: object | string;
+  data: T | string;
 }

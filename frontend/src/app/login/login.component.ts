@@ -21,10 +21,12 @@ export class LoginComponent {
     console.log('Username:', this.email);
     console.log('Password:', this.password);
 
-    const response = await this.loginService.logInUser(this.email, this.password) as loginResponse;
+    const response = await this.loginService.logInUser(this.email, this.password) as loginResponse<{apikey: string}>;
 
     if(response.status === '200'){
       //route to home page
+
+      localStorage.setItem('apikey', response.data as Object as string);
 
       this.router.navigate(['/home']);
 
