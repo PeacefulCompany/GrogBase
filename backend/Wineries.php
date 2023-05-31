@@ -17,9 +17,13 @@
 		exit();
 	}
 
+	if(isset($input_json['search'])){ //Check if the search param is specified
+		$search = $input_json['search']; //stores the array of inputted search fields
+	}
+
 	if(isset($input_json['sort']))	//check if sort was specified
 	{
-		$sort = $input_json['sort'];
+		$sort = $input_json['sort']; 
 	}
 	else
 	{
@@ -57,6 +61,14 @@
 			$params = implode(",",$return_pars);
 		}
 		
+		if (isset($search)) {
+			$query .= ' WHERE ';
+			foreach ($search as $key => $value) {
+				$query .= ' ' . $key . ' %LIKE% ' . $value . ' AND '; // Add each search param to the query
+			}
+			$query = substr($query, 0, strlen($query) - 5); //Remove the final extra and clause
+		}
+
 		if(isset($sort))	//If sort is not null it will load the sort conditions
 		{
 			$sort_params = $sort;
