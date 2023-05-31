@@ -61,6 +61,7 @@
 	{	
 		$placeholders = implode(", ", array_fill(0, count($return_pars), "?"));//set placeholers string eg: ?,?,?,?
 		$query = "SELECT " . $placeholders . " FROM wineries";
+		$types = str_repeat("s", count($return_pars));
 
 		if($return_pars == "*")	//if wildcard is specified set that is the SQL parameter
 		{
@@ -72,13 +73,16 @@
 		}
 		
 		if (isset($search)) {
+			$search_pars = array();
 			$query .= ' WHERE ';
-			foreach ($search as $key => $value) {
-				if ($fuzzy === true) {
-					$query .=  $key . ' LIKE %' . $value . '% AND '; // Add each search param to the query
+			foreach ($variable as $key => $value) {
+				if ($fuzzy) {
+					$query .= '? LIKE %?% AND ';
 				} else {
-					$query .=  $key . ' LIKE ' . $value . ' AND '; // Add each search param to the query
+					$query .= '? LIKE %?% AND ';
 				}
+				$types .= 'ss';
+				array_push($search_pars, $key, $value);
 			}
 			$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
 		}
@@ -104,8 +108,7 @@
 
 		//Any code below this comment expectes the query to be have finished building
 		$stmt = $GLOBALS['conn']->prepare($query);
-		$types = str_repeat("s", count($return_pars));
-		$stmt->bind_param($types, ...$return_pars);
+		$stmt->bind_param($types, ...$return_pars, ...$search_pars);
 
 		$result = $GLOBALS['conn']->query($query);
 	}
