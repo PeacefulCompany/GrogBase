@@ -1,1 +1,10 @@
-<p>admin works!</p>
+<div class="wineries">
+<ng-container *ngFor="let winery of wineries">
+  <app-winery
+    [winery]="winery"
+    ></app-winery>
+  <mat-divider>
+  </mat-divider>
+
+</ng-container>
+</div>
