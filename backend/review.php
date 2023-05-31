@@ -1,52 +1,22 @@
 <?php
 
-class reviewAPI
-{
 
+    // function wineTypeHandler()
+    // {
+    //     $data = json_decode(file_get_contents('php://input'), true);
+    //     switch ($data["type"]) {
+    //         case "getWineReviews":
+    //             return $this->getWineReviews($data);
 
-    private $connection = null;
+    //         case "getWineryReviews":
+    //             return $this->getWineryReviews($data);
 
-    public static function instance()
-    {
-        static $instance = null;
-        if ($instance == null) {
-            $instance = new reviewAPI();
-        }
-        return $instance;
-    }
+    //         default;
+    //     }
 
-    private function __construct()
-    {
-        $this->connection = new mysqli("wheatley.cs.up.ac.za", "u04643187", "?");
-        if ($this->connection->connect_error) {
-            die("connection failed: (invalid credentials) " . $this->connection->connect_error);
-        } else {
-            $this->connection->select_db("u04643187_grogTemp");
-        }
-    }
+    // }
 
-    public function __destruct()
-    {
-        $this->connection->close();
-    }
-
-
-    public function wineTypeHandler()
-    {
-        $data = json_decode(file_get_contents('php://input'), true);
-        switch ($data["type"]) {
-            case "getWineReviews":
-                return $this->getWineReviews($data);
-
-            case "getWineryReviews":
-                return $this->getWineryReviews($data);
-
-            default;
-        }
-
-    }
-
-    private function getWineryReviews($data) //determines the amount of join that will need to be setup
+     function getWineryReviews($data, $connection) //determines the amount of join that will need to be setup
     {
         echo ("winery");
         $params = "";
@@ -77,7 +47,7 @@ class reviewAPI
                 }
             }
         } else {
-            return $this->errorThrower("missing return");
+            return errorThrower("missing return");
         }
 
 
@@ -94,14 +64,14 @@ class reviewAPI
         //adding search clause to query
 
         if (!isset($data['search']) && isset($data['fuzzy'])) {
-            return $this->errorThrower("Cannot have a fuzzy parameter without a search parameter");
+            return errorThrower("Cannot have a fuzzy parameter without a search parameter");
         }
 
         if (isset($data['search'])) {
 
             foreach ($data['search'] as $key => $value) {
 
-                $keyS = mysqli_real_escape_string($this->connection, $key);
+                $keyS = mysqli_real_escape_string($connection, $key);
 
 
                 $params .= "s";
@@ -123,18 +93,18 @@ class reviewAPI
 
         //adding sort clause to query
         if (!isset($data['sort']) && isset($data['order'])) {
-            return $this->errorThrower("Cannot have a order parameter without a sort parameter");
+            return errorThrower("Cannot have a order parameter without a sort parameter");
         }
 
         if (isset($data['sort'])) {
             $rogue = $data['sort'];
             $sort = "";
             for ($i = 0; $i < count($rogue) - 1; $i++) {
-                $temp = mysqli_real_escape_string($this->connection, $rogue[$i]);
+                $temp = mysqli_real_escape_string($connection, $rogue[$i]);
                 $sort = $sort . $temp . ',';
             }
 
-            $temp = mysqli_real_escape_string($this->connection, $rogue[count($rogue) - 1]);
+            $temp = mysqli_real_escape_string($connection, $rogue[count($rogue) - 1]);
             $sort = $sort . $temp;
 
             //adding the order by caluse to query
@@ -157,9 +127,9 @@ class reviewAPI
 
         // binding params to the query and executing
         echo $query;
-        $prepared = mysqli_prepare($this->connection, $query);
+        $prepared = mysqli_prepare($connection, $query);
         if (!$prepared) {
-            return $this->errorThrower("Error in query");
+            return errorThrower("Error in query");
 
         }
         if ($params != "") {
@@ -169,13 +139,13 @@ class reviewAPI
         $prepared->execute();
         $res = $prepared->get_result();
         $formattedRes = mysqli_fetch_all($res, MYSQLI_ASSOC);
-        return $this->messgaeFormatter($formattedRes);
+        return messageFormatter($formattedRes);
 
     }
 
 
 
-    private function getWineReviews($data) //determines the amount of join that will need to be setup
+     function getWineReviews($data, $connection) //determines the amount of join that will need to be setup
     {
         $params = "";
 
@@ -206,7 +176,7 @@ class reviewAPI
                 }
             }
         } else {
-            return $this->errorThrower("missing return");
+            return errorThrower("missing return");
         }
 
 
@@ -223,14 +193,14 @@ class reviewAPI
         //adding search clause to query
 
         if (!isset($data['search']) && isset($data['fuzzy'])) {
-            return $this->errorThrower("Cannot have a fuzzy parameter without a search parameter");
+            return errorThrower("Cannot have a fuzzy parameter without a search parameter");
         }
 
         if (isset($data['search'])) {
 
             foreach ($data['search'] as $key => $value) {
 
-                $keyS = mysqli_real_escape_string($this->connection, $key);
+                $keyS = mysqli_real_escape_string($connection, $key);
 
 
                 $params .= "s";
@@ -252,18 +222,18 @@ class reviewAPI
 
         //adding sort clause to query
         if (!isset($data['sort']) && isset($data['order'])) {
-            return $this->errorThrower("Cannot have a order parameter without a sort parameter");
+            return errorThrower("Cannot have a order parameter without a sort parameter");
         }
 
         if (isset($data['sort'])) {
             $rogue = $data['sort'];
             $sort = "";
             for ($i = 0; $i < count($rogue) - 1; $i++) {
-                $temp = mysqli_real_escape_string($this->connection, $rogue[$i]);
+                $temp = mysqli_real_escape_string($connection, $rogue[$i]);
                 $sort = $sort . $temp . ',';
             }
 
-            $temp = mysqli_real_escape_string($this->connection, $rogue[count($rogue) - 1]);
+            $temp = mysqli_real_escape_string($connection, $rogue[count($rogue) - 1]);
             $sort = $sort . $temp;
 
             //adding the order by caluse to query
@@ -288,9 +258,9 @@ class reviewAPI
         var_dump($searchFeild);
 
         echo $query;
-        $prepared = mysqli_prepare($this->connection, $query);
+        $prepared = mysqli_prepare($connection, $query);
         if (!$prepared) {
-            return $this->errorThrower("Error in query");
+            return errorThrower("Error in query");
 
         }
 
@@ -301,19 +271,19 @@ class reviewAPI
         $prepared->execute();
         $res = $prepared->get_result();
         $formattedRes = mysqli_fetch_all($res, MYSQLI_ASSOC);
-        return $this->messgaeFormatter($formattedRes);
+        return messageFormatter($formattedRes);
 
     }
 
 
-    private function setupSelectString($returnString) // handles the setup of the select part of the query statment though a passed in array of string values
+     function setupSelectString($returnString) // handles the setup of the select part of the query statment though a passed in array of string values
     {
         $feilds = "";
 
         return $feilds;
     }
 
-    private function messgaeFormatter($jsonResponse)
+     function messageFormatter($jsonResponse)
     { //formats the response for a return message on a successful request
         $response = array(
             'status' => "success",
@@ -324,7 +294,7 @@ class reviewAPI
     }
 
 
-    private function errorThrower($message) //formats the response for a return message on a unsuccessful request
+     function errorThrower($message) //formats the response for a return message on a unsuccessful request
     {
         $data = array(
             'status' => 'failed',
@@ -334,12 +304,9 @@ class reviewAPI
         return json_encode($data);
     }
 
-}
 
 
-$queryResponse = reviewAPI::instance();
-echo "posted";
-echo ($queryResponse->wineTypeHandler());
+
 
 
 
