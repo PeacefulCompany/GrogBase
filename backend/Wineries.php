@@ -1,15 +1,8 @@
 <?php
-//include 'Config.php';
 
-	$GLOBALS['conn'] = $connection;	// stores the MYSQLi connection in Config.php for easy access
-
-	header('Content-Type: application/json');
-	header('Cache-Control: no-cache, no-store, must-revalidate');
-	header('Pragma: no-cache');
-	header('Expires: 0');
-
-	$input_json = json_decode(file_get_contents("php://input"),true);	// retrieve json from API call
-
+function getWineries($conn,$json)
+{
+	$input_json = json_decode($json);
 	if(!isset($input_json['return']) || empty($input_json['return']))	//check if the return paramter is valid
 	{
 		header("HTTP/1.1 400 Bad Request");
@@ -53,71 +46,69 @@
 	}
 	
 	$return_pars = $input_json['return'];
+
+	getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $fuzzy);
+}
+	
 	
 	//This function's purpose is to return all records with specified fields from the return array
 	//This output is then sorted if required and ordered accordingly.
 	//Returns a json object
-	function getReturnRecords($return_pars, $sort, $order, $search, $limit, $fuzzy)
-	{	
-		$placeholders = implode(", ", array_fill(0, count($return_pars), "?"));//set placeholers string eg: ?,?,?,?
-		$query = "SELECT " . $placeholders . " FROM wineries";
-		$types = str_repeat("s", count($return_pars));
-		
-		//The below if is actually pretty useless but not sure
-		// if($return_pars[0] == "*")	
-		// {
-		// 	$return  = "*";
-		// }
-		
-		if (isset($search)) {
-			$search_pars = array();
-			$query .= ' WHERE ';
-			foreach ($search as $key => $value) {
-				if ($fuzzy === true) {
-					$query .= '? LIKE %?% AND ';
-				} else {
-					$query .= '? LIKE ? AND ';
-				}
-				$types .= 'ss';
-				array_push($search_pars, $key, $value); //Add parameters for when stmnt is preapred
+function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $fuzzy)
+{	
+	$placeholders = implode(", ", array_fill(0, count($return_pars), "?"));//set placeholers string eg: ?,?,?,?
+	$query = "SELECT " . $placeholders . " FROM wineries";
+	$types = str_repeat("s", count($return_pars));
+	
+	if (isset($search)) {
+		$search_pars = array();
+		$query .= ' WHERE ';
+		foreach ($search as $key => $value) {
+			if ($fuzzy === true) {
+				$query .= '? LIKE %?% AND ';
+			} else {
+				$query .= '? LIKE ? AND ';
 			}
-			$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
+			$types .= 'ss';
+			array_push($search_pars, $key, $value); //Add parameters for when stmnt is preapred
 		}
-
-		if (isset($limit)) { // IF the limit param is specified
-			if (is_numeric($limit)) {
-				$query .= 'LIMIT ' . $limit; //Add limit clause to the query
-			}
-		}
-
-		if(isset($sort))	//If sort is not null it will load the sort conditions
-		{
-			$sort_params = $sort;
-		}
-		else
-		{
-			$sort_params = "name";//  default sort value
-			
-		}
-
-		if(isset($sort))
-		{
-			$query = $query." ORDER BY ".$sort_params." ".$order;
-		}
-
-		//Any code below this comment expectes the query to be have finished building
-		$stmt = $GLOBALS['conn']->prepare($query); //prepare the statements
-		$stmt->bind_param($types, ...$return_pars, ...$search_pars);
-		$stmt->execute();
-
-		$result = $stmt->get_result();
-
-		$data = array();
-		while($row = $result->fetch_assoc())
-		{
-			$data[] = $row;
-		}
-		$out = array('status' => 'success','data' => $data);
-		echo json_encode($out);
+		$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
 	}
+
+	if (isset($limit)) { // IF the limit param is specified
+		if (is_numeric($limit)) {
+			$query .= 'LIMIT ' . $limit; //Add limit clause to the query
+		}
+	}
+
+	if(isset($sort))	//If sort is not null it will load the sort conditions
+	{
+		$sort_params = $sort;
+	}
+	else
+	{
+		$sort_params = "name";//  default sort value
+		
+	}
+
+	if(isset($sort))
+	{
+		$query = $query." ORDER BY ".$sort_params." ".$order;
+	}
+
+	//Any code below this comment expectes the query to be have finished building
+	$stmt = $conn->prepare($query); //prepare the statements
+	$stmt->bind_param($types, ...$return_pars, ...$search_pars);
+	$stmt->execute();
+
+	$result = $stmt->get_result();
+
+	$data = array();
+	while($row = $result->fetch_assoc())
+	{
+		$data[] = $row;
+	}
+	$out = array('status' => 'success','data' => $data);
+	echo json_encode($out);
+}
 ?>
