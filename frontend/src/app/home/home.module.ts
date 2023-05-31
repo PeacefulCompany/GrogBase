@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import {MatCardModule} from '@angular/material/card';
 import { HomeComponent } from './home.component';
 
 @NgModule({
@@ -17,8 +18,10 @@ import { HomeComponent } from './home.component';
       MatToolbarModule,
       MatSidenavModule,
       MatListModule,
-      RouterModule
+      RouterModule,
+      MatCardModule
     ],
     providers: [],
   })
-  export class HomeModule { }
+  export class HomeModule { 
+  }
