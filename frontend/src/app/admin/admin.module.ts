@@ -12,12 +12,14 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 import { MatDialogModule } from "@angular/material/dialog";
 import { SharedModule } from '../_shared/shared.module';
+import { WineComponent } from './wine/wine.component';
 
 
 @NgModule({
   declarations: [
     AdminPage,
-    WineryComponent
+    WineryComponent,
+    WineComponent
   ],
   imports: [
     CommonModule,

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { WineService } from '../_services/wine.service';
 import { WineryService } from '../_services/winery.service';
 import { WineryEditorComponent } from '../_shared/winery-editor/winery-editor.component';
-import { Winery } from '../_types';
+import { Winery, Wine } from '../_types';
 
 @Component({
   selector: 'app-admin',
@@ -11,12 +12,17 @@ import { Winery } from '../_types';
 })
 export class AdminPage {
   wineries: Winery[] = [];
+  wines: Wine[] = [];
+
   constructor(
     private wineryService: WineryService,
+    private wineService: WineService,
     private dialogService: MatDialog
   ) {
     this.wineryService.getAll()
     .subscribe(res => this.wineries = res);
+    this.wineService.getAll()
+    .subscribe(res => this.wines = res);
   }
 
   editWinery(winery: Winery) {
@@ -32,5 +38,12 @@ export class AdminPage {
   }
   deleteWinery(winery: Winery) {
     this.wineryService.delete(winery);
+  }
+
+  editWine(wine: Wine) {
+    alert("edit: " + wine.id);
+  }
+  deleteWine(wine: Wine) {
+    alert("delete: " + wine.id);
   }
 }

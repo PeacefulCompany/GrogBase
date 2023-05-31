@@ -1,12 +1,17 @@
-<div class="wineries">
-<ng-container *ngFor="let winery of wineries">
-  <app-winery
+<h2 class="mat-h2">Wineries</h2>
+<div class="list">
+  <app-winery *ngFor="let winery of wineries"
     (onEdit)="editWinery($event)"
     (onDelete)="deleteWinery($event)"
     [winery]="winery"
     ></app-winery>
-  <mat-divider>
-  </mat-divider>
-
-</ng-container>
+</div>
+<h2 mat-title>Wines</h2>
+<div class="list">
+  <app-wine
+    *ngFor="let wine of wines"
+    (onEdit)="editWine($event)"
+    (onDelete)="deleteWine($event)"
+    [wine]="wine"
+    ></app-wine>
 </div>
