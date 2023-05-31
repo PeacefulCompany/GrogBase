@@ -21,6 +21,10 @@
 		$search = $input_json['search']; //stores the array of inputted search fields
 	}
 
+	if (isset($input_json['limit'])) { //Check if limit param is specified
+		$limit = $input_json['limit']; //store limit param
+	}
+
 	if(isset($input_json['sort']))	//check if sort was specified
 	{
 		$sort = $input_json['sort']; 
@@ -66,7 +70,11 @@
 			foreach ($search as $key => $value) {
 				$query .= ' ' . $key . ' %LIKE% ' . $value . ' AND '; // Add each search param to the query
 			}
-			$query = substr($query, 0, strlen($query) - 5); //Remove the final extra and clause
+			$query = substr($query, 0, strlen($query) - 5); //Remove the final extra AND clause
+		}
+
+		if (isset($limit)) { // IF the limit param is specified
+			$query .= ' LIMIT ' . $limit . ' '; //Add limit clause to the query
 		}
 
 		if(isset($sort))	//If sort is not null it will load the sort conditions
