@@ -21,6 +21,12 @@
 		$search = $input_json['search']; //stores the array of inputted search fields
 	}
 
+	if (isset($input_json['fuzzy'])) {
+		$fuzzy = $input_json['fuzzy'];
+	} else {
+		$fuzzy = true;
+	}
+
 	if (isset($input_json['limit'])) { //Check if limit param is specified
 		$limit = $input_json['limit']; //store limit param
 	}
@@ -28,11 +34,6 @@
 	if(isset($input_json['sort']))	//check if sort was specified
 	{
 		$sort = $input_json['sort']; 
-	}
-	if (isset($input_json['fuzzy'])) {
-		$fuzzy = $input_json['fuzzy'];
-	} else {
-		$fuzzy = true;
 	}
 	else
 	{
@@ -56,7 +57,7 @@
 	//This function's purpose is to return all records with specified fields from the return array
 	//This output is then sorted if required and ordered accordingly.
 	//Returns a php array of records
-	function getReturnRecords($return_pars, $sort, $order, $search, $limit)
+	function getReturnRecords($return_pars, $sort, $order, $search, $limit, $fuzzy)
 	{	
 		$placeholders = implode(", ", array_fill(0, count($return_pars), "?"));//set placeholers string eg: ?,?,?,?
 		$query = "SELECT " . $placeholders . " FROM wineries";
