@@ -126,6 +126,7 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 		$data[] = $row;
 	}
 	$out = array('status' => 'success','data' => $data);
+	header("HTTP/1.1 200 OK");
 	echo json_encode($out);
 }
 ?>
