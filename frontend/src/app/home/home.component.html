@@ -12,19 +12,38 @@
         <a mat-list-item routerLink="/About" id="About">About</a>
       </mat-nav-list>
     </mat-sidenav>
-  
-    <mat-sidenav-content>
-        <div class="container">
+
+    <mat-sidenav-content >
+        <div class="container" *ngFor="let item of Localwiener"> 
             <mat-card>
               <mat-card-header>
-                <mat-card-title>Winerie:Name</mat-card-title>
+                <mat-card-title>{{ item.Name }}</mat-card-title>
               </mat-card-header>
               <mat-card-content>
-                <p>This is a basic Angular Material homepage template.</p>
+                <P>{{ item.Established }}</P>
+                <P>{{ item.Location }}</P>
+                <P>{{ item.Country }}</P>
+                <P>{{ item.Website }}</P>
+                <P>{{ item.Description }}</P>
               </mat-card-content>
             </mat-card>
           </div>
         <router-outlet></router-outlet>
+    </mat-sidenav-content>
+    <mat-sidenav-content class="Wines">
+        <div class="container" *ngFor="let item of TopWine"> 
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>{{ item.name }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ item.type }}</p>
+                <p>{{ item.year }}</p>
+                <p>{{ item.price }}</p>
+                <p>{{ item.description}}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
   
