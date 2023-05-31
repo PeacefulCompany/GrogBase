@@ -6,7 +6,7 @@ function getWineries($conn,$json)
 	if(!isset($input_json['return']) || empty($input_json['return']))	//check if the return paramter is valid
 	{
 		header("HTTP/1.1 400 Bad Request");
-		echo json_encode(array('status' => 'error','data' => 'Error: Empty Return Parameter'));
+		echo json_encode(array('status' => 'error','data' => 'Error: Wineries Empty Return Parameter'));
 		exit();
 	}
 
@@ -80,15 +80,25 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 			$query .= 'LIMIT ' . $limit; //Add limit clause to the query
 		}
 	}
-
-	if(isset($sort))	//If sort is not null it will load the sort conditions
+	$sort_fields = array(
+		"winery_id",
+		"name",
+		"description",
+		"established",
+		"location",
+		"region",
+		"country",
+		"website",
+		"manager_id"
+	);
+	
+	if(isset($sort) && in_array($sort, $sort_fields))	//If sort is not null or doesn't exist it will load the sort conditions
 	{
 		$sort_params = $sort;
 	}
 	else
 	{
 		$sort_params = "name";//  default sort value
-		
 	}
 
 	if(isset($sort))
@@ -102,6 +112,13 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 	$stmt->execute();
 
 	$result = $stmt->get_result();
+
+	if(!$result)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		echo json_encode(array('status' => 'error','data' => 'Error: Wineries SQL Error'));
+		exit();
+	}
 
 	$data = array();
 	while($row = $result->fetch_assoc())
