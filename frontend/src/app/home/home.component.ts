@@ -197,5 +197,7 @@ export class HomeComponent implements OnInit {
   
   }
   ngOnInit(): void {
+    //show full page LoadingOverlay
+ 
   }
 }

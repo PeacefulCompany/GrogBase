@@ -12,7 +12,10 @@
         <a mat-list-item routerLink="/About" id="About">About</a>
       </mat-nav-list>
     </mat-sidenav>
-
+  
+    <mat-sidenav-content >
+    <h2 class="title">Local Wineries</h2>
+    </mat-sidenav-content>
     <mat-sidenav-content >
         <div class="container" *ngFor="let item of Localwiener"> 
             <mat-card>
@@ -30,6 +33,9 @@
           </div>
         <router-outlet></router-outlet>
     </mat-sidenav-content>
+    <mat-sidenav-content >
+        <h2 class="title">Top Wines</h2>
+        </mat-sidenav-content>
     <mat-sidenav-content class="Wines">
         <div class="container" *ngFor="let item of TopWine"> 
             <mat-card class="Wines">
