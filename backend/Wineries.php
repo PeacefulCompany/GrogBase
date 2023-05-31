@@ -76,19 +76,21 @@
 			$search_pars = array();
 			$query .= ' WHERE ';
 			foreach ($variable as $key => $value) {
-				if ($fuzzy) {
+				if ($fuzzy === true) {
 					$query .= '? LIKE %?% AND ';
 				} else {
-					$query .= '? LIKE %?% AND ';
+					$query .= '? LIKE ? AND ';
 				}
 				$types .= 'ss';
-				array_push($search_pars, $key, $value);
+				array_push($search_pars, $key, $value); //Add parameters for when stmnt is preapred
 			}
 			$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
 		}
 
 		if (isset($limit)) { // IF the limit param is specified
-			$query .= 'LIMIT ' . $limit; //Add limit clause to the query
+			if (is_numeric($limit)) {
+				$query .= 'LIMIT ' . $limit; //Add limit clause to the query
+			}
 		}
 
 		if(isset($sort))	//If sort is not null it will load the sort conditions
