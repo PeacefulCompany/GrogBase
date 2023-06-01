@@ -1,8 +1,8 @@
 <?php
 
 
-require_once "lib/Database.php";
-require_once "lib/Controller.php";
+require_once "Database.php";
+require_once "Controller.php";
 
 
 // sets up base response headers
