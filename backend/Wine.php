@@ -1,5 +1,7 @@
 <?php
 
+require_once "Skeleton/config.php";
+
 class Wines{
 
     /*--------------------------------------
@@ -15,50 +17,33 @@ class Wines{
     needs to be noted that a database
     connection will need to be passed in.
     */
-    // private $connection = null;
-
-    // public static function instance()
-    // {
-    //     static $instance = null;
-    //     if ($instance == null) {
-    //         $instance = new Wines();
-    //     }
-    //     return $instance;
-    // }
-
-    // private function __construct()
-    // {
-    //     $this->connection = new mysqli("wheatley.cs.up.ac.za", "u22551167", "Slayer17@");
-    //     if ($this->connection->connect_error) {
-    //         die("connection failed: (invalid credentials) " . $this->connection->connect_error);
-    //     } else {
-    //         $this->connection->select_db("u22551167");
-    //     }
-    // }
-
-    // public function __destruct()
-    // {
-    //     $this->connection->close();
-    // }
-
-    public function getWines($conn,$json)
+    
+    public function getWines($db,$json)
     {
-        $array = json_decode($json);//assuming a json object is passed in, we turn it into an asssociative array.
+        $conn = $db;
+        $jsonObj = json_decode($json,true);//assuming a json object is passed in, we turn it into an asssociative array.
         $statement = null;
-        $select_clause = implode(",",$array['return']);//gets all the values to be selected (returned)
-        $statement .= "SELECT ".$select_clause." FROM `table`";//to be changed but the select is put in here. 
+        $stuffs = array();
+        $returns = array();
+        $returns = $jsonObj['return'];
+        foreach($returns as $val)
+        {
+            array_push($stuffs, $val);
+        }
+        $select_clause = implode(",",$stuffs);//gets all the values to be selected (returned)
+        $statement .= "SELECT ".$select_clause." FROM `wines`";//to be changed but the select is put in here. 
         $where_clause = null;//where clause used if search is specified
         $types = null;//this is just to ensure binding goes smoothly for SQL prepared statements i.e: ssss or iiii or sisisi etc.
         $params = array();//an array to store the parameters we are going to bind
         $fuzzy = false;//to fuzzy search the db or not
-        if(key_exists('fuzzy',$array))//if fuzzy is specified then change it from the default value
+        if(key_exists('fuzzy',$jsonObj))//if fuzzy is specified then change it from the default value
         {
-            $fuzzy = $array['fuzzy'];
+            $fuzzy = $jsonObj['fuzzy'];
         }
-        if(key_exists('search',$array))//if we are required to search for specific values
+        if(key_exists('search',$jsonObj))//if we are required to search for specific values
         {
             $where_clause = " WHERE ";//assign values to the where clause
-            $search = $array['search'];//make life easier and get the search array
+            $search = $jsonObj['search'];//make life easier and get the search array
             foreach($search as $key => $value)//loop through it
             {
                 if(array_key_last($search)!=$key)
@@ -85,25 +70,25 @@ class Wines{
             }
         }
         $statement.=$where_clause;//add the where clause to the statement and all the conditions
-        if(key_exists('sort',$array))//check if the data returned needs to be ordered by anything specific
+        if(key_exists('sort',$jsonObj))//check if the data returned needs to be ordered by anything specific
         {
             $sorts = null;//to store the stuff to sort by
             $orderStuff = null;//to store the string
-            if(!is_array($array['sort'])){//converts sort to array if not an array
-                $orderStuff = $array['sort'];
+            if(!is_array($jsonObj['sort'])){//converts sort to array if not an array
+                $orderStuff = $jsonObj['sort'];
             }
             else{//otherwise just implode that crap
-                $sorts = $array['sort'];
+                $sorts = $jsonObj['sort'];
                 $orderStuff = implode(",",$sorts);
             }
 
             $oStr = " ORDER BY ".$orderStuff;//sets up the clause
             $statement.=$oStr;//adds the order by clause
         }
-        if(key_exists('order',$array))//checks if asc or dsc specified
+        if(key_exists('order',$jsonObj))//checks if asc or dsc specified
         {
-            $typeO = $array['order'];//stores it
-            if(!key_exists('sort',$array))//if no order by specified have a default
+            $typeO = $jsonObj['order'];//stores it
+            if(!key_exists('sort',$jsonObj))//if no order by specified have a default
             {
                 $statement.=" ORDER BY `ID` ".$typeO;//default order is by wineID
             }
@@ -111,21 +96,23 @@ class Wines{
                 $statement.=" ".$typeO;//otherwise just add the parameter
             }
         }
-        if(key_exists('limit',$array))//if we want to limit results
+        if(key_exists('limit',$jsonObj))//if we want to limit results
         {
-            $statement.=" LIMIT ".$array['limit'];//limit them
+            $statement.=" LIMIT ".$jsonObj['limit'];//limit them
         }
+        echo $statement;
+        echo "\n";
         if($query = $conn->mysqli->prepare($statement))
         {
             $query = $conn->mysqli->prepare($statement);
-            if(key_exists('search', $array))
+            if(key_exists('search', $jsonObj))
             {
                 $query->bind_param($types,...$params);
             }
             $wineData = array();//contains the data that the user sees.
             $results = array();//this is to contain results of query
             $binding = array();//this is used to help create an associative array using results
-            foreach($array['return'] as $column)
+            foreach($jsonObj['return'] as $column)
             {
                 $results[$column] = null;//creates the associated key in results
                 $binding[] =& $results[$column];//now we add the key value to each result key
@@ -135,7 +122,7 @@ class Wines{
             while($query->fetch())//while there is data to fetch
             {
                 $row = array();//a "new" row for each resulting row
-                foreach($array['return'] as $column)//populating the row
+                foreach($jsonObj['return'] as $column)//populating the row
                 {
                     $row[$column] = $results[$column];
                 }
@@ -157,8 +144,10 @@ class Wines{
     }
 }
 
-// $query_selector = Wines::instance();
-// echo "posted";
-// $query_selector->getWines($query_selector->);
+$dataobj = new Wines;
+header('Content-Type: application/json');
+$db = new Database;
+$conn = $db->mysqli;
+echo $dataobj->getWines($db,file_get_contents('php://input'));
 
 ?>
