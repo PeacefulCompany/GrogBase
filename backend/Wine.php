@@ -28,7 +28,7 @@ class Wine{
         $specs = null;
             if(key_exists('search', $jsonObj))
             {
-                $search = $json['search'];
+                $search = $jsonObj['search'];
 
                 foreach($search as $key => $value)
                 {
