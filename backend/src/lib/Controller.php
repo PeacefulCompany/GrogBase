@@ -99,7 +99,8 @@ class Controller {
         echo json_encode(array_merge([
             'status' => 'success',
             'timestamp' => time(),
-        ], $data));
+            'data' => $data
+        ]));
     }
 }
 ?>
