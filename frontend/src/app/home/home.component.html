@@ -1,0 +1,55 @@
+<mat-toolbar color="primary">
+    <span>Welcome to GrogBase</span>
+  </mat-toolbar>
+  <mat-sidenav-container>
+    <mat-sidenav mode="side" opened>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/">Home</a>
+        <a mat-list-item routerLink="/about">Wines</a>
+        <a mat-list-item routerLink="/Wineries">Wineries</a>
+        <a mat-list-item routerLink="/Admin" id="Contact">Admin</a>
+        <a mat-list-item routerLink="/Contact" id="Contact">Contact</a>
+        <a mat-list-item routerLink="/About" id="About">About</a>
+      </mat-nav-list>
+    </mat-sidenav>
+  
+    <mat-sidenav-content >
+    <h2 class="title">Local Wineries</h2>
+    </mat-sidenav-content>
+    <mat-sidenav-content >
+        <div class="container" *ngFor="let item of Localwiener"> 
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>{{ item.Name }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <P>{{ item.Established }}</P>
+                <P>{{ item.Location }}</P>
+                <P>{{ item.Country }}</P>
+                <P>{{ item.Website }}</P>
+                <P>{{ item.Description }}</P>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+    <mat-sidenav-content >
+        <h2 class="title">Top Wines</h2>
+        </mat-sidenav-content>
+    <mat-sidenav-content class="Wines">
+        <div class="container" *ngFor="let item of TopWine"> 
+            <mat-card class="Wines">
+              <mat-card-header>
+                <mat-card-title>{{ item.name }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ item.type }}</p>
+                <p>{{ item.year }}</p>
+                <p>{{ item.price }}</p>
+                <p>{{ item.description}}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
