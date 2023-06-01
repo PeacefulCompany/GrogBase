@@ -129,4 +129,36 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 	header("HTTP/1.1 200 OK");
 	echo json_encode($out);
 }
+function addWineries($conn, $json){
+	$wineries = array();// a variable to store all the wineries to be added
+	$input_json = json_decode($json);
+	/*As an example, We expect
+{
+    "type":"addWineries",
+    "apikey":"a9198b68355f78830054c31a39916b7f",
+    "wineries":[
+		{
+			"name": "",
+			"description": "",
+			"established": "",
+			"location": "",
+			"region": "",
+			"country": "",
+			"website": "",
+			"manager_idL": ""
+		},
+		{
+			"name": "",
+			"description": "",
+			"established": "",
+			"location": "",
+			"region": "",
+			"country": "",
+			"website": "",
+			"manager_idL": ""
+		}
+	]
+}
+	 */
+}
 ?>
