@@ -213,7 +213,40 @@ function addWineriesSQLCall($conn, $wineries){
 
 function updateWinery($conn, $winery)
 {
-	
+	$query = "UPDATE wineries SET ";
+	$to_update = $winery['update'];
+	// $update_fields = array(
+	// 	"winery_id",
+	// 	"name",
+	// 	"description",
+	// 	"established",
+	// 	"location",
+	// 	"region",
+	// 	"country",
+	// 	"website",
+	// 	"manager_id"
+	// );
+	$columns = array();
+	foreach($to_update as $key => $val)
+	{	if($key != "manager_id")
+		{
+			$columns[] = `$key="$val"`;
+		}
+	}
+	$query .= implode(",",$columns);
+	$query .= " WHERE manager_id = " . $winery['manager_id'];
+
+	if($conn->query($query) === TRUE)
+	{
+		header("HTTP/1.1 200 OK");
+		echo json_encode(array('status' => 'success','data' => "Update Succesful"));
+	}
+	else
+	{
+		header("HTTP/1.1 400 Bad Request");
+		echo json_encode(array('status' => 'error','data' => $conn->error));
+		exit();
+	}
 }
 function deleteWineries($conn, $wineries)
 {
