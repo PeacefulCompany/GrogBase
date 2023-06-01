@@ -3,6 +3,9 @@
 function getWineries($conn,$json)
 {
 	$input_json = json_decode($json);
+	//echo $input_json;
+	//echo $json;
+	$input_json = get_object_vars($input_json);
 	if(!isset($input_json['return']) || empty($input_json['return']))	//check if the return paramter is valid
 	{
 		header("HTTP/1.1 400 Bad Request");
@@ -49,8 +52,6 @@ function getWineries($conn,$json)
 
 	getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $fuzzy);
 }
-	
-	
 	//This function's purpose is to return all records with specified fields from the return array
 	//This output is then sorted if required and ordered accordingly.
 	//Returns a json object
@@ -209,8 +210,8 @@ function addWineriesSQLCall($conn, $wineries){
 }
 
 
-function deleteWineries($conn, $wineries)
-{
-	
-}
+function deleteWineries($conn, $wineries){}
+$input = file_get_contents('php://input');
+
+getWineries(null, $input);
 ?>
