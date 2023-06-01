@@ -182,16 +182,22 @@ function addWineriesSQLCall($conn, $wineries){
 	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manger_id) VALUES";
 	$allParams = array();
 	$params = array('name','description','established','location','region','country','website','manger_id');
+	$types = "";
 	foreach ($wineries as $oneWinery) {
 		$query .= '(?, ?, ?, ?, ?, ?, ?, ?), ';
 		foreach ($params as $oneParam) {
 			array_push($allParams, $oneWinery[$oneParam]);
+			if ($oneParam == 'manager_id') {
+				$types .= 'i';
+			} else {
+				$types .= 's';
+			}
 		}
 	}
 	$query = substr($query, 0, strlen($query) - 2);
 	$query .= ';';
 	$stmt = $conn->prepare($query); //prepare the statements
-	$stmt->bind_param(str_repeat('s', count($allParams)), $allParams);
+	$stmt->bind_param($types, ...$allParams);
 	try {
 		$stmt->execute();
 	} catch (\Throwable $th) {
