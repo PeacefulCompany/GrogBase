@@ -1,8 +1,6 @@
 <?php
 
-require_once "Skeleton/config.php";
-
-class Wines{
+class Wine{
 
     /*--------------------------------------
     The get wines function returns a JSON obj
@@ -17,10 +15,134 @@ class Wines{
     needs to be noted that a database
     connection will need to be passed in.
     */
-    
-    public function getWines($db,$json)
+
+
+    public function getAllWines($conn,$json){
+        $jsonObj = json_decode($json,true);
+        $wines = array();
+        $stmt = "SELECT * FROM `wines`";
+        $params = array();
+        $fuzzy = $jsonObj['fuzzy'];
+        $typeString = null;
+        $wString = " WHERE";
+        $specs = null;
+            if(key_exists('search', $jsonObj))
+            {
+                $search = $json['search'];
+
+                foreach($search as $key => $value)
+                {
+                    if(array_key_last($search)!=$key)
+                    {
+                        $specs .=" ".$key." LIKE ? AND";
+                    }
+                    else{
+                        $specs .=" ".$key." LIKE ?";
+                    }
+                    if($key=='ID' || $key=='Year' || $key=='Price' || $key=='WineryID')
+                    {
+                        $typeString.='i';
+                    }
+                    else{
+                        $typeString.='s';
+                    }
+                    if(!$fuzzy)
+                    {
+                        array_push($params, $value);
+                    }
+                    else{
+                        array_push($params, "%".$value."%");
+                    }                
+                }
+                $stmt.=$wString.$specs;
+            }
+            if(key_exists('sort',$jsonObj))
+            {
+                $sorts = null;
+                $orderStuff = null;
+                if(!is_array($jsonObj['sort'])){
+                    $orderStuff = $jsonObj['sort'];
+                }
+                else{
+                    $sorts = $jsonObj['sort'];
+                    $orderStuff = implode(",",$sorts);
+                }
+
+                $oStr = " ORDER BY ".$orderStuff;
+                $stmt.=$oStr;
+            }
+            if(key_exists('order',$jsonObj))
+            {
+                $typeO = $jsonObj['order'];
+                if(!key_exists('sort',$jsonObj))
+                {
+                    $stmt.=" ORDER BY `make` ".$typeO;
+                }
+                else{
+                    $stmt.=" ".$typeO;
+                }
+            }
+
+            if(key_exists('limit',$jsonObj))
+            {
+                $stmt.=" LIMIT ".$jsonObj['limit'];
+            }
+            if($data = $conn->prepare($stmt))
+            {
+                if(key_exists('search', $jsonObj))
+                {
+                    $data->bind_param($typeString,...$params);
+                }
+                $data->execute();
+                $id = null;
+                $name = null;
+                $desc = null;
+                $type = null;
+                $year = null;
+                $price = null;
+                $winery = null;
+                $data->bind_result($id,$name,$desc,$type,$year,$price,$winery);         
+                while($data->fetch())
+                {
+                    $wines[] = [
+                        'wine_id' => $id,
+                        'name' => $name, 
+                        'description' => $desc,
+                        'type' => $type,
+                        'year' => $year,
+                        'price' => $price,
+                        'winery' => $winery,
+                    ];
+                }
+                $data->close();
+                return json_encode(array(
+                    "status" => "success",
+                    "data" => $wines
+                ));
+            }
+            else{
+                header("HTTP/1.1 400 Bad Request");
+                return json_encode(array(
+                    "status" => "failed",
+                    "data" => "Error. Bad request(check return body spelling)"
+            ));
+        }
+    }
+
+    public function direct($conn,$json)
     {
-        $conn = $db;
+        $jsonObj = json_decode($json,true);
+        if($jsonObj['return']==["*"])
+        {
+            return $this->getAllWines($conn,$json);
+        }
+        else{
+            return $this->getWines($conn,$json);
+        }
+    }
+
+    public function getWines($conn,$json)
+    {
         $jsonObj = json_decode($json,true);//assuming a json object is passed in, we turn it into an asssociative array.
         $statement = null;
         $stuffs = array();
@@ -100,11 +222,9 @@ class Wines{
         {
             $statement.=" LIMIT ".$jsonObj['limit'];//limit them
         }
-        echo $statement;
-        echo "\n";
-        if($query = $conn->mysqli->prepare($statement))
+        if($query = $conn->prepare($statement))
         {
-            $query = $conn->mysqli->prepare($statement);
+            $query = $conn->prepare($statement);
             if(key_exists('search', $jsonObj))
             {
                 $query->bind_param($types,...$params);
@@ -143,11 +263,5 @@ class Wines{
         }
     }
 }
-
-$dataobj = new Wines;
-header('Content-Type: application/json');
-$db = new Database;
-$conn = $db->mysqli;
-echo $dataobj->getWines($db,file_get_contents('php://input'));
 
 ?>
