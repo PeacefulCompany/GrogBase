@@ -209,8 +209,15 @@ function addWineriesSQLCall($conn, $wineries){
 	die();
 }
 
+function updateWinery($conn, $winery)
+{
+	
+}
+function deleteWineries($conn, $wineries)
+{
+	
+}
 
-function deleteWineries($conn, $wineries){}
 $input = file_get_contents('php://input');
 
 getWineries(null, $input);
