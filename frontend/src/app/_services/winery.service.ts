@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { SearchOptions, SortBy, Winery } from '../_types';
+import { Options, SearchOptions, SortBy, Winery } from '../_types';
 import { faker } from "@faker-js/faker";
 
 function generateWinery(): Winery {
@@ -16,21 +16,6 @@ function generateWinery(): Winery {
   }
 }
 
-/**
-  * Represents generic options regarding the
-  * data that is to be returned from the API.
-  *
-  * Note: as of the time of the last commit,
-  * wineries may not have any null values. This
-  * is to facilitate the sorting of mock data
-  * and can be changed to allow for the correct
-  * specification of return parameters
-  */
-export interface WineryOptions {
-  sortBy?: SortBy<Winery>,
-  return?: keyof Winery[]
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -44,7 +29,7 @@ export class WineryService {
     * @param options Optional return parameters
     * @return The array of wineries
     */
-  getAll(options?: WineryOptions): Observable<Winery[]> {
+  getAll(options?: Options<Winery>): Observable<Winery[]> {
     let arr = faker.helpers.multiple(generateWinery, {
       count: 10
     });
@@ -82,9 +67,23 @@ export class WineryService {
     * @param term The search term
     * @return The array of wineries
     */
-  search(search: SearchOptions<Winery>, options?: WineryOptions): Observable<Winery[]> {
+  search(search: SearchOptions<Winery>, options?: Options<Winery>): Observable<Winery[]> {
     let arr = faker.helpers.multiple(generateWinery, {
       count: 10
+    });
+
+    return of(arr);
+  }
+
+  getTopWineries(options?: Options<Winery>): Observable<Winery[]> {
+    let arr = faker.helpers.multiple(generateWinery, {
+      count: 10
+    });
+    const sortBy = options?.sortBy;
+    if(sortBy) arr = arr.sort((a, b) => {
+      if(a[sortBy.key] < b[sortBy.key]) return -1;
+      if(a[sortBy.key] > b[sortBy.key]) return 1;
+      return 0;
     });
 
     return of(arr);

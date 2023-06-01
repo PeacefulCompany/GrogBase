@@ -2,14 +2,14 @@
 <div class="container">
   <mat-card *ngFor="let item of Localwiener">
     <mat-card-header>
-      <mat-card-title>{{ item.Name }}</mat-card-title>
+      <mat-card-title>{{ item.name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <P>{{ item.Established }}</P>
-      <P>{{ item.Location }}</P>
-      <P>{{ item.Country }}</P>
-      <P>{{ item.Website }}</P>
-      <P>{{ item.Description }}</P>
+      <p>{{ item.established }}</p>
+      <p>{{ item.location }}</p>
+      <p>{{ item.country }}</p>
+      <p>{{ item.website }}</p>
+      <p>{{ item.description }}</p>
     </mat-card-content>
   </mat-card>
 </div>
