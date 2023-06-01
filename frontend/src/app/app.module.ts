@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { AdminModule } from './admin/admin.module';
 import { WineriesModule } from './wineries/wineries.module';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +19,9 @@ import { WineriesModule } from './wineries/wineries.module';
     BrowserAnimationsModule,
 
     AdminModule,
-    WineriesModule
+    WineriesModule,
+
+    MatSidenavModule
   ],
   providers: [],
   bootstrap: [AppComponent]
