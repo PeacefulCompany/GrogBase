@@ -2,13 +2,41 @@
     //Get connection from database class in config file
     include 'Config.php';
     $GLOBALS['conn'] = $connection;
-    //Check to see if API key exists
-
-    //Send to correct endpoint based on type
-
+    
     include_once 'Wine.php';
     include_once 'Wineries.php';
     include_once 'review.php';
+    //Check to see if API key exists
+    function checkPermission($conn, $data)//returns true if valid manager api_key, and echoes error if false
+    {
+        $fetchUser= $conn->prepare("SELECT * FROM Users WHERE api_key = ?");
+            $fetchUser->bind_param('s', $data["api_key"]);
+            $fetchUser->execute();
+            // echo($email. " ". $password);
+            $result = $fetchUser->get_result();
+            $fetchUser->close();
+    
+            if (mysqli_num_rows($result) > 0) {
+                $dbRes = mysqli_fetch_assoc($result);
+                if($dbRes["user_type"] == 'Manager')
+                {
+                    return true;
+                }
+                else
+                {
+                    echo errorThrower("action denied, you dont have permission for that action");
+    
+                    return false;
+                }
+            } else
+            {
+                echo errorThrower("no such api_key");
+                return false;
+            }
+    
+    }
+    //Send to correct endpoint based on type
+
 
     /*We expect something like:
     {
