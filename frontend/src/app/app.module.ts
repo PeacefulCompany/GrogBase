@@ -5,6 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+import { LoginModule } from './login/login.module';
+import { SignupModule } from './signup/signup.module';
+import { HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './home/home.module';
 
 @NgModule({
@@ -15,6 +19,9 @@ import { HomeModule } from './home/home.module';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    LoginModule,
+    SignupModule,
+    HttpClientModule
     HomeModule,
     MatButtonModule
   ],
