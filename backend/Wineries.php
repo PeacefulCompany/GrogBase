@@ -195,7 +195,7 @@ function addWineriesSQLCall($conn, $wineries){
 		}
 	}
 	$query = substr($query, 0, strlen($query) - 2);
-	$query .= ';';
+	$query .= ' ';//changed semi-colon to space
 	$stmt = $conn->prepare($query); //prepare the statements
 	$stmt->bind_param($types, ...$allParams);
 	try {
