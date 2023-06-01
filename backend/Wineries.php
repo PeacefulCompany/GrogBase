@@ -208,7 +208,10 @@ function addWineriesSQLCall($conn, $wineries){
 	die();
 }
 
-
+function updateWinery($conn, $winery)
+{
+	
+}
 function deleteWineries($conn, $wineries)
 {
 	
