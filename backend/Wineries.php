@@ -203,10 +203,14 @@ function addWineriesSQLCall($conn, $wineries){
 	} catch (\Throwable $th) {
 		header("HTTP/1.1 400 Bad Request");
 		echo json_encode(array('status' => 'error','data' => ('SQL error with statement' . $stmt->debugDumpParams())));
-
 	}
 	header("HTTP/1.1 200 OK");
 	die();
 }
 
+
+function deleteWineries($conn, $wineries)
+{
+	
+}
 ?>
