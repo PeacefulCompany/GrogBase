@@ -8,9 +8,13 @@
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <p>{{winery.description}}</p>
-    <mat-divider>
-    </mat-divider>
+    <p>
+      <strong>Website: </strong>
+      <a mat-button [href]="winery.website">{{winery.website}}</a>
+    </p>
+    <mat-divider></mat-divider>
+    <p id="main">{{winery.description}}</p>
+    <mat-divider></mat-divider>
   </mat-card-content>
   <mat-card-footer id="footer">
     <mat-card-subtitle>
