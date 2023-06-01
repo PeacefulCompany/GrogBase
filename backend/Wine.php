@@ -1,6 +1,6 @@
 <?php
 
-class Wineries{
+class Wines{
 
     /*--------------------------------------
     The get wines function returns a JSON obj
@@ -15,6 +15,31 @@ class Wineries{
     needs to be noted that a database
     connection will need to be passed in.
     */
+    // private $connection = null;
+
+    // public static function instance()
+    // {
+    //     static $instance = null;
+    //     if ($instance == null) {
+    //         $instance = new Wines();
+    //     }
+    //     return $instance;
+    // }
+
+    // private function __construct()
+    // {
+    //     $this->connection = new mysqli("wheatley.cs.up.ac.za", "u22551167", "Slayer17@");
+    //     if ($this->connection->connect_error) {
+    //         die("connection failed: (invalid credentials) " . $this->connection->connect_error);
+    //     } else {
+    //         $this->connection->select_db("u22551167");
+    //     }
+    // }
+
+    // public function __destruct()
+    // {
+    //     $this->connection->close();
+    // }
 
     public function getWines($conn,$json)
     {
@@ -131,5 +156,9 @@ class Wineries{
         }
     }
 }
+
+// $query_selector = Wines::instance();
+// echo "posted";
+// $query_selector->getWines($query_selector->);
 
 ?>
