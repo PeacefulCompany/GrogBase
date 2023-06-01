@@ -1,0 +1,33 @@
+<div>
+  <h3>Sort</h3>
+  <mat-form-field>
+    <mat-label>Sort By</mat-label>
+    <mat-select>
+      <mat-option
+        *ngFor="let opt of sortOptions"
+        [value]="opt.sortBy"
+        >
+        {{opt.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Country</mat-label>
+    <mat-select>
+      <mat-option
+        *ngFor="let opt of sortOptions"
+        [value]="opt.sortBy"
+        >
+        {{opt.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <h3>Filter</h3>
+</div>
+<div class="list">
+  <app-winery
+    *ngFor="let winery of wineries"
+    [winery]="winery"
+    ></app-winery>
+</div>

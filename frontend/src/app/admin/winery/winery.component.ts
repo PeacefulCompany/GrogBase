@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Winery } from 'src/app/_types';
 
 @Component({
-  selector: 'app-winery',
+  selector: 'admin-winery',
   templateUrl: './winery.component.html',
   styleUrls: ['./winery.component.sass']
 })

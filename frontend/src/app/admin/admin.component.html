@@ -1,17 +1,17 @@
 <h2 class="mat-h2">Wineries</h2>
 <div class="list">
-  <app-winery *ngFor="let winery of wineries"
+  <admin-winery *ngFor="let winery of wineries"
     (onEdit)="editWinery($event)"
     (onDelete)="deleteWinery($event)"
     [winery]="winery"
-    ></app-winery>
+    ></admin-winery>
 </div>
 <h2 mat-title>Wines</h2>
 <div class="list">
-  <app-wine
+  <admin-wine
     *ngFor="let wine of wines"
     (onEdit)="editWine($event)"
     (onDelete)="deleteWine($event)"
     [wine]="wine"
-    ></app-wine>
+    ></admin-wine>
 </div>
