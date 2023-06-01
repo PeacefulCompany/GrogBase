@@ -57,30 +57,27 @@ function getWineries($conn,$json)
 	//Returns a json object
 function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $fuzzy)
 {	
-	$placeholders = implode(", ", array_fill(0, count($return_pars), "?"));//set placeholers string eg: ?,?,?,?
+	$placeholders = implode(", ", $return_pars);
 	$query = "SELECT " . $placeholders . " FROM wineries";
-	$types = str_repeat("s", count($return_pars));
-	
+	$types = "";
+
 	if (isset($search)) {
 		$search_pars = array();
 		$query .= ' WHERE ';
 		foreach ($search as $key => $value) {
 			if ($fuzzy === true) {
-				$query .= '? LIKE %?% AND ';
+				$query .= $key . ' LIKE ? AND ';
+				$value = '%' . $value . '%';
 			} else {
-				$query .= '? LIKE ? AND ';
+				$query .= $key . ' LIKE ? AND ';
 			}
-			$types .= 'ss';
-			array_push($search_pars, $key, $value); //Add parameters for when stmnt is preapred
+			$types .= 's';
+			array_push($search_pars, $value); //Add parameters for when stmnt is preapred
 		}
 		$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
 	}
 
-	if (isset($limit)) { // IF the limit param is specified
-		if (is_numeric($limit)) {
-			$query .= 'LIMIT ' . $limit; //Add limit clause to the query
-		}
-	}
+
 	$sort_fields = array(
 		"winery_id",
 		"name",
@@ -106,10 +103,14 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 	{
 		$query = $query." ORDER BY ".$sort_params." ".$order;
 	}
-
+	if (isset($limit)) { // IF the limit param is specified
+		if (is_numeric($limit)) {
+			$query .= ' LIMIT ' . $limit; //Add limit clause to the query
+		}
+	}
 	//Any code below this comment expectes the query to be have finished building
 	$stmt = $conn->prepare($query); //prepare the statements
-	$stmt->bind_param($types, ...$return_pars, ...$search_pars);
+	$stmt->bind_param($types, ...$search_pars);
 	$stmt->execute();
 
 	$result = $stmt->get_result();
@@ -122,6 +123,7 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 	}
 
 	$data = array();
+	
 	while($row = $result->fetch_assoc())
 	{
 		$data[] = $row;
@@ -218,7 +220,17 @@ function deleteWineries($conn, $wineries)
 	
 }
 
-$input = file_get_contents('php://input');
+// $input = file_get_contents('php://input');
 
-getWineries(null, $input);
+// $servername = "wheatley.cs.up.ac.za";
+// $username = "u22512323";
+// $password = "UFYT4LNTU7XNWZGY2NW7OR7FBYSBNNVW";
+
+// $conn = new mysqli($servername, $username, $password);
+// if ($conn->connect_error) {
+// 	echo 'whoops';
+// }
+// $conn->query("USE u22512323_GrogBase;");
+
+// getWineries($conn, $input);
 ?>
