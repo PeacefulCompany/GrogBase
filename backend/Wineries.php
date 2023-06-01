@@ -192,8 +192,15 @@ function addWineriesSQLCall($conn, $wineries){
 	$query .= ';';
 	$stmt = $conn->prepare($query); //prepare the statements
 	$stmt->bind_param(str_repeat('s', count($allParams)), $allParams);
-	$stmt->execute();
+	try {
+		$stmt->execute();
+	} catch (\Throwable $th) {
+		header("HTTP/1.1 400 Bad Request");
+		echo json_encode(array('status' => 'error','data' => ('SQL error with statement' . $stmt->debugDumpParams())));
 
+	}
+	header("HTTP/1.1 200 OK");
+	die();
 }
 
 ?>
