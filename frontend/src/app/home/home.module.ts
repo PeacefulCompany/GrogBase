@@ -7,6 +7,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import {MatCardModule} from '@angular/material/card';
 import { HomeComponent } from './home.component';
+import { SharedModule } from '../_shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -15,13 +16,16 @@ import { HomeComponent } from './home.component';
     imports: [
       BrowserModule,
       BrowserAnimationsModule,
+      RouterModule,
+
+      SharedModule,
+
+      MatCardModule,
       MatToolbarModule,
       MatSidenavModule,
       MatListModule,
-      RouterModule,
-      MatCardModule
     ],
     providers: [],
   })
-  export class HomeModule { 
+  export class HomeModule {
   }
