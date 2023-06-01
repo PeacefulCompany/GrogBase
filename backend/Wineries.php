@@ -130,35 +130,53 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 	echo json_encode($out);
 }
 function addWineries($conn, $json){
-	$wineries = array();// a variable to store all the wineries to be added
-	$input_json = json_decode($json);
 	/*As an example, We expect
-{
-    "type":"addWineries",
-    "apikey":"a9198b68355f78830054c31a39916b7f",
-    "wineries":[
-		{
-			"name": "",
-			"description": "",
-			"established": "",
-			"location": "",
-			"region": "",
-			"country": "",
-			"website": "",
-			"manager_idL": ""
-		},
-		{
-			"name": "",
-			"description": "",
-			"established": "",
-			"location": "",
-			"region": "",
-			"country": "",
-			"website": "",
-			"manager_idL": ""
+	{
+		"type":"addWineries",
+		"apikey":"a9198b68355f78830054c31a39916b7f",
+		"wineries":[
+			{
+				"name": "",
+				"description": "",
+				"established": "",
+				"location": "",
+				"region": "",
+				"country": "",
+				"website": "",
+				"manager_idL": ""
+			},
+			{
+				"name": "",
+				"description": "",
+				"established": "",
+				"location": "",
+				"region": "",
+				"country": "",
+				"website": "",
+				"manager_idL": ""
+			}
+			]
 		}
-	]
+		*/
+	$input_json = json_decode($json);
+	$wineries = array();// a variable to store all the wineries to be added
+	$wineries = $input_json['wineries'];
+	$params = array('name','description','established','location','region','country','website','manager_idL');
+	foreach ($wineries as $oneWinery) {
+		if (count($oneWinery) !== 8) {
+			header("HTTP/1.1 400 Bad Request");
+			echo json_encode(array('status' => 'error','data' => 'Too many or too few params'));
+			exit();
+		}
+		foreach ($params as $oneParam) {
+			if (!array_key_exists($oneParam, $oneWinery)) {
+				header("HTTP/1.1 400 Bad Request");
+				echo json_encode(array('status' => 'error','data' => ('Missing data for ' . $oneParam)));
+				exit();
+			}
+		}
+	}
+
 }
-	 */
 }
 ?>
