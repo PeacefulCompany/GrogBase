@@ -15,6 +15,8 @@ import { LoginModule } from './login/login.module';
 import { SignupModule } from './signup/signup.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './home/home.module';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -29,17 +31,20 @@ import { HomeModule } from './home/home.module';
     WineriesModule,
 
     MatSidenavModule,
-    AdminModule
+    AdminModule,
 
     LoginModule,
     SignupModule,
-    HttpClientModule
+    HttpClientModule,
     HomeModule,
-    MatButtonModule
+
+    MatButtonModule,
+    MatToolbarModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  
+
  }

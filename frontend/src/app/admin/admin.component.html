@@ -1,4 +1,4 @@
-<h2 class="mat-h2">Wineries</h2>
+<h2 class="title">Wineries</h2>
 <div class="list">
   <admin-winery *ngFor="let winery of wineries"
     (onEdit)="editWinery($event)"
@@ -6,7 +6,7 @@
     [winery]="winery"
     ></admin-winery>
 </div>
-<h2 mat-title>Wines</h2>
+<h2 class="title">Wines</h2>
 <div class="list">
   <admin-wine
     *ngFor="let wine of wines"

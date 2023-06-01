@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path: 'signup', component: SignupComponent
   },
-  
+
   {
     path: "admin",
     component: AdminPage
@@ -23,7 +23,7 @@ const routes: Routes = [
   {
     path: "wineries",
     component: WineriesPage
-  }
+  },
   { path: '', component: HomeComponent },
 ];
 
