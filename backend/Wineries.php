@@ -178,5 +178,8 @@ function addWineries($conn, $json){
 	}
 
 }
+function addWineriesSQLCall($conn, $wineries){
+	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_idL) VALUES";
+	$allParams = array();
 }
 ?>
