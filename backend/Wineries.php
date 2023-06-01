@@ -181,5 +181,15 @@ function addWineries($conn, $json){
 function addWineriesSQLCall($conn, $wineries){
 	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_idL) VALUES";
 	$allParams = array();
+	$params = array('name','description','established','location','region','country','website','manager_idL');
+	foreach ($wineries as $oneWinery) {
+		$query .= '(?, ?, ?, ?, ?, ?, ?, ?), ';
+		foreach ($params as $oneParam) {
+			array_push($allParams, $oneWinery[$oneParam]);
+		}
+	}
+	$stmt = $conn->prepare($query); //prepare the statements
+	$stmt->bind_param(str_repeat('s', count($allParams)), $allParams);
+	$stmt->execute();
 }
 ?>
