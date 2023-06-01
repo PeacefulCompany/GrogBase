@@ -1,0 +1,60 @@
+mat-toolbar
+  position:fixed
+  top:0
+  left:0
+  right:0
+
+mat-sidenav
+  width:20vh
+  overflow: hidden
+  
+mat-sidenav-content
+    display: flex
+    flex-direction: row
+    flex-wrap: no-wrap
+    height: fit-content
+    overflow-y: auto  
+    gap: 1rem
+
+mat-sidenav-content.Wines
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  overflow-y: auto
+  max-height: 90vh
+  padding-left: 4vw
+  width: 90vw
+
+mat-sidenav-container
+  height:90vh
+  width:100vw 
+  
+.title
+  font-size: 2rem
+  font-weight: 500
+  margin-left: 2vw
+  margin-top: 2vh
+
+mat-card
+  width: fit-content
+  min-width: 20vw
+  margin-left:2vw
+
+
+mat-card.Wines
+  width: fit-content
+  min-width: 15vw
+
+::-webkit-scrollbar 
+  width: 8px
+
+::-webkit-scrollbar-track 
+  background-color: transparent
+
+::-webkit-scrollbar-thumb 
+  background-color: #888
+  border-radius: 4px
+
+::-webkit-scrollbar-thumb:hover 
+  background-color: #555
+
