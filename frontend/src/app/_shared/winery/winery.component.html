@@ -1,0 +1,20 @@
+<mat-card class="winery">
+  <mat-card-header>
+    <mat-card-title>
+      {{winery.name}}
+    </mat-card-title>
+    <mat-card-subtitle>
+      Est. {{winery.established}}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{winery.description}}</p>
+    <mat-divider>
+    </mat-divider>
+  </mat-card-content>
+  <mat-card-footer id="footer">
+    <mat-card-subtitle>
+      {{winery.location}}, {{winery.region}} {{winery.country}}
+    </mat-card-subtitle>
+  </mat-card-footer>
+</mat-card>
