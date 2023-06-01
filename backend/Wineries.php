@@ -176,7 +176,7 @@ function addWineries($conn, $json){
 			}
 		}
 	}
-
+	addWineriesSQLCall($conn, $wineries);
 }
 function addWineriesSQLCall($conn, $wineries){
 	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manger_id) VALUES";
@@ -188,9 +188,12 @@ function addWineriesSQLCall($conn, $wineries){
 			array_push($allParams, $oneWinery[$oneParam]);
 		}
 	}
+	$query = substr($query, 0, strlen($query) - 2);
+	$query .= ';';
 	$stmt = $conn->prepare($query); //prepare the statements
 	$stmt->bind_param(str_repeat('s', count($allParams)), $allParams);
 	$stmt->execute();
+
 }
 
 ?>
