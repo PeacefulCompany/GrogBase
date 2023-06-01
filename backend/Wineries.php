@@ -143,7 +143,7 @@ function addWineries($conn, $json){
 				"region": "",
 				"country": "",
 				"website": "",
-				"manager_idL": ""
+				"manger_id": ""
 			},
 			{
 				"name": "",
@@ -153,7 +153,7 @@ function addWineries($conn, $json){
 				"region": "",
 				"country": "",
 				"website": "",
-				"manager_idL": ""
+				"manger_id": ""
 			}
 			]
 		}
@@ -161,7 +161,7 @@ function addWineries($conn, $json){
 	$input_json = json_decode($json);
 	$wineries = array();// a variable to store all the wineries to be added
 	$wineries = $input_json['wineries'];
-	$params = array('name','description','established','location','region','country','website','manager_idL');
+	$params = array('name','description','established','location','region','country','website','manger_id');
 	foreach ($wineries as $oneWinery) {
 		if (count($oneWinery) !== 8) {
 			header("HTTP/1.1 400 Bad Request");
@@ -179,9 +179,9 @@ function addWineries($conn, $json){
 
 }
 function addWineriesSQLCall($conn, $wineries){
-	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_idL) VALUES";
+	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manger_id) VALUES";
 	$allParams = array();
-	$params = array('name','description','established','location','region','country','website','manager_idL');
+	$params = array('name','description','established','location','region','country','website','manger_id');
 	foreach ($wineries as $oneWinery) {
 		$query .= '(?, ?, ?, ?, ?, ?, ?, ?), ';
 		foreach ($params as $oneParam) {
@@ -192,4 +192,5 @@ function addWineriesSQLCall($conn, $wineries){
 	$stmt->bind_param(str_repeat('s', count($allParams)), $allParams);
 	$stmt->execute();
 }
+
 ?>
