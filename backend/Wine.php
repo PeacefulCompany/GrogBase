@@ -1,8 +1,146 @@
 <?php
 
-class Wine{
 
-    /*--------------------------------------
+
+
+    /*
+    The getAllWhines function is a separate function
+    that works similarly to the getWines function.
+    It is just used as an end point to fetch all
+    information regarding the wine.
+    */
+
+    function getAllWines($conn,$json){
+        $jsonObj = json_decode($json,true);//get as assc array
+        $wines = array();//create an array to store data to be returned
+        $stmt = "SELECT * FROM `wines`";//start of the statement
+        $params = array();//this is an array used to store the bound params
+        $fuzzy = $jsonObj['fuzzy'];//stores the value of fuzzy search
+        $typeString = null;//stores the string of types for statement binding
+        $wString = " WHERE";//where clause
+        $specs = null;//specs are just certain search requirements
+            if(key_exists('search', $jsonObj))//checks if we want to filter the data
+            {
+                $search = $jsonObj['search'];
+
+                foreach($search as $key => $value)//constructs the search statement(well actually the where statement)
+                {
+                    if(array_key_last($search)!=$key)//to deal with the syntax of the where clause
+                    {
+                        $specs .=" ".$key." LIKE ? AND";
+                    }
+                    else{
+                        $specs .=" ".$key." LIKE ?";
+                    }
+                    if($key=='ID' || $key=='Year' || $key=='Price' || $key=='WineryID')//if numeric value, then add i
+                    {
+                        $typeString.='i';
+                    }
+                    else{//if non numeric then add s
+                        $typeString.='s';
+                    }
+                    if(!$fuzzy)//if fuzzy or not
+                    {
+                        array_push($params, $value);//exact value
+                    }
+                    else{
+                        array_push($params, "%".$value."%");//substring of value
+                    }                
+                }
+                $stmt.=$wString.$specs;//adds to the query statement
+            }
+            if(key_exists('sort',$jsonObj))//if data is to be sorted
+            {
+                $sorts = null;
+                $orderStuff = null;//what to order by
+                if(!is_array($jsonObj['sort'])){
+                    $orderStuff = $jsonObj['sort'];//array of stuff to sort by
+                }
+                else{
+                    $sorts = $jsonObj['sort'];
+                    $orderStuff = implode(",",$sorts);//implode with commas to have the correct syntax
+                }
+
+                $oStr = " ORDER BY ".$orderStuff;//constructs the order by clause
+                $stmt.=$oStr;//appends to the statement
+            }
+            if(key_exists('order',$jsonObj))//if we want to order by it
+            {
+                $typeO = $jsonObj['order'];//how we are going to sort ASC/DESC
+                if(!key_exists('sort',$jsonObj))
+                {
+                    $stmt.=" ORDER BY `id` ".$typeO;//default order
+                }
+                else{
+                    $stmt.=" ".$typeO;//append the statement
+                }
+            }
+
+            if(key_exists('limit',$jsonObj))//if you want to limit the results returned
+            {
+                $stmt.=" LIMIT ".$jsonObj['limit'];//append
+            }
+            if($data = $conn->prepare($stmt))//check syntax and readiness
+            {
+                if(key_exists('search', $jsonObj))//if we are to search/filter/have specific where
+                {
+                    $data->bind_param($typeString,...$params);//binds parameters
+                }
+                $data->execute();//execute query
+                $id = null;
+                $name = null;
+                $desc = null;
+                $type = null;
+                $year = null;
+                $price = null;
+                $winery = null;
+                $data->bind_result($id,$name,$desc,$type,$year,$price,$winery);//bind result         
+                while($data->fetch())//gets data
+                {
+                    $wines[] = [//sets up the array
+                        'wine_id' => $id,
+                        'name' => $name, 
+                        'description' => $desc,
+                        'type' => $type,
+                        'year' => $year,
+                        'price' => $price,
+                        'winery' => $winery,
+                    ];
+                }
+                $data->close();//close
+                return json_encode(array(//return
+                    "status" => "success",
+                    "data" => $wines
+                ));
+            }
+            else{//if there is an error
+                header("HTTP/1.1 400 Bad Request");//handle it well
+                return json_encode(array(
+                    "status" => "failed",
+                    "data" => "Error. Bad request(check return body spelling)"
+            ));
+        }
+    }
+
+    /*
+    The Direct function is used
+    as a routing function. Just
+    checks the type of request made,
+    then routes to separate functions.
+    */
+
+    function direct($conn,$json)
+    {
+        $jsonObj = json_decode($json,true);
+        if($jsonObj['return']==["*"])
+        {
+            return getAllWines($conn,$json);
+        }
+        else{
+            return getWines($conn,$json);
+        }
+    }
+        /*--------------------------------------
     The get wines function returns a JSON obj
     that contains any attributes specified when
     making the request. To achieve this it will
@@ -16,132 +154,7 @@ class Wine{
     connection will need to be passed in.
     */
 
-
-    public function getAllWines($conn,$json){
-        $jsonObj = json_decode($json,true);
-        $wines = array();
-        $stmt = "SELECT * FROM `wines`";
-        $params = array();
-        $fuzzy = $jsonObj['fuzzy'];
-        $typeString = null;
-        $wString = " WHERE";
-        $specs = null;
-            if(key_exists('search', $jsonObj))
-            {
-                $search = $jsonObj['search'];
-
-                foreach($search as $key => $value)
-                {
-                    if(array_key_last($search)!=$key)
-                    {
-                        $specs .=" ".$key." LIKE ? AND";
-                    }
-                    else{
-                        $specs .=" ".$key." LIKE ?";
-                    }
-                    if($key=='ID' || $key=='Year' || $key=='Price' || $key=='WineryID')
-                    {
-                        $typeString.='i';
-                    }
-                    else{
-                        $typeString.='s';
-                    }
-                    if(!$fuzzy)
-                    {
-                        array_push($params, $value);
-                    }
-                    else{
-                        array_push($params, "%".$value."%");
-                    }                
-                }
-                $stmt.=$wString.$specs;
-            }
-            if(key_exists('sort',$jsonObj))
-            {
-                $sorts = null;
-                $orderStuff = null;
-                if(!is_array($jsonObj['sort'])){
-                    $orderStuff = $jsonObj['sort'];
-                }
-                else{
-                    $sorts = $jsonObj['sort'];
-                    $orderStuff = implode(",",$sorts);
-                }
-
-                $oStr = " ORDER BY ".$orderStuff;
-                $stmt.=$oStr;
-            }
-            if(key_exists('order',$jsonObj))
-            {
-                $typeO = $jsonObj['order'];
-                if(!key_exists('sort',$jsonObj))
-                {
-                    $stmt.=" ORDER BY `make` ".$typeO;
-                }
-                else{
-                    $stmt.=" ".$typeO;
-                }
-            }
-
-            if(key_exists('limit',$jsonObj))
-            {
-                $stmt.=" LIMIT ".$jsonObj['limit'];
-            }
-            if($data = $conn->prepare($stmt))
-            {
-                if(key_exists('search', $jsonObj))
-                {
-                    $data->bind_param($typeString,...$params);
-                }
-                $data->execute();
-                $id = null;
-                $name = null;
-                $desc = null;
-                $type = null;
-                $year = null;
-                $price = null;
-                $winery = null;
-                $data->bind_result($id,$name,$desc,$type,$year,$price,$winery);         
-                while($data->fetch())
-                {
-                    $wines[] = [
-                        'wine_id' => $id,
-                        'name' => $name, 
-                        'description' => $desc,
-                        'type' => $type,
-                        'year' => $year,
-                        'price' => $price,
-                        'winery' => $winery,
-                    ];
-                }
-                $data->close();
-                return json_encode(array(
-                    "status" => "success",
-                    "data" => $wines
-                ));
-            }
-            else{
-                header("HTTP/1.1 400 Bad Request");
-                return json_encode(array(
-                    "status" => "failed",
-                    "data" => "Error. Bad request(check return body spelling)"
-            ));
-        }
-    }
-
-    public function direct($conn,$json)
-    {
-        $jsonObj = json_decode($json,true);
-        if($jsonObj['return']==["*"])
-        {
-            return $this->getAllWines($conn,$json);
-        }
-        else{
-            return $this->getWines($conn,$json);
-        }
-    }
-
-    public function getWines($conn,$json)
+    function getWines($conn,$json)
     {
         $jsonObj = json_decode($json,true);//assuming a json object is passed in, we turn it into an asssociative array.
         $statement = null;
@@ -262,6 +275,6 @@ class Wine{
             ));//returns an error object if you wanna call it that
         }
     }
-}
+
 
 ?>
