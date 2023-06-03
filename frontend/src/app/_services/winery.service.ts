@@ -1,20 +1,89 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Options, SearchOptions, SortBy, Winery } from '../_types';
-import { faker } from "@faker-js/faker";
 
-function generateWinery(): Winery {
-  return {
-    id: faker.number.int(),
-    name: faker.company.name(),
-    description: faker.lorem.paragraph(20),
-    established: faker.date.past().getFullYear(),
-    location: faker.location.streetAddress(),
-    region: faker.location.county(),
-    country: faker.location.country(),
-    website: faker.internet.url()
-  }
-}
+const WINERIES: Winery[]  = [
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerOne',
+      established: 2019,
+      location: 'Wien',
+      country: 'South Africa',
+      region: 'Africa',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    },
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerTwo',
+      established: 2019,
+      location: 'Wien',
+      country: 'Austria',
+      region: 'Europe',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    },
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerTwo',
+      established: 2019,
+      location: 'Wien',
+      country: 'Austria',
+      region: 'Europe',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    },
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerTwo',
+      established: 2019,
+      location: 'Wien',
+      country: 'Austria',
+      region: 'Europe',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    },
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerTwo',
+      established: 2019,
+      location: 'Wien',
+      country: 'Austria',
+      region: 'Europe',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    },
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerTwo',
+      established: 2019,
+      location: 'Wien',
+      country: 'Austria',
+      region: 'Europe',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    },
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerTwo',
+      established: 2019,
+      location: 'Wien',
+      country: 'Austria',
+      region: 'Europe',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    },
+    {
+      id: Math.floor(Math.random() * 1000),
+      name: 'WienerTwo',
+      established: 2019,
+      location: 'Wien',
+      country: 'Austria',
+      region: 'Europe',
+      website: 'https://www.wiener.com',
+      description: 'Wiener is a company that sells hot dogs.'
+    }
+   ];
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +99,7 @@ export class WineryService {
     * @return The array of wineries
     */
   getAll(options?: Options<Winery>): Observable<Winery[]> {
-    let arr = faker.helpers.multiple(generateWinery, {
-      count: 10
-    });
+    let arr = WINERIES;
     const sortBy = options?.sortBy;
     if(sortBy) arr = arr.sort((a, b) => {
       if(a[sortBy.key] < b[sortBy.key]) return -1;
@@ -68,17 +135,12 @@ export class WineryService {
     * @return The array of wineries
     */
   search(search: SearchOptions<Winery>, options?: Options<Winery>): Observable<Winery[]> {
-    let arr = faker.helpers.multiple(generateWinery, {
-      count: 10
-    });
-
+    let arr = WINERIES;
     return of(arr);
   }
 
   getTopWineries(options?: Options<Winery>): Observable<Winery[]> {
-    let arr = faker.helpers.multiple(generateWinery, {
-      count: 10
-    });
+    let arr = WINERIES;
     const sortBy = options?.sortBy;
     if(sortBy) arr = arr.sort((a, b) => {
       if(a[sortBy.key] < b[sortBy.key]) return -1;
