@@ -93,7 +93,7 @@ class Wine{
                 {
                     $data->bind_param($typeString,...$params);
                 }
-                $data->execute();
+                $data->execute();//execute query
                 $id = null;
                 $name = null;
                 $desc = null;
