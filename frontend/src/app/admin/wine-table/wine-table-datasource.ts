@@ -54,6 +54,15 @@ export class WineTableDataSource extends DataSource<Wine> {
       search: this.filter,
     }).subscribe(res => this.data.next(res));
   }
+  updateWine(wine: Wine) {
+    this.data.next(this.data.value.map(elem => {
+      if(elem.id != wine.id) return elem;
+      return wine;
+    }));
+  }
+  removeWine(wine: Wine) {
+    this.data.next(this.data.value.filter(elem => elem.id != wine.id));
+  }
 
   /**
    *  Called when the table is being destroyed. Use this function, to clean up

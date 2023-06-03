@@ -41,10 +41,12 @@ export class WineryTableComponent implements AfterViewInit {
     ref.afterClosed().subscribe(data => {
       if(!data) return;
       this.wineryService.update(data);
+      this.dataSource.updateWine(data);
     })
   }
   deleteWinery(winery: Winery) {
     this.wineryService.delete(winery);
+    this.dataSource.removeWine(winery);
   }
 
   ngAfterViewInit(): void {

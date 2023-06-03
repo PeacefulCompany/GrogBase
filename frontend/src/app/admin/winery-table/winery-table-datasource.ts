@@ -57,6 +57,16 @@ export class WineryTableDataSource extends DataSource<Winery> {
     this.getData();
   }
 
+  updateWine(wine: Winery) {
+    this.data.next(this.data.value.map(elem => {
+      if(elem.id != wine.id) return elem;
+      return wine;
+    }));
+  }
+  removeWine(wine: Winery) {
+    this.data.next(this.data.value.filter(elem => elem.id != wine.id));
+  }
+
   /**
    *  Called when the table is being destroyed. Use this function, to clean up
    * any open connections or free any held resources that were set up during connect.

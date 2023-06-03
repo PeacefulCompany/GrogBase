@@ -40,9 +40,9 @@ export class WineTableComponent implements AfterViewInit {
     this.dataSource.setSort(sort);
   }
 
-
   deleteWine(wine: Wine) {
     this.wineService.delete(wine);
+    this.dataSource.removeWine(wine);
   }
 
   editWine(wine: Wine) {
@@ -54,6 +54,7 @@ export class WineTableComponent implements AfterViewInit {
     ref.afterClosed().subscribe(data => {
       if(!data) return;
       this.wineService.update(data);
+      this.dataSource.updateWine(data);
     })
   }
 }
