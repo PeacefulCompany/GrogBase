@@ -191,7 +191,7 @@ function updateWinery($controller)
 {
 	$input_json = $controller->get_post_json();
 	$controller->assert_params(['update']);
-	//UPDATE wineries SET
+	
 	$query = "UPDATE wineries SET ";
 	$to_update = $input_json['update'];
 	
@@ -199,16 +199,16 @@ function updateWinery($controller)
 	$values = array();
 	$types = "";
 	foreach($to_update as $key => $val)
-	{	if($key != "manager_id" || $key != "established")
+	{	if($key != "manager_id" && $key != "established")
 		{
 			$values[] = $val;
-			$columns[] = $key.'="?" ';
+			$columns[] = $key.'="?" ';//NON NUMERIC
 			$types .= "s";
 		}
 		else
 		{
 			$values[] = $val;
-			$columns[] = $key.'=? ';
+			$columns[] = $key.'=? ';//NUMERIC
 			$types .= "i";
 		}
 	}
