@@ -87,6 +87,7 @@
                     $data->bind_param($typeString,...$params);//binds parameters
                 }
                 $data->execute();//execute query
+                //below we initialize some stuff because php was complaining for no reason
                 $id = null;
                 $name = null;
                 $desc = null;

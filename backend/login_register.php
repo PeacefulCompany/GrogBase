@@ -1,5 +1,6 @@
 <?php
     class login_register{
+        //potential layout for the login/register endpoint
         public function checkDuplicates($email,$conn)
         {
             $query = $conn->prepare("SELECT COUNT(*) FROM `users` WHERE `email` = ?");
@@ -7,6 +8,7 @@
             $query->bind_param("s", $e);
             $e = $email;
             $query->execute();
+            $result = null;
             $query->bind_result($result);
             $query->fetch();
             $query->close();
@@ -45,17 +47,18 @@
 
         public function validateDetails($uname, $password, $conn)
         {
-            if(!($this->checkDuplicates($uname)>0))
+            if(!($this->checkDuplicates($uname,$conn)>0))
             {
                 echo "No user with that email exists, please create an account.";
             }
             else{
                 $em = null;
                 $query2 = $conn->prepare("SELECT `pass` FROM `users` WHERE `email` = ?");
-                $em = 
+                $em = null;
                 $query2->bind_param('s',$em);
                 $em = $uname;
                 $query2->execute();
+                $hashed = "";
                 $query2->bind_result($hashed);
                 $query2->fetch();
                 $query2->close();
@@ -66,6 +69,7 @@
                     $query3->bind_param("s",$ak);
                     $ak = $uname;
                     $query3->execute();
+                    $apikey = "";
                     $query3->bind_result($apikey);
                     $query3->fetch();
                     $query3->close();
