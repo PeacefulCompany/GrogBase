@@ -16,6 +16,12 @@
 
     // }
 
+    require_once "Database.php";
+    require_once "Controller.php";
+
+
+
+
      function getWineryReviews($data, $connection) //determines the amount of join that will need to be setup
     {
         echo ("winery");
@@ -47,7 +53,7 @@
                 }
             }
         } else {
-            return errorThrower("missing return");
+            throw new Exception("missing return in json", 400);
         }
 
 
@@ -64,7 +70,7 @@
         //adding search clause to query
 
         if (!isset($data['search']) && isset($data['fuzzy'])) {
-            return errorThrower("Cannot have a fuzzy parameter without a search parameter");
+            throw new Exception("Cannot have a fuzzy parameter without a search parameter", 400);
         }
 
         if (isset($data['search'])) {
@@ -93,7 +99,7 @@
 
         //adding sort clause to query
         if (!isset($data['sort']) && isset($data['order'])) {
-            return errorThrower("Cannot have a order parameter without a sort parameter");
+            throw new Exception("Cannot have a order parameter without a sort parameter", 400);
         }
 
         if (isset($data['sort'])) {
@@ -126,20 +132,29 @@
         $query .= " limit " . $limit;
 
         // binding params to the query and executing
-        echo $query;
-        $prepared = mysqli_prepare($connection, $query);
-        if (!$prepared) {
-            return errorThrower("Error in query");
+        // echo $query;
 
-        }
-        if ($params != "") {
-            $prepared->bind_param($params, ...$searchFeild);
+
+        try {
+            return $connection->query($query, $params, $searchFeild);
+        } catch (Exception $e)
+        {
+            throw $e;
         }
 
-        $prepared->execute();
-        $res = $prepared->get_result();
-        $formattedRes = mysqli_fetch_all($res, MYSQLI_ASSOC);
-        return messageFormatter($formattedRes);
+        // $prepared = mysqli_prepare($connection, $query);
+        // if (!$prepared) {
+        //     return errorThrower("Error in query");
+
+        // }
+        // if ($params != "") {
+        //     $prepared->bind_param($params, ...$searchFeild);
+        // }
+
+        // $prepared->execute();
+        // $res = $prepared->get_result();
+        // $formattedRes = mysqli_fetch_all($res, MYSQLI_ASSOC);
+        // return messageFormatter($formattedRes);
 
     }
 
@@ -176,7 +191,7 @@
                 }
             }
         } else {
-            return errorThrower("missing return");
+            throw new Exception("missing return in json", 400);
         }
 
 
@@ -193,7 +208,7 @@
         //adding search clause to query
 
         if (!isset($data['search']) && isset($data['fuzzy'])) {
-            return errorThrower("Cannot have a fuzzy parameter without a search parameter");
+            throw new Exception("Cannot have a fuzzy parameter without a search parameter", 400);
         }
 
         if (isset($data['search'])) {
@@ -222,7 +237,8 @@
 
         //adding sort clause to query
         if (!isset($data['sort']) && isset($data['order'])) {
-            return errorThrower("Cannot have a order parameter without a sort parameter");
+            throw new Exception("Cannot have a order parameter without a sort parameter", 400);
+
         }
 
         if (isset($data['sort'])) {
@@ -253,25 +269,36 @@
             $limit = $data["limit"];
         }
         $query .= " limit " . $limit;
-
+        
         // binding params to the query and executing
-        var_dump($searchFeild);
 
-        echo $query;
-        $prepared = mysqli_prepare($connection, $query);
-        if (!$prepared) {
-            return errorThrower("Error in query");
 
+        try {
+            return $connection->query($query, $params, $searchFeild);
+        } catch (Exception $e) {
+            throw $e;   
         }
 
-        if ($params != "") {
-            $prepared->bind_param($params, ...$searchFeild);
-        }
 
-        $prepared->execute();
-        $res = $prepared->get_result();
-        $formattedRes = mysqli_fetch_all($res, MYSQLI_ASSOC);
-        return messageFormatter($formattedRes);
+
+
+        // var_dump($searchFeild);
+
+        // echo $query;
+        // $prepared = mysqli_prepare($connection, $query);
+        // if (!$prepared) {
+        //     return errorThrower("Error in query");
+
+        // }
+
+        // if ($params != "") {
+        //     $prepared->bind_param($params, ...$searchFeild);
+        // }
+
+        // $prepared->execute();
+        // $res = $prepared->get_result();
+        // $formattedRes = mysqli_fetch_all($res, MYSQLI_ASSOC);
+        // return messageFormatter($formattedRes);
 
     }
 
@@ -305,6 +332,102 @@
     }
 
 
+
+    /*
+    
+    {
+        api_key:,
+        type: "insertWineReview",
+        target: {user_id: "", wine_id: ""},
+        values: {points: "", review: "", drunk: ""}
+    }
+    
+    */
+
+    function insertReviewWines($data, $connection){
+        $query = "INSERT INTO reviews_wine('user_id', 'wine_id', 'points', 'reviews', 'drunk') VALUES(?,?,?,?,?)";
+        
+        if(isset($data['target']) && isset($data['values']))
+        {
+            if(isset($data['target']['user_id']) && isset($data['target']['wine_id'])  && isset($data['values']['points'])  && isset($data['values']['review'])  && isset($data['values']['drunk']))
+            {
+                $arr = [];
+                array_push($arr, $data['target']['user_id']);
+                array_push($arr, $data['target']['wine_id']);
+                array_push($arr, $data['values']['points']);
+                array_push($arr, $data['values']['review']);
+                array_push($arr, $data['values']['drunk']);
+
+                try{
+                    $connection->query($query,'sssss', $arr);
+                }
+                catch (Exception $e)
+                {
+                    throw $e;
+                }
+            }
+            else
+            {
+                throw new Exception("missing feilds in target or values");
+            }
+        }
+        else
+        {
+            throw new Exception("missing target or values", 400);
+        }
+    }
+
+
+    /*
+    
+    {
+        api_key:,
+        type: "insertWineryReview",
+        target: {user_id: "", wine_id: ""},
+        values: {points: "", review: ""}
+    }
+    
+    */
+
+    function insertReviewWinery($data, $connection){
+        $query = "INSERT INTO reviews_winery('winery_id', 'user_id', 'points', 'reviews') VALUES(?,?,?,?)";
+
+        if(isset($data['target']) && isset($data['values']))
+        {
+            if(isset($data['target']['user_id']) && isset($data['target']['wine_id'])  && isset($data['values']['points'])  && isset($data['values']['review']))
+            {
+                $arr = [];
+                array_push($arr, $data['target']['user_id']);
+                array_push($arr, $data['target']['wine_id']);
+                array_push($arr, $data['values']['points']);
+                array_push($arr, $data['values']['review']);
+
+                try{
+                    $connection->query($query,'ssss', $arr);
+                }
+                catch (Exception $e)
+                {
+                    throw $e;
+                }
+            }
+            else
+            {
+                throw new Exception("missing feilds in target or values");
+            }
+        }
+        else
+        {
+            throw new Exception("missing target or values", 400);
+        }
+    }
+
+    function averagePointsPerWinery(){
+
+    }
+    
+    function averagePointsPerWine(){
+
+    }
 
 
 
