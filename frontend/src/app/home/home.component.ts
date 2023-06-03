@@ -1,203 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { WineService } from '../_services/wine.service';
+import { WineryService } from '../_services/winery.service';
+import { Wine, Winery } from '../_types';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.sass']
 })
-export class HomeComponent implements OnInit {
-   Name:string = "Home";
-   TopWine = [
-    {
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    },{
-      "name": "x",
-      "type": "x",
-      "year": "x",
-      "price": "x",
-      "description": "x"
-    }
-   ];
-   Localwiener = [
-    {
-      'Name': 'WienerOne',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'South Africa',
-      'Region': 'Africa',
-      'Website': 'https://www.wiener.com',
-      'Description': 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      'Name': 'WienerTwo',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'Austria',
-      'Region' : 'Europe',
-      'Website' : 'https://www.wiener.com',
-      'Description' : 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      'Name': 'WienerTwo',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'Austria',
-      'Region' : 'Europe',
-      'Website' : 'https://www.wiener.com',
-      'Description' : 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      'Name': 'WienerTwo',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'Austria',
-      'Region' : 'Europe',
-      'Website' : 'https://www.wiener.com',
-      'Description' : 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      'Name': 'WienerTwo',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'Austria',
-      'Region' : 'Europe',
-      'Website' : 'https://www.wiener.com',
-      'Description' : 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      'Name': 'WienerTwo',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'Austria',
-      'Region' : 'Europe',
-      'Website' : 'https://www.wiener.com',
-      'Description' : 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      'Name': 'WienerTwo',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'Austria',
-      'Region' : 'Europe',
-      'Website' : 'https://www.wiener.com',
-      'Description' : 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      'Name': 'WienerTwo',
-      'Established': '2019',
-      'Location': 'Wien',
-      'Country': 'Austria',
-      'Region' : 'Europe',
-      'Website' : 'https://www.wiener.com',
-      'Description' : 'Wiener is a company that sells hot dogs.'
-    }
-   ];
+export class HomeComponent {
+  TopWine: Wine[] = [];
+  Localwiener: Winery[] = [];
 
-  constructor() { 
-  
-  }
-  ngOnInit(): void {
-    //show full page LoadingOverlay
- 
+  constructor(
+    private wineService: WineService,
+    private wineryService: WineryService
+  ) {
+    this.wineService.getTopWines()
+      .subscribe(res => this.TopWine = res);
+    this.wineryService.getTopWineries()
+      .subscribe(res => this.Localwiener = res);
   }
 }

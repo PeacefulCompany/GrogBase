@@ -1,17 +1,9 @@
 <h2 class="title">Local Wineries</h2>
 <div class="container">
-  <mat-card *ngFor="let item of Localwiener">
-    <mat-card-header>
-      <mat-card-title>{{ item.Name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <P>{{ item.Established }}</P>
-      <P>{{ item.Location }}</P>
-      <P>{{ item.Country }}</P>
-      <P>{{ item.Website }}</P>
-      <P>{{ item.Description }}</P>
-    </mat-card-content>
-  </mat-card>
+  <app-winery
+    *ngFor="let winery of Localwiener"
+    [winery]="winery"
+  ></app-winery>
 </div>
 <h2 class="title">Top Wines</h2>
 <div class="container">

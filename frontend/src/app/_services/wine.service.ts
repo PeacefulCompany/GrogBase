@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
 import { Observable, of } from 'rxjs';
-import { SortBy, Wine, WineType } from '../_types';
+import { Options, Wine, WineType } from '../_types';
 
 function generateWine(): Wine {
   return {
@@ -21,10 +21,12 @@ export class WineService {
 
   constructor() { }
 
-  getAll(sortBy?: SortBy<Wine>): Observable<Wine[]> {
+  getAll(options?: Options<Wine>): Observable<Wine[]> {
+
     let arr = faker.helpers.multiple(generateWine, {
       count: 10
     });
+    const sortBy = options?.sortBy;
     if(sortBy) arr = arr.sort((a, b) => {
       if(a[sortBy.key] < b[sortBy.key]) return -1;
       if(a[sortBy.key] > b[sortBy.key]) return 1;
@@ -39,5 +41,19 @@ export class WineService {
   }
   delete(wine: Wine) {
     alert("delete wine: " + JSON.stringify(wine));
+  }
+
+  getTopWines(options?: Options<Wine>): Observable<Wine[]> {
+    let arr = faker.helpers.multiple(generateWine, {
+      count: 10
+    });
+    const sortBy = options?.sortBy;
+    if(sortBy) arr = arr.sort((a, b) => {
+      if(a[sortBy.key] < b[sortBy.key]) return -1;
+      if(a[sortBy.key] > b[sortBy.key]) return 1;
+      return 0;
+    });
+
+    return of(arr);
   }
 }
