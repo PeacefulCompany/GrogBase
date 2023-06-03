@@ -1,17 +1,10 @@
 <?php
 
-function getWineries($conn,$json)
+require_once 'Database.php';
+function getWineries($controller)
 {
-	$input_json = json_decode($json);
-	//echo $input_json;
-	//echo $json;
-	$input_json = get_object_vars($input_json);
-	if(!isset($input_json['return']) || empty($input_json['return']))	//check if the return paramter is valid
-	{
-		header("HTTP/1.1 400 Bad Request");
-		echo json_encode(array('status' => 'error','data' => 'Error: Wineries Empty Return Parameter'));
-		exit();
-	}
+	$input_json = $controller->get_post_json();
+	$controller->assert_params(['return']);
 
 	if(isset($input_json['search'])){ //Check if the search param is specified
 		$search = $input_json['search']; //stores the array of inputted search fields
@@ -50,12 +43,12 @@ function getWineries($conn,$json)
 	
 	$return_pars = $input_json['return'];
 
-	getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $fuzzy);
+	getReturnRecords($controller,$return_pars, $sort, $order, $search, $limit, $fuzzy);
 }
 	//This function's purpose is to return all records with specified fields from the return array
 	//This output is then sorted if required and ordered accordingly.
 	//Returns a json object
-function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $fuzzy)
+function getReturnRecords($controller,$return_pars, $sort, $order, $search, $limit, $fuzzy)
 {	
 	$placeholders = implode(", ", $return_pars);
 	$query = "SELECT " . $placeholders . " FROM wineries";
@@ -76,7 +69,6 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 		}
 		$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
 	}
-
 
 	$sort_fields = array(
 		"winery_id",
@@ -109,17 +101,12 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 		}
 	}
 	//Any code below this comment expectes the query to be have finished building
-	$stmt = $conn->prepare($query); //prepare the statements
-	$stmt->bind_param($types, ...$search_pars);
-	$stmt->execute();
-
-	$result = $stmt->get_result();
+	$db = new Database();
+	$result = $db->query($query,$types,$search_pars);
 
 	if(!$result)
 	{
-		header("HTTP/1.1 400 Bad Request");
-		echo json_encode(array('status' => 'error','data' => 'Error: Wineries SQL Error'));
-		exit();
+		throw new Exception('Error: Wineries SQL Error',400);
 	}
 
 	$data = array();
@@ -128,9 +115,7 @@ function getReturnRecords($conn,$return_pars, $sort, $order, $search, $limit, $f
 	{
 		$data[] = $row;
 	}
-	$out = array('status' => 'success','data' => $data);
-	header("HTTP/1.1 200 OK");
-	echo json_encode($out);
+	$controller->success($data);
 }
 function addWineries($conn, $json){
 	/*As an example, We expect
@@ -236,19 +221,9 @@ function updateWinery($conn, $winery)
 	$query .= implode(",",$columns);
 	$query .= " WHERE manager_id = " . $winery['manager_id'];
 
-	if($conn->query($query) === TRUE)
-	{
-		header("HTTP/1.1 200 OK");
-		echo json_encode(array('status' => 'success','data' => "Update Succesful"));
-	}
-	else
-	{
-		header("HTTP/1.1 400 Bad Request");
-		echo json_encode(array('status' => 'error','data' => $conn->error));
-		exit();
-	}
+	
 }
-function deleteWineries($conn, $wineries)
+function deleteWinery($conn, $winery)
 {
 	
 }
