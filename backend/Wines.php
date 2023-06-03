@@ -163,7 +163,7 @@ require_once "Controller.php";
             }
         }
         $statement.=$where_clause;//add the where clause to the statement and all the conditions
-        if(!key_exists('sort',$jsonObj) || key_exists('order',$jsonObj))
+        if(!key_exists('sort',$jsonObj) &&  key_exists('order',$jsonObj))
         {
             header("HTTP/1.1 400 Bad Request");
                 return json_encode(array(
