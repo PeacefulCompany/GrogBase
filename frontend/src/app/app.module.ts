@@ -17,10 +17,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './home/home.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
+import { WinesComponent } from './wines/wines.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    WinesComponent,
   ],
   imports: [
     BrowserModule,
