@@ -219,13 +219,14 @@ function updateWinery($controller)
 	$db->query($query,$types,$values);
 	$controller->success("Winery Updated Successfully");
 }
-function deleteWinery($controller, $json){
-	$input_json = json_decode($json);
-	$input_json = get_object_vars($input_json);
+function deleteWinery($controller)
+{
+	$input_json = $controller->get_post_json();
 	$query = 'UPDATE wineries SET active = 0 WHERE winery_id = ?';
 	$params = [$input_json['winery_id']];
-	$controller->query($query, 'i', $params);
-
+	$db = new Database();
+	$db->query($query, 'i', $params);
+	$controller->success("Winery Set to Inactive");
 }
 
 // $input = file_get_contents('php://input');
