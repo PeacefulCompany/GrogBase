@@ -20,3 +20,14 @@ export interface Wine {
   price: number,
   winery: number
 }
+
+export namespace WineType {
+  const reverseMap = new Map<string, WineType>();
+  Object.keys(WineType).forEach((s: string) => {
+    const e = (<any>WineType)[s];
+    reverseMap.set(e.toString(), e);
+  });
+  export function valueOf(str: string) {
+    return reverseMap.get(str);
+  }
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Options, Wine, WineType } from '../_types';
+import { Options, SortOrder, Wine, WineType } from '../_types';
 
 const WINES: Wine[] = [
   {
@@ -142,13 +142,29 @@ export class WineService {
 
   getAll(options?: Options<Wine>): Observable<Wine[]> {
 
-    let arr = WINES;
+    let arr = [...WINES];
     const sortBy = options?.sortBy;
-    if(sortBy) arr = arr.sort((a, b) => {
-      if(a[sortBy.key] < b[sortBy.key]) return -1;
-      if(a[sortBy.key] > b[sortBy.key]) return 1;
-      return 0;
-    });
+    const search = options?.search;
+    if(sortBy) {
+      arr = arr.sort((a, b) => {
+        let dir = 0;
+        if(a[sortBy.key] < b[sortBy.key]) dir = -1;
+        if(a[sortBy.key] > b[sortBy.key]) dir =  1;
+        if(sortBy.order == SortOrder.Descending) dir *= -1;
+        return dir;
+      });
+      console.log("sort");
+    }
+    if(search) {
+      console.log(search);
+      arr = arr.filter(elem => {
+        return Object.keys(search).some(key => {
+          const value = search[key as keyof Wine];
+          if(!value) return true;
+          return elem[key as keyof Wine] == value;
+        });
+      })
+    }
 
     return of(arr);
   }
@@ -161,7 +177,7 @@ export class WineService {
   }
 
   getTopWines(options?: Options<Wine>): Observable<Wine[]> {
-    let arr = WINES;
+    let arr = [...WINES];
     const sortBy = options?.sortBy;
     if(sortBy) arr = arr.sort((a, b) => {
       if(a[sortBy.key] < b[sortBy.key]) return -1;

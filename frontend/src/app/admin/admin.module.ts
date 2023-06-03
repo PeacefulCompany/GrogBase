@@ -13,13 +13,18 @@ import { MatTableModule } from "@angular/material/table";
 import { MatDialogModule } from "@angular/material/dialog";
 import { SharedModule } from '../_shared/shared.module';
 import { WineComponent } from './wine/wine.component';
+import { WineTableComponent } from './wine-table/wine-table.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
   declarations: [
     AdminPage,
     WineryComponent,
-    WineComponent
+    WineComponent,
+    WineTableComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +37,10 @@ import { WineComponent } from './wine/wine.component';
     MatListModule,
     MatIconModule,
     MatTableModule,
-    MatDialogModule
+    MatDialogModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatSelectModule
   ]
 })
 export class AdminModule { }
