@@ -93,7 +93,7 @@ function checkPermission($controller)
             throw new Exception("YOU don't have permission FOR THAT ACTION, now get outa here and DON'T COME BACK!", 400);
         }
     } else {
-        throw new Exception("Nice try but you don't even exist in the database... L");
+        throw new Exception("Nice try but you don't even exist in the database... L", 400);
     }
 
 }
