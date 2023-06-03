@@ -93,8 +93,7 @@ class Wine{
                 {
                     $data->bind_param($typeString,...$params);
                 }
-                $data->execute();
-                //below we initialize some stuff because php was complaining for no reason
+                $data->execute();//execute query
                 $id = null;
                 $name = null;
                 $desc = null;
