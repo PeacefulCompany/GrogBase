@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-
 import { MatButtonModule } from '@angular/material/button';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,12 +16,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './home/home.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
-import { WinesComponent } from './wines/wines.component';
+import { WineModule } from './wines/wines.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WinesComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +37,7 @@ import { WinesComponent } from './wines/wines.component';
     SignupModule,
     HttpClientModule,
     HomeModule,
-
+  
     MatButtonModule,
     MatToolbarModule,
     MatListModule
