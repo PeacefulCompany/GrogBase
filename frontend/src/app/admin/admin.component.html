@@ -1,11 +1,17 @@
 <mat-tab-group>
   <mat-tab label="Wineries">
-    <h2 class="title">Wineries</h2>
+    <div class="header-bar">
+      <h2 class="title">Wineries</h2>
+      <button mat-raised-button color="primary" (click)="onWineryAdd()">Add</button>
+    </div>
     <app-winery-table>
     </app-winery-table>
   </mat-tab>
   <mat-tab label="Wines">
-    <h2 class="title">Wines</h2>
+    <div class="header-bar">
+      <h2 class="title">Wines</h2>
+      <button mat-raised-button color="primary" (click)="onWineAdd()">Add</button>
+    </div>
     <div class="filterList">
       <div class="grow">
       <mat-form-field>

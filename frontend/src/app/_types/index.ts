@@ -17,13 +17,3 @@ export interface Options<T> {
   search?: SearchOptions<T>,
   return?: keyof T[]
 }
-
-export interface Update<T> {
-  type: string,
-  api_key: string,
-  id: number,
-  update: {
-    // indicate the property (key) and it's new value (value)
-    [Prop in keyof T]?: string;
-  }
-}

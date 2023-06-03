@@ -26,4 +26,11 @@ export class AdminPage {
     this.wineTable.dataSource.setFilter(this.wineFilters);
   }
 
+  onWineAdd() {
+    alert("Add wine");
+  }
+
+  onWineryAdd() {
+    alert("Add winery");
+  }
 }
