@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Wine } from 'src/app/_types/wine.interface';
 
 @Component({
-  selector: 'app-wine',
+  selector: 'admin-wine',
   templateUrl: './wine.component.html',
   styleUrls: ['./wine.component.sass']
 })

@@ -1,19 +1,138 @@
 import { Injectable } from '@angular/core';
-import { faker } from '@faker-js/faker';
 import { Observable, of } from 'rxjs';
-import { SortBy, Wine, WineType } from '../_types';
+import { Options, Wine, WineType } from '../_types';
 
-function generateWine(): Wine {
-  return {
-    id: faker.number.int(),
-    name: faker.company.name(),
-    description: faker.lorem.paragraph(20),
-    type: faker.helpers.enumValue(WineType),
-    price: Number.parseFloat(faker.commerce.price()),
-    year: faker.date.past().getFullYear(),
-    winery: faker.number.int()
+const WINES: Wine[] = [
+  {
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
+  },{
+    id: Math.floor(Math.random()*1000),
+    winery: Math.floor(Math.random() * 1000),
+    name: "x",
+    type: WineType.Red,
+    year: 1968,
+    price: 69,
+    "description": "x"
   }
-}
+];
 @Injectable({
   providedIn: 'root'
 })
@@ -21,10 +140,10 @@ export class WineService {
 
   constructor() { }
 
-  getAll(sortBy?: SortBy<Wine>): Observable<Wine[]> {
-    let arr = faker.helpers.multiple(generateWine, {
-      count: 10
-    });
+  getAll(options?: Options<Wine>): Observable<Wine[]> {
+
+    let arr = WINES;
+    const sortBy = options?.sortBy;
     if(sortBy) arr = arr.sort((a, b) => {
       if(a[sortBy.key] < b[sortBy.key]) return -1;
       if(a[sortBy.key] > b[sortBy.key]) return 1;
@@ -39,5 +158,17 @@ export class WineService {
   }
   delete(wine: Wine) {
     alert("delete wine: " + JSON.stringify(wine));
+  }
+
+  getTopWines(options?: Options<Wine>): Observable<Wine[]> {
+    let arr = WINES;
+    const sortBy = options?.sortBy;
+    if(sortBy) arr = arr.sort((a, b) => {
+      if(a[sortBy.key] < b[sortBy.key]) return -1;
+      if(a[sortBy.key] > b[sortBy.key]) return 1;
+      return 0;
+    });
+
+    return of(arr);
   }
 }
