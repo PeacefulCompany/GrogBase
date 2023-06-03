@@ -1,10 +1,13 @@
-<mat-select [(value)]="selected" (selectionChange)="selectChanged($event)">
+<mat-form-field>
+  <mat-label>Wine Type</mat-label>
+  <mat-select [(value)]="selected" (selectionChange)="selectChanged($event)">
 
-  <mat-option
-    [value]="undefined" selected
-    >Any</mat-option>
-  <mat-option
-    *ngFor="let type of wineTypes"
-    [value]="type"
-    >{{type}}</mat-option>
-</mat-select>
+    <mat-option
+      [value]="undefined" selected
+      >Any</mat-option>
+    <mat-option
+      *ngFor="let type of wineTypes"
+      [value]="type"
+      >{{type}}</mat-option>
+  </mat-select>
+</mat-form-field>

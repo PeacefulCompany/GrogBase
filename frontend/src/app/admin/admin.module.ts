@@ -17,6 +17,10 @@ import { WineTableComponent } from './wine-table/wine-table.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { WineryTableComponent } from './winery-table/winery-table.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -24,7 +28,8 @@ import { MatSelectModule } from '@angular/material/select';
     AdminPage,
     WineryComponent,
     WineComponent,
-    WineTableComponent
+    WineTableComponent,
+    WineryTableComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +45,10 @@ import { MatSelectModule } from '@angular/material/select';
     MatDialogModule,
     MatPaginatorModule,
     MatSortModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class AdminModule { }

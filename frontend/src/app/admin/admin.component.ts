@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { WineService } from '../_services/wine.service';
 import { WineryService } from '../_services/winery.service';
 import { WineEditorComponent } from '../_shared/wine-editor/wine-editor.component';
 import { WineryEditorComponent } from '../_shared/winery-editor/winery-editor.component';
-import { Winery, Wine } from '../_types';
+import { Winery, Wine, WineType, SearchOptions } from '../_types';
+import { WineTableComponent } from './wine-table/wine-table.component';
 
 @Component({
   selector: 'app-admin',
@@ -13,17 +14,21 @@ import { Winery, Wine } from '../_types';
 })
 export class AdminPage {
   wineries: Winery[] = [];
-  wines: Wine[] = [];
+  wineFilters: SearchOptions<Wine> = {};
+
+  @ViewChild(WineTableComponent) wineTable!: WineTableComponent;
 
   constructor(
     private wineryService: WineryService,
-    private wineService: WineService,
     private dialogService: MatDialog
   ) {
     this.wineryService.getAll()
     .subscribe(res => this.wineries = res);
-    this.wineService.getAll()
-    .subscribe(res => this.wines = res);
+  }
+
+  wineTypeSelected(type?: WineType) {
+    this.wineFilters.type = type;
+    this.wineTable.dataSource.setFilter(this.wineFilters);
   }
 
   editWinery(winery: Winery) {
@@ -39,20 +44,5 @@ export class AdminPage {
   }
   deleteWinery(winery: Winery) {
     this.wineryService.delete(winery);
-  }
-
-  editWine(wine: Wine) {
-    const ref = this.dialogService.open(WineEditorComponent, {
-      data: wine,
-      width: "75%",
-      minHeight: "75%"
-    });
-    ref.afterClosed().subscribe(data => {
-      if(!data) return;
-      this.wineService.update(data);
-    })
-  }
-  deleteWine(wine: Wine) {
-    this.wineService.delete(wine);
   }
 }
