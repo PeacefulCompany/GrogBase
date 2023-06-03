@@ -248,9 +248,13 @@ function updateWinery($conn, $winery)
 		exit();
 	}
 }
-function deleteWineries($conn, $wineries)
-{
-	
+function deleteWinery($controller, $json){
+	$input_json = json_decode($json);
+	$input_json = get_object_vars($input_json);
+	$query = 'UPDATE wineries SET active = 0 WHERE winery_id = ?';
+	$params = [$input_json['winery_id']];
+	$controller->query($query, 'i', $params);
+
 }
 
 // $input = file_get_contents('php://input');
@@ -265,5 +269,5 @@ function deleteWineries($conn, $wineries)
 // }
 // $conn->query("USE u22512323_GrogBase;");
 
-// getWineries($conn, $input);
+// deleteWinery($conn, $input);
 ?>
