@@ -117,7 +117,7 @@ function getReturnRecords($controller,$return_pars, $sort, $order, $search, $lim
 	}
 	$controller->success($data);
 }
-function addWineries($conn, $json){
+function addWineries($controller){
 	/*As an example, We expect
 	{
 		"type":"addWineries",
@@ -146,30 +146,28 @@ function addWineries($conn, $json){
 			]
 		}
 		*/
-	$input_json = json_decode($json);
+	$input_json = $controller->get_post_json();
+	$controller->assert_params(['wineries']);
+
 	$wineries = array();// a variable to store all the wineries to be added
 	$wineries = $input_json['wineries'];
-	$params = array('name','description','established','location','region','country','website','manger_id');
+	$params = array('name','description','established','location','region','country','website','manager_id');
 	foreach ($wineries as $oneWinery) {
 		if (count($oneWinery) !== 8) {
-			header("HTTP/1.1 400 Bad Request");
-			echo json_encode(array('status' => 'error','data' => 'Too many or too few params'));
-			exit();
+			throw new Exception('Too many or too few params',400);
 		}
 		foreach ($params as $oneParam) {
 			if (!array_key_exists($oneParam, $oneWinery)) {
-				header("HTTP/1.1 400 Bad Request");
-				echo json_encode(array('status' => 'error','data' => ('Missing data for ' . $oneParam)));
-				exit();
+				throw new Exception('Missing data for ' . $oneParam,400);
 			}
 		}
 	}
-	addWineriesSQLCall($conn, $wineries);
+	addWineriesSQLCall($controller,$wineries);
 }
-function addWineriesSQLCall($conn, $wineries){
-	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manger_id) VALUES";
+function addWineriesSQLCall($controller,$wineries){
+	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_id) VALUES";
 	$allParams = array();
-	$params = array('name','description','established','location','region','country','website','manger_id');
+	$params = array('name','description','established','location','region','country','website','manager_id');
 	$types = "";
 	foreach ($wineries as $oneWinery) {
 		$query .= '(?, ?, ?, ?, ?, ?, ?, ?), ';
@@ -184,44 +182,42 @@ function addWineriesSQLCall($conn, $wineries){
 	}
 	$query = substr($query, 0, strlen($query) - 2);
 	$query .= ' ';//changed semi-colon to space
-	$stmt = $conn->prepare($query); //prepare the statements
-	$stmt->bind_param($types, ...$allParams);
-	try {
-		$stmt->execute();
-	} catch (\Throwable $th) {
-		header("HTTP/1.1 400 Bad Request");
-		echo json_encode(array('status' => 'error','data' => ('SQL error with statement' . $stmt->debugDumpParams())));
-	}
-	header("HTTP/1.1 200 OK");
-	die();
+	$db = new Database();
+	$db->query($query,$types,$allParams);
+	$controller->success("Winery Added Successfully");
 }
 
-function updateWinery($conn, $winery)
+function updateWinery($controller)
 {
+	$input_json = $controller->get_post_json();
+	$controller->assert_params(['update']);
+	//UPDATE wineries SET
 	$query = "UPDATE wineries SET ";
-	$to_update = $winery['update'];
-	// $update_fields = array(
-	// 	"winery_id",
-	// 	"name",
-	// 	"description",
-	// 	"established",
-	// 	"location",
-	// 	"region",
-	// 	"country",
-	// 	"website",
-	// 	"manager_id"
-	// );
+	$to_update = $input_json['update'];
+	
 	$columns = array();
+	$values = array();
+	$types = "";
 	foreach($to_update as $key => $val)
-	{	if($key != "manager_id")
+	{	if($key != "manager_id" || $key != "established")
 		{
-			$columns[] = `$key="$val"`;
+			$values[] = $val;
+			$columns[] = $key.'="?" ';
+			$types .= "s";
+		}
+		else
+		{
+			$values[] = $val;
+			$columns[] = $key.'=? ';
+			$types .= "i";
 		}
 	}
 	$query .= implode(",",$columns);
-	$query .= " WHERE manager_id = " . $winery['manager_id'];
+	$query .= "WHERE winery_id = " . $input_json['update']['manager_id'];
 
-	
+	$db = new Database();
+	$db->query($query,$types,$values);
+	$controller->success("Winery Updated Successfully");
 }
 function deleteWinery($conn, $winery)
 {
