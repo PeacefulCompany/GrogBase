@@ -1,8 +1,12 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { WineryTableDataSource, WineryTableItem } from './winery-table-datasource';
+import { WineryService } from 'src/app/_services/winery.service';
+import { WineryEditorComponent } from 'src/app/_shared/winery-editor/winery-editor.component';
+import { Winery } from 'src/app/_types';
+import { WineryTableDataSource } from './winery-table-datasource';
 
 @Component({
   selector: 'app-winery-table',
@@ -12,19 +16,38 @@ import { WineryTableDataSource, WineryTableItem } from './winery-table-datasourc
 export class WineryTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<WineryTableItem>;
+  @ViewChild(MatTable) table!: MatTable<Winery>;
   dataSource: WineryTableDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  displayedColumns = ['name', 'established', 'location', 'region', 'country', 'website', 'actions'];
 
-  constructor() {
-    this.dataSource = new WineryTableDataSource();
+  constructor(
+    private wineryService: WineryService,
+    private dialogService: MatDialog
+  ) {
+    this.dataSource = new WineryTableDataSource(this.wineryService);
+  }
+
+  onSort(sort: Sort) {
+    this.dataSource.setSort(sort);
+  }
+  editWinery(winery: Winery) {
+    const ref = this.dialogService.open(WineryEditorComponent, {
+      data: winery,
+      width: "75%",
+      minHeight: "75%"
+    });
+    ref.afterClosed().subscribe(data => {
+      if(!data) return;
+      this.wineryService.update(data);
+    })
+  }
+  deleteWinery(winery: Winery) {
+    this.wineryService.delete(winery);
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;
   }
 }

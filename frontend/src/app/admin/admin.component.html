@@ -1,13 +1,8 @@
 <mat-tab-group>
   <mat-tab label="Wineries">
     <h2 class="title">Wineries</h2>
-    <div class="list">
-      <admin-winery *ngFor="let winery of wineries"
-        (onEdit)="editWinery($event)"
-        (onDelete)="deleteWinery($event)"
-        [winery]="winery"
-        ></admin-winery>
-    </div>
+    <app-winery-table>
+    </app-winery-table>
   </mat-tab>
   <mat-tab label="Wines">
     <h2 class="title">Wines</h2>

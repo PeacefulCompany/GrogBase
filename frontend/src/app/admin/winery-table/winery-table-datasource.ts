@@ -1,50 +1,23 @@
 import { DataSource } from '@angular/cdk/collections';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { map } from 'rxjs/operators';
-import { Observable, of as observableOf, merge } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { SearchOptions, SortBy, SortOrder, Winery } from 'src/app/_types';
+import { WineryService } from 'src/app/_services/winery.service';
+import { Sort } from '@angular/material/sort';
 
-// TODO: Replace this with your own data model type
-export interface WineryTableItem {
-  name: string;
-  id: number;
-}
-
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: WineryTableItem[] = [
-  {id: 1, name: 'Hydrogen'},
-  {id: 2, name: 'Helium'},
-  {id: 3, name: 'Lithium'},
-  {id: 4, name: 'Beryllium'},
-  {id: 5, name: 'Boron'},
-  {id: 6, name: 'Carbon'},
-  {id: 7, name: 'Nitrogen'},
-  {id: 8, name: 'Oxygen'},
-  {id: 9, name: 'Fluorine'},
-  {id: 10, name: 'Neon'},
-  {id: 11, name: 'Sodium'},
-  {id: 12, name: 'Magnesium'},
-  {id: 13, name: 'Aluminum'},
-  {id: 14, name: 'Silicon'},
-  {id: 15, name: 'Phosphorus'},
-  {id: 16, name: 'Sulfur'},
-  {id: 17, name: 'Chlorine'},
-  {id: 18, name: 'Argon'},
-  {id: 19, name: 'Potassium'},
-  {id: 20, name: 'Calcium'},
-];
 
 /**
  * Data source for the WineryTable view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class WineryTableDataSource extends DataSource<WineryTableItem> {
-  data: WineryTableItem[] = EXAMPLE_DATA;
-  paginator: MatPaginator | undefined;
-  sort: MatSort | undefined;
+export class WineryTableDataSource extends DataSource<Winery> {
+  data = new BehaviorSubject<Winery[]>([]);
+  sort?: SortBy<Winery>;
+  filter?: SearchOptions<Winery> = {};
 
-  constructor() {
+  constructor(
+    private wineryService: WineryService
+  ) {
     super();
   }
 
@@ -53,59 +26,44 @@ export class WineryTableDataSource extends DataSource<WineryTableItem> {
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(): Observable<WineryTableItem[]> {
-    if (this.paginator && this.sort) {
-      // Combine everything that affects the rendered data into one update
-      // stream for the data-table to consume.
-      return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
-        .pipe(map(() => {
-          return this.getPagedData(this.getSortedData([...this.data ]));
-        }));
-    } else {
-      throw Error('Please set the paginator and sort on the data source before connecting.');
+  connect(): Observable<Winery[]> {
+    this.getData();
+    return this.data.asObservable();
+  }
+
+  getData() {
+    this.wineryService.getAll({
+      sortBy: this.sort,
+      search: this.filter,
+    }).subscribe(res => this.data.next(res));
+  }
+
+  setSort(sort: Sort) {
+    console.log("sort");
+    if(sort.direction.length == 0) {
+      this.sort = undefined;
     }
+    else {
+      this.sort = {
+        key: sort.active as keyof Winery,
+        order: sort.direction == 'asc' ? SortOrder.Ascending : SortOrder.Descending
+      }
+    }
+    console.log(this.sort);
+    this.getData();
+  }
+  setFilter(filter?: SearchOptions<Winery>) {
+    this.filter = filter;
+    this.getData();
   }
 
   /**
    *  Called when the table is being destroyed. Use this function, to clean up
    * any open connections or free any held resources that were set up during connect.
    */
-  disconnect(): void {}
-
-  /**
-   * Paginate the data (client-side). If you're using server-side pagination,
-   * this would be replaced by requesting the appropriate data from the server.
-   */
-  private getPagedData(data: WineryTableItem[]): WineryTableItem[] {
-    if (this.paginator) {
-      const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-      return data.splice(startIndex, this.paginator.pageSize);
-    } else {
-      return data;
-    }
+  disconnect(): void {
+    this.data.complete();
   }
 
-  /**
-   * Sort the data (client-side). If you're using server-side sorting,
-   * this would be replaced by requesting the appropriate data from the server.
-   */
-  private getSortedData(data: WineryTableItem[]): WineryTableItem[] {
-    if (!this.sort || !this.sort.active || this.sort.direction === '') {
-      return data;
-    }
 
-    return data.sort((a, b) => {
-      const isAsc = this.sort?.direction === 'asc';
-      switch (this.sort?.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc);
-        default: return 0;
-      }
-    });
-  }
-}
-
-/** Simple sort comparator for example ID/Name columns (for client-side sorting). */
-function compare(a: string | number, b: string | number, isAsc: boolean): number {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
