@@ -1,8 +1,8 @@
 <?php
 
 // require_once "Skeleton/config.php";
-
-
+require_once "Database.php";
+require_once "Controller.php";
 
     /*--------------------------------------
     The get wines function returns a JSON obj
@@ -18,9 +18,8 @@
     connection will need to be passed in.
     */
 
-
-    function getAllWines($conn,$json){
-        $jsonObj = json_decode($json,true);
+    function getAllWines($controller){
+        $jsonObj = $controller->get_post_json();
         $wines = array();
         $stmt = "SELECT * FROM `wines`";
         $params = array();
@@ -63,11 +62,7 @@
             }
             if(!key_exists('sort',$jsonObj) && key_exists('order',$jsonObj))
             {
-                header("HTTP/1.1 400 Bad Request");
-                    return json_encode(array(
-                        "status" => "failed",
-                        "data" => "Cannot sort when there is nothing to order by. Check request body."
-                ));
+                throw new Exception("Cannot sort when there is nothing to order by. Check request body.", 400);
             }
             if(key_exists('sort',$jsonObj))
             {
@@ -100,63 +95,26 @@
             {
                 $stmt.=" LIMIT ".$jsonObj['limit'];
             }
-            if($data = $conn->prepare($stmt))
-            {
-                if(key_exists('search', $jsonObj))
-                {
-                    $data->bind_param($typeString,...$params);
-                }
-                $data->execute();
-                $id = null;
-                $name = null;
-                $desc = null;
-                $type = null;
-                $year = null;
-                $price = null;
-                $winery = null;
-                $data->bind_result($id,$name,$desc,$type,$year,$price,$winery);         
-                while($data->fetch())
-                {
-                    $wines[] = [
-                        'wine_id' => $id,
-                        'name' => $name, 
-                        'description' => $desc,
-                        'type' => $type,
-                        'year' => $year,
-                        'price' => $price,
-                        'winery' => $winery,
-                    ];
-                }
-                $data->close();
-                return json_encode(array(
-                    "status" => "success",
-                    "data" => $wines
-                ));
-            }
-            else{
-                header("HTTP/1.1 400 Bad Request");
-                return json_encode(array(
-                    "status" => "failed",
-                    "data" => "Error. Bad request(check return body spelling)"
-            ));
-        }
+            $db = new Database;
+            $res = $db->query($stmt,$typeString,$params);
+            return $controller->success($res);
     }
 
-    function direct($conn,$json)
+    function direct($controller)
     {
-        $jsonObj = json_decode($json,true);
+        $jsonObj = $controller->get_post_json();
         if($jsonObj['return']==["*"])
         {
-            return getAllWines($conn,$json);
+            return getAllWines($controller);
         }
         else{
-            return getWines($conn,$json);
+            return getWines($controller);
         }
     }
 
-    function getWines($conn,$json)
+    function getWines($controller)
     {
-        $jsonObj = json_decode($json,true);//assuming a json object is passed in, we turn it into an asssociative array.
+        $jsonObj = $controller->get_post_json();//assuming a json object is passed in, we turn it into an asssociative array.
         $statement = null;
         $stuffs = array();
         $returns = array();
@@ -243,52 +201,8 @@
         {
             $statement.=" LIMIT ".$jsonObj['limit'];//limit them
         }
-        if($query = $conn->prepare($statement))
-        {
-            $query = $conn->prepare($statement);
-            if(key_exists('search', $jsonObj))
-            {
-                $query->bind_param($types,...$params);
-            }
-            $wineData = array();//contains the data that the user sees.
-            $results = array();//this is to contain results of query
-            $binding = array();//this is used to help create an associative array using results
-            foreach($jsonObj['return'] as $column)
-            {
-                $results[$column] = null;//creates the associated key in results
-                $binding[] =& $results[$column];//now we add the key value to each result key
-            }
-            $query->execute();//execute
-            call_user_func_array(array($query,'bind_result'), $binding);//this now binds the results to the results array using bindings linkage
-            while($query->fetch())//while there is data to fetch
-            {
-                $row = array();//a "new" row for each resulting row
-                foreach($jsonObj['return'] as $column)//populating the row
-                {
-                    $row[$column] = $results[$column];
-                }
-                array_push($wineData, $row);//pushes into the wine obj
-            }
-            $query->close();//closes db connection
-            return json_encode(array(
-                "status" => "success",
-                "data" => $wineData
-            )); //return wines
-        }
-        else{
-            header("HTTP/1.1 400 Bad Request");
-                return json_encode(array(
-                    "status" => "failed",
-                    "data" => "Error. Bad request(Check return body parameters)"
-            ));//returns an error object if you wanna call it that
-        }
+        $db = new Database;
+        $res = $db->query($statement,$types,$params);
+        $controller->success($res);
     }
-
-
-
-// header('Content-Type: application/json');
-// $db = new Database;
-// $conn = $db->mysqli;
-// echo direct($conn,file_get_contents('php://input'));
-
 ?>
