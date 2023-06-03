@@ -1,1 +1,7 @@
-<p>wines works!</p>
+<h1 class="title">Our Celestial Symphony of Grapes</h1>
+<div class="Wines">
+    <app-wine
+      *ngFor="let wine of WineList"
+    [wine]="wine"
+    ></app-wine>
+</div>

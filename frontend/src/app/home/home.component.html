@@ -1,22 +1,18 @@
-<h2 class="title">Local Wineries</h2>
-<div class="winery">
+<h2 class="title">The Exquisite Refuge of Locally Grown Vines</h2>
+<h5 class="title2">Discover some exceptional local Top Wineries</h5>
+
+<div class="TopWineries">
   <app-winery
     *ngFor="let winery of Localwiener"
     [winery]="winery"
   ></app-winery>
 </div>
-<h2 class="title">Top Wines</h2>
-<div class="container">
-  <mat-card class="Wines" *ngFor="let item of TopWine">
-    <mat-card-header>
-      <mat-card-title>{{ item.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>{{ item.type }}</p>
-      <p>{{ item.year }}</p>
-      <p>{{ item.price }}</p>
-      <p>{{ item.description}}</p>
-    </mat-card-content>
-  </mat-card>
+<h2 class="title">The Grand Symphony of Unparalleled Flavors</h2>
+<h5 class="title2">Explore a selection of exquisite top wines</h5>
+<div class="Wines">
+  <app-wine
+    *ngFor="let wine of TopWine"
+    [wine]="wine"
+  ></app-wine>
 </div>
 

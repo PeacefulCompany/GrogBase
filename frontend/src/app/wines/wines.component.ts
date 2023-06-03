@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Wine, Winery } from '../_types';
+import { WineService } from '../_services/wine.service';
+
 
 @Component({
   selector: 'app-wines',
@@ -6,8 +9,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./wines.component.sass']
 })
 export class WinePage implements OnInit {
-
-  constructor() { }
+  WineList: Wine[] = [];
+  constructor( private wineService: WineService,) {
+    this.wineService.getAll()
+      .subscribe(res => this.WineList = res);
+  }
 
   ngOnInit(): void {
   }
