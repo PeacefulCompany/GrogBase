@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Database.php';
+require_once "Controller.php";
 function getWineries($controller)
 {
 	$input_json = $controller->get_post_json();
@@ -109,13 +110,7 @@ function getReturnRecords($controller,$return_pars, $sort, $order, $search, $lim
 		throw new Exception('Error: Wineries SQL Error',400);
 	}
 
-	$data = array();
-	
-	while($row = $result->fetch_assoc())
-	{
-		$data[] = $row;
-	}
-	$controller->success($data);
+	$controller->success($result);
 }
 function addWineries($controller){
 	/*As an example, We expect
@@ -153,7 +148,7 @@ function addWineries($controller){
 	$wineries = $input_json['wineries'];
 	$params = array('name','description','established','location','region','country','website','manager_id');
 	foreach ($wineries as $oneWinery) {
-		if (count($oneWinery) !== 8) {
+		if (count($oneWinery) !== 9) {
 			throw new Exception('Too many or too few params',400);
 		}
 		foreach ($params as $oneParam) {
@@ -165,15 +160,16 @@ function addWineries($controller){
 	addWineriesSQLCall($controller,$wineries);
 }
 function addWineriesSQLCall($controller,$wineries){
-	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_id) VALUES";
+	//TODO if winery in database but inactive make active
+	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_id, active) VALUES";
 	$allParams = array();
-	$params = array('name','description','established','location','region','country','website','manager_id');
+	$params = array('name','description','established','location','region','country','website','manager_id', 'active');
 	$types = "";
 	foreach ($wineries as $oneWinery) {
-		$query .= '(?, ?, ?, ?, ?, ?, ?, ?), ';
+		$query .= '(?, ?, ?, ?, ?, ?, ?, ?, ?), ';
 		foreach ($params as $oneParam) {
 			array_push($allParams, $oneWinery[$oneParam]);
-			if ($oneParam == 'manager_id') {
+			if ($oneParam == 'manager_id' || $oneParam == 'active' || $oneParam == 'established') {
 				$types .= 'i';
 			} else {
 				$types .= 's';
@@ -194,33 +190,36 @@ function updateWinery($controller)
 	
 	$query = "UPDATE wineries SET ";
 	$to_update = $input_json['update'];
-	
+
 	$columns = array();
 	$values = array();
 	$types = "";
 	foreach($to_update as $key => $val)
-	{	if($key != "manager_id" && $key != "established")
-		{
-			$values[] = $val;
-			$columns[] = $key.'="?" ';//NON NUMERIC
-			$types .= "s";
-		}
-		else
-		{
-			$values[] = $val;
-			$columns[] = $key.'=? ';//NUMERIC
-			$types .= "i";
+	{	
+		if ($key != 'winery_id') {
+			if($key != "manager_id" && $key != "established" && $key != "winery_id")
+			{
+				$values[] = $val;
+				$columns[] = $key.'=? ';//NON NUMERIC
+				$types .= "s";
+			}
+			else
+			{
+				$values[] = $val;
+				$columns[] = $key.'=? ';//NUMERIC
+				$types .= "i";
+			}
 		}
 	}
 	$query .= implode(",",$columns);
-	$query .= "WHERE winery_id = " . $input_json['update']['manager_id'];
-
+	$query .= "WHERE winery_id = " . $input_json['update']['winery_id'];
 	$db = new Database();
 	$db->query($query,$types,$values);
 	$controller->success("Winery Updated Successfully");
 }
 function deleteWinery($controller)
 {
+	//TODO assert params
 	$input_json = $controller->get_post_json();
 	$query = 'UPDATE wineries SET active = 0 WHERE winery_id = ?';
 	$params = [$input_json['winery_id']];
