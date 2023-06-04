@@ -149,7 +149,7 @@ function addWineries($controller){
 	$wineries = $input_json['wineries'];
 	$params = array('name','description','established','location','region','country','website','manager_id');
 	foreach ($wineries as $oneWinery) {
-		if (count($oneWinery) !== 9) {
+		if (count($oneWinery) !== 8) {
 			throw new Exception('Too many or too few params',400);
 		}
 		foreach ($params as $oneParam) {
@@ -162,15 +162,15 @@ function addWineries($controller){
 }
 function addWineriesSQLCall($controller,$wineries){
 	//TODO if winery in database but inactive make active
-	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_id, active) VALUES";
+	$query = "INSERT INTO wineries (name, description, established, location, region, country, website, manager_id) VALUES";
 	$allParams = array();
-	$params = array('name','description','established','location','region','country','website','manager_id', 'active');
+	$params = array('name','description','established','location','region','country','website','manager_id');
 	$types = "";
 	foreach ($wineries as $oneWinery) {
 		$query .= '(?, ?, ?, ?, ?, ?, ?, ?, ?), ';
 		foreach ($params as $oneParam) {
 			array_push($allParams, $oneWinery[$oneParam]);
-			if ($oneParam == 'manager_id' || $oneParam == 'active' || $oneParam == 'established') {
+			if ($oneParam == 'manager_id' || $oneParam == 'established') {
 				$types .= 'i';
 			} else {
 				$types .= 's';
