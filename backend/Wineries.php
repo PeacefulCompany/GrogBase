@@ -229,6 +229,15 @@ function deleteWinery($controller)
 	$controller->success("Winery Set to Inactive");
 }
 
+function getCountries($controller)//returns a list of distinct countries in which there are wineries
+{
+	$input_json = $controller->get_post_json();
+	$limit = $input_json['limit'];
+	$db = new Database();
+	$result = $db->get_column_distinct('wineries','country',$limit);
+	$controller->success($result);
+}
+
 // $input = file_get_contents('php://input');
 
 // $servername = "wheatley.cs.up.ac.za";
