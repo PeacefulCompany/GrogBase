@@ -1,88 +1,78 @@
 <?php
-        //potential layout for the login/register endpoint
-        function checkDuplicates($email,$conn)
+        require_once "Database.php";
+        require_once "Controller.php";
+        function checkDuplicates($details)
         {
-            $query = $conn->prepare("SELECT COUNT(*) FROM `users` WHERE `email` = ?");
-            $e = null;
-            $query->bind_param("s", $e);
-            $e = $email;
-            $query->execute();
-            $result = null;
-            $query->bind_result($result);
-            $query->fetch();
-            $query->close();
-            return $result;
+            $email = $details['email'];
+            $params = array();
+            array_push($params,$email);
+            $query = "SELECT COUNT(*) FROM `users` WHERE `email` = ?";
+            $db = new Database;
+            $res = $db->query($query,'s',$params);
+            return $res[0]["COUNT(*)"];
         }
 
-        function createUser($name, $surname, $email, $pwd, $apikey, $conn)
+        function createUser($controller)
         {
-            if(checkDuplicates($email,$conn)>0)
+            $req = $controller->get_post_json();//gets the json object request
+            $details = $req['details'];//gets the array that stores the details to be inserted
+            $pwd = $details['password'];//user's password
+            $apikey = bin2hex(random_bytes(10));//generated apikey
+            $details['password'] = password_hash($pwd,PASSWORD_ARGON2ID);
+            $details['userType'] = "User";
+            $details['api_key'] = $apikey;
+            $params = array();
+            $params2 = array();
+            $email = $details['email'];
+            array_push($params2,$email);
+            foreach($details as $value)
             {
-                echo "User already exists";
+                array_push($params,$value);
+            }
+            if(checkDuplicates($details)>0)
+            {
+                throw new Exception("A user with this email already exists.", 409);
+                return;
+            }
+            $query = "INSERT INTO users(first_name, last_name, email, password, user_type,api_key) VALUES (?,?,?,?,?,?)";
+            $query2 = "SELECT `user_id` FROM `users` WHERE `email`=?";
+            $types = "ssssss";
+            $db = new Database;
+            $db->query($query,$types,$params);
+            $uid = $db->query($query2,'s',$params2);
+            $return = array();
+            $return['user_id'] = $uid[0]['user_id'];
+            $return['api_key'] = $apikey;
+            $return['user_type'] = $details['userType'];
+            $controller->success($return);
+        }
+
+        function validateDetails($controller)
+        {
+            $db = new Database;
+            $req = $controller->get_post_json();
+            $details = $req['details'];
+            if(!(checkDuplicates($details)>0))
+            {
+                throw new Exception("No user with those credentials exists",401);
                 return;
             }
             else{
-                $query = $conn->prepare("INSERT INTO users( firstname, surname, email, pass, apikey) VALUES (?,?,?,?,?,?)");
-                $pass = password_hash($pwd,PASSWORD_ARGON2ID);
-                $n = null;
-                $s = null;
-                $e = null;
-                $p = null;
-                $ak = null;
-                $sa = null;
-                $query->bind_param("ssssss",$n,$s, $e, $p, $ak);
-                $n = $name; 
-                $s = $surname;
-                $e = $email;
-                $p = $pass;
-                $ak = $apikey;
-                $query->execute();
-                $query->close();
-                echo "Congrats, you're now one of us :)";
-                echo "\nYour API key is: ". $apikey;
-                return;
-            }
-        }
-
-        function validateDetails($uname, $password, $conn)
-        {
-            if(!(checkDuplicates($uname,$conn)>0))
-            {
-                echo "No user with that email exists, please create an account.";
-            }
-            else{
-                $em = null;
-                $query2 = $conn->prepare("SELECT `pass` FROM `users` WHERE `email` = ?");
-                $em = null;
-                $query2->bind_param('s',$em);
-                $em = $uname;
-                $query2->execute();
-                $hashed = "";
-                $query2->bind_result($hashed);
-                $query2->fetch();
-                $query2->close();
-                if(password_verify($password,$hashed))
+                $query1 = "SELECT `password` FROM `users` WHERE `email` = ?";
+                $params1 = array();
+                $email = $details['email'];
+                array_push($params1,$email);
+                $res = $db->query($query1,'s',$params1);
+                $hashed = $res[0]['password'];
+                if(password_verify($details['password'],$hashed))
                 {
-                    $query3 = $conn->prepare("SELECT `apikey` FROM `users` WHERE `email` = ?");
-                    $ak = null;
-                    $query3->bind_param("s",$ak);
-                    $ak = $uname;
-                    $query3->execute();
-                    $apikey = "";
-                    $query3->bind_result($apikey);
-                    $query3->fetch();
-                    $query3->close();
-                    echo json_encode(array(
-                        "status"=>200,
-                        "apikey"=>$apikey,
-                        "logged"=>true
-                    ));
+                    $query2 = "SELECT `user_id`,`api_key`,`user_type` FROM `users` WHERE `email` = ?";
+                    $res2 = $db->query($query2,'s',$params1);
+                    $controller->success($res2[0]);
                 }
                 else{
-                    echo json_encode(array(
-                        "status"=>401,
-                        "logged"=>false
-                    ));
+                    throw new Exception("Incorrect credentials.",401);
+                    return;
                 }
             }
         }
