@@ -40,12 +40,15 @@ export class WineryTableComponent implements AfterViewInit {
     });
     ref.afterClosed().subscribe(data => {
       if(!data) return;
-      this.wineryService.update(data);
-      this.dataSource.updateWine(data);
+      this.wineryService.update(data)
+        .subscribe();
+      // there are some pass-by-reference trickery going
+      // on when editing wineries, so updating the
+      // the data source is not required
     })
   }
   deleteWinery(winery: Winery) {
-    this.wineryService.delete(winery);
+    this.wineryService.delete(winery).subscribe();
     this.dataSource.removeWine(winery);
   }
 

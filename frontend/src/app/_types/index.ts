@@ -15,7 +15,7 @@ export type SearchOptions<T> = {
 export interface Options<T> {
   sortBy?: SortBy<T>,
   search?: SearchOptions<T>,
-  return?: keyof T[],
+  return?: string[],
   limit?: number
 }
 

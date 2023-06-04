@@ -58,13 +58,10 @@ export class WineryTableDataSource extends DataSource<Winery> {
   }
 
   updateWine(wine: Winery) {
-    this.data.next(this.data.value.map(elem => {
-      if(elem.id != wine.id) return elem;
-      return wine;
-    }));
+    this.getData();
   }
   removeWine(wine: Winery) {
-    this.data.next(this.data.value.filter(elem => elem.id != wine.id));
+    this.data.next(this.data.value.filter(elem => elem.winery_id != wine.winery_id));
   }
 
   /**

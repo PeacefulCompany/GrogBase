@@ -28,7 +28,8 @@ export class WineryService {
       // should be replaced by actual authenticated API key
       api_key: "fuck tou",
       type: "getWineries",
-      return: ["*"]
+      return: options?.return || ["*"],
+      search: {}
     };
 
     if(sortBy) {
@@ -50,6 +51,7 @@ export class WineryService {
         params.fuzzy = true;
       }
     }
+    params.search.active = "1";
 
     const obs = this.http.post<Response<Winery[]>>(environment.apiEndpoint, params)
       .pipe(
@@ -57,7 +59,9 @@ export class WineryService {
           console.error(e.error);
           return of(e.error)
         }),
-        map(res => res.data));
+        map((res: Response<any[]>) => {
+          return res.data;
+        }));
     return obs;
   }
 
@@ -67,18 +71,29 @@ export class WineryService {
     * @return Whether the update was successful
     */
   update(winery: Winery): Observable<boolean> {
-    alert("update: " + JSON.stringify(winery));
-    return of(true);
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'updateWinery',
+      update: winery
+    }).pipe(
+      catchError(e => {
+        throw e.error;
+      }),
+      map(() => true)
+    );
   }
 
   /**
     * Updates the data of a winery
-    * @param winery The winery to update
+    * @param winery The winery to delete
     * @return Whether the update was successful
     */
   delete(winery: Winery): Observable<boolean> {
-    alert("delete: " + winery.id);
-    return of(true);
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'deleteWinery',
+      winery_id: winery.winery_id
+    }).pipe(map(() => true));
   }
 
   getTopWineries(options?: Options<Winery>): Observable<Winery[]> {
