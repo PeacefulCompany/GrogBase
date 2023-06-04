@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SignupService } from '../_services/signup.service';
+import { UserService } from '../_services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -15,26 +15,10 @@ export class SignupComponent{
   lName = '';
   password = '';
 
-  constructor(private signupService: SignupService, private snackBar: MatSnackBar, private router: Router) { }
+  constructor(private userService: UserService, private snackBar: MatSnackBar, private router: Router) { }
 
-  async signup(){
-
-
-    console.log('Username:', this.email);
-    console.log('First Name:', this.fName);
-    console.log('Last Name:', this.lName);
-    console.log('Password:', this.password);
-
-    await this.signupService.signUpUser(this.email, this.fName, this.lName, this.password);
-
-    this.snackBar.open("Sign up Succesful", 'Close', {
-      duration: 3000,
-    });
-
-    //redirect to login page
-
-    this.router.navigate(['/login']);
-
+  signup(){
+    this.userService.signUpUser(this.email, this.fName, this.lName, this.password);
   }
 
 }

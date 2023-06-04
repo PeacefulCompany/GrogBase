@@ -8,6 +8,8 @@ import { SignupComponent} from './signup/signup.component';
 import {  HomeComponent } from './home/home.component';
 import { WinePage } from './wines/wines.component';
 
+import { AuthGuard } from './_services/auth.guard';
+
 const routes: Routes = [
 
   {
@@ -16,20 +18,22 @@ const routes: Routes = [
   {
     path: 'signup', component: SignupComponent
   },
-
   {
     path: "admin",
-    component: AdminPage
+    component: AdminPage,
+    canActivate: [AuthGuard]
   },
   {
     path: "wineries",
-    component: WineriesPage
+    component: WineriesPage,
+    canActivate: [AuthGuard]
   },
   {
     path: "wines",
-    component: WinePage
+    component: WinePage,
+    canActivate: [AuthGuard]
   },
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
