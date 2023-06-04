@@ -39,7 +39,17 @@ function getWineryReviews($controller) //determines the amount of join that will
 
 
     //build init query
-    $query = "Select " . $feilds . " FROM reviews_winery NATURAL JOIN users NATURAL JOIN wineries WHERE 1=1";
+    $query = "Select " . $feilds . " FROM reviews_winery NATURAL JOIN users NATURAL JOIN wineries ";
+
+
+    // if (in_array("rating_avg", $data['return'])) {
+
+    // asd
+
+    // }
+
+
+    $query .= " WHERE 1=1";
 
 
     //adding search clause to query
@@ -113,11 +123,14 @@ function getWineReviews($controller) //determines the amount of join that will n
 {
     $data = $controller->get_post_json();
     $params = "";
+    // $averagerating = false;
 
     // handles return part of the query
     $controller->assert_params(["return"]);
 
+    // $index = array_search('avg_rating', $data['return']);
 
+    //creating fields params
     $feilds = "";
     $feilds = "";
     if ($data["return"] == '*') {
@@ -127,6 +140,11 @@ function getWineReviews($controller) //determines the amount of join that will n
         $feilds = implode(",", $data["return"]);
     }
 
+    // if($averagerating)
+    // {
+    //     $feilds .= ", AVG(points) ";
+    // }
+
 
     // handles the sort setup of the query and throws and error if incorrect json is created
 
@@ -135,7 +153,38 @@ function getWineReviews($controller) //determines the amount of join that will n
 
 
     //build init query
-    $query = "Select " . $feilds . " FROM reviews_wine NATURAL JOIN users NATURAL JOIN wines WHERE 1=1 ";
+    $query = "Select " . $feilds . " FROM reviews_wine NATURAL JOIN users NATURAL JOIN wines ";
+
+
+
+    // if (in_array("rating_avg", $data['return'])) {
+    //     $subquery = "NATURAL JOIN (
+    //         SELECT
+    //             `wines`.`wine_id` AS `wine_id`,
+    //             `wines`.`name` AS `name`,
+    //             `wines`.`description` AS `description`,
+    //             `wines`.`type` AS `type`,
+    //             `wines`.`year` AS `year`,
+    //             `wines`.`price` AS `price`,
+    //             `wines`.`winery` AS `winery`,
+    //             `R`.`rating_avg` AS `rating_avg`
+    //         FROM
+    //             `wines`
+    //         LEFT JOIN (
+    //             SELECT
+    //                 `reviews_wine`.`wine_id` AS `wine_id`,
+    //                 ROUND(AVG(`reviews_wine`.`points`), 2) AS `rating_avg`
+    //             FROM
+    //                 `reviews_wine`
+    //             GROUP BY `reviews_wine`.`wine_id`
+    //         ) `R` ON (`wines`.`wine_id` = `R`.`wine_id`)
+    //     ) AS `subquery_alias` ";
+
+    //     $query .= str_replace(array("\n", "\r"), '', $subquery);
+    // }
+
+
+    $query .= " WHERE 1=1 ";
 
 
     //adding search clause to query
@@ -209,7 +258,7 @@ function getWineReviews($controller) //determines the amount of join that will n
  * inserts a new record into the review_wine table
  * note if there is a fuplicate key, an sql exception is thrown
  * 
-*/
+ */
 
 function insertReviewWines($controller)
 {
@@ -241,7 +290,7 @@ function insertReviewWines($controller)
  * inserts a new record into the review_winery table
  * note if there is a fuplicate key, an sql exception is thrown
  * 
-*/
+ */
 
 function insertReviewWinery($controller)
 {
@@ -338,6 +387,67 @@ function averagePointsPerWine($controller)
     $controller->success($data);
 
 }
+
+
+/*
+ {
+    api_key: "...",
+    type : "",
+    target:{user_id: int , wine_id: int}
+ } 
+ */
+
+
+/**
+ * 
+ * deletes a wine review based in the primary key of the record determined by the passed in json
+ * 
+ */
+
+function deleteWineReview($controller)
+{
+    $data = $controller->get_post_json();
+
+    $controller->assert_params(["target"]);
+
+    if (isset($data["target"]["user_id"]) && isset($data["target"]["wine_id"])) {
+        $query = "DELETE FROM reviews_wine WHERE user_id = ? AND wine_id = ?";
+        $db = new Database();
+
+        $db->query($query, "ii", [$data["target"]["user_id"], $data["target"]["wine_id"]]);
+
+    } else {
+        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and wine_id");
+    }
+
+}
+
+
+/**
+ * 
+ * deletes a winery review based in the primary key of the record determined by the passed in json
+ * 
+ */
+
+function deleteWineryReview($controller)
+{
+    $data = $controller->get_post_json();
+
+    $controller->assert_params(["target"]);
+
+    if (isset($data["target"]["user_id"]) && isset($data["target"]["winery_id"])) {
+        $query = "DELETE FROM reviews_wine WHERE user_id = ? AND winery_id = ?";
+        $db = new Database();
+
+        $db->query($query, "ii", [$data["target"]["user_id"], $data["target"]["winery_id"]]);
+
+    } else {
+        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and winery_id");
+    }
+
+}
+
+
 
 
 
