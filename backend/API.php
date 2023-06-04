@@ -60,6 +60,9 @@ try {
         case "insertReviewWinery":
             insertReviewWinery($controller);
             return;
+        case "getCountries":
+            getCountries($controller);
+            return;
         default:
             throw new Exception("not a valid type, you are dom >:|");
     }
