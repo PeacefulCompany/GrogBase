@@ -4,11 +4,14 @@ require_once "Database.php";
 require_once "Controller.php";
 
 
-
+/**
+ * 
+ * gets specific records in review_winery based on the custom selected fields/sorts/searches in the json object posted to the php file
+ * 
+ */
 
 function getWineryReviews($controller) //determines the amount of join that will need to be setup
 {
-    // echo "winery";
     $data = $controller->get_post_json();
     $params = "";
 
@@ -100,11 +103,14 @@ function getWineryReviews($controller) //determines the amount of join that will
 
 }
 
-
+/**
+ * 
+ * gets specific records in review_wines based on the custom selected fields/sorts/searches in the json object posted to the php file
+ * 
+ */
 
 function getWineReviews($controller) //determines the amount of join that will need to be setup
 {
-    // echo "wine";
     $data = $controller->get_post_json();
     $params = "";
 
@@ -198,15 +204,11 @@ function getWineReviews($controller) //determines the amount of join that will n
 
 
 
-/*
-
-{
-    api_key:,
-    type: "insertWineReview",
-    target: {user_id: "", wine_id: ""},
-    values: {points: "", review: "", drunk: ""}
-}
-
+/**
+ *  
+ * inserts a new record into the review_wine table
+ * note if there is a fuplicate key, an sql exception is thrown
+ * 
 */
 
 function insertReviewWines($controller)
@@ -226,8 +228,6 @@ function insertReviewWines($controller)
         array_push($arr, $data['values']['drunk']);
         $db = new Database();
 
-        var_dump($arr);
-
         $db->query($query, 'iiisi', $arr);
 
     } else {
@@ -236,15 +236,11 @@ function insertReviewWines($controller)
 }
 
 
-/*
-
-{
-    api_key:,
-    type: "insertWineryReview",
-    target: {user_id: "", wine_id: ""},
-    values: {points: "", review: ""}
-}
-
+/**
+ * 
+ * inserts a new record into the review_winery table
+ * note if there is a fuplicate key, an sql exception is thrown
+ * 
 */
 
 function insertReviewWinery($controller)
@@ -272,6 +268,12 @@ function insertReviewWinery($controller)
     }
 }
 
+
+/**
+ * 
+ * returns the average points per winery (average rating in other words) from the database
+ * 
+ */
 function averagePointsPerWinery($controller)
 {
     $db = new Database();
@@ -303,6 +305,12 @@ function averagePointsPerWinery($controller)
 
 
 }
+
+/**
+ * 
+ * returns the average points per wine (average rating in other words) from the database
+ * 
+ */
 
 function averagePointsPerWine($controller)
 {
