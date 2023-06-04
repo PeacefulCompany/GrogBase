@@ -15,5 +15,12 @@ export type SearchOptions<T> = {
 export interface Options<T> {
   sortBy?: SortBy<T>,
   search?: SearchOptions<T>,
-  return?: keyof T[]
+  return?: keyof T[],
+  limit?: number
+}
+
+export interface Response<T> {
+  status: 'success' | 'error',
+  timestamp: number,
+  data: T
 }
