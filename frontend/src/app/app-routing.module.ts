@@ -6,6 +6,7 @@ import { WineriesPage } from './wineries/wineries.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent} from './signup/signup.component';
 import {  HomeComponent } from './home/home.component';
+import { WinePage } from './wines/wines.component';
 
 const routes: Routes = [
 
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: "wineries",
     component: WineriesPage
+  },
+  {
+    path: "wines",
+    component: WinePage
   },
   { path: '', component: HomeComponent },
 ];
