@@ -83,7 +83,7 @@ function checkPermission($controller)
     $data = $controller->get_post_json();
     $db = new Database();
 
-    $res = $db->query("SELECT * FROM Users WHERE api_key = ?", 's', [$data['api_key']]);
+    $res = $db->query("SELECT * FROM users WHERE api_key = ?", 's', [$data['api_key']]);
 
     if ($res != null) {
         if ($res[0]["user_type"] == 'Manager') {
