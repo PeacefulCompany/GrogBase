@@ -9,3 +9,9 @@ export interface Winery {
   website: string,
 }
 
+
+export interface WineryReview {
+  winery_id: number
+  points: number,
+  review: string,
+}

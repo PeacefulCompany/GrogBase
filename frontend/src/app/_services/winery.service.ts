@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Options, Response, Winery } from '../_types';
+import { Options, Response, Winery, WineryReview } from '../_types';
 
 
 @Injectable({
@@ -111,6 +111,21 @@ export class WineryService {
       api_key: 'fuck you',
       type: 'deleteWinery',
       winery_id: winery.winery_id
+    }).pipe(map(() => true));
+  }
+
+  review(rating: WineryReview): Observable<boolean> {
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'insertReviewWinery',
+      target: {
+        user_id: 1,
+        winery_id: rating.winery_id
+      },
+      values: {
+        points: rating,
+        review: rating.review
+      }
     }).pipe(map(() => true));
   }
 

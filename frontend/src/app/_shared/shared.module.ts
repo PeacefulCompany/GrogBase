@@ -17,6 +17,9 @@ import { WineComponent } from './wine/wine.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { WineTypeComponent } from './wine-type/wine-type.component';
+import { ReviewWineryComponent } from './review-winery/review-winery.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,8 @@ import { WineTypeComponent } from './wine-type/wine-type.component';
     WineEditorComponent,
     WineryComponent,
     WineComponent,
-    WineTypeComponent
+    WineTypeComponent,
+    ReviewWineryComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +41,9 @@ import { WineTypeComponent } from './wine-type/wine-type.component';
     MatButtonModule,
     MatSelectModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatIconModule,
+    MatSliderModule
   ],
 
   exports: [
@@ -45,7 +51,8 @@ import { WineTypeComponent } from './wine-type/wine-type.component';
     WineEditorComponent,
     WineryComponent,
     WineComponent,
-    WineTypeComponent
+    WineTypeComponent,
+
   ],
 })
 export class SharedModule { }
