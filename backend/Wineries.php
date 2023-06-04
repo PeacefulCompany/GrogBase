@@ -167,7 +167,7 @@ function addWineriesSQLCall($controller,$wineries){
 	$params = array('name','description','established','location','region','country','website','manager_id');
 	$types = "";
 	foreach ($wineries as $oneWinery) {
-		$query .= '(?, ?, ?, ?, ?, ?, ?, ?, ?), ';
+		$query .= '(?, ?, ?, ?, ?, ?, ?, ?), ';
 		foreach ($params as $oneParam) {
 			array_push($allParams, $oneWinery[$oneParam]);
 			if ($oneParam == 'manager_id' || $oneParam == 'established') {
