@@ -280,7 +280,7 @@ function insertReviewWines($controller)
         $db->query($query, 'iiisi', $arr);
 
     } else {
-        throw new Exception("missing feilds in target or values");
+        throw new Exception("missing feilds in target or values", 400);
     }
 }
 
@@ -299,10 +299,10 @@ function insertReviewWinery($controller)
 
     $query = "INSERT INTO reviews_winery VALUES(?,?,?,?)";
 
-    if (isset($data['target']['user_id']) && isset($data['target']['wine_id']) && isset($data['values']['points']) && isset($data['values']['review'])) {
+    if (isset($data['target']['user_id']) && isset($data['target']['winery_id']) && isset($data['values']['points']) && isset($data['values']['review'])) {
         $arr = [];
         array_push($arr, $data['target']['user_id']);
-        array_push($arr, $data['target']['wine_id']);
+        array_push($arr, $data['target']['winery_id']);
         array_push($arr, $data['values']['points']);
         array_push($arr, $data['values']['review']);
 
@@ -313,7 +313,7 @@ function insertReviewWinery($controller)
 
 
     } else {
-        throw new Exception("missing feilds in target or values");
+        throw new Exception("missing feilds in target or values", 400);
     }
 }
 
@@ -417,7 +417,7 @@ function deleteWineReview($controller)
         $db->query($query, "ii", [$data["target"]["user_id"], $data["target"]["wine_id"]]);
 
     } else {
-        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and wine_id");
+        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and wine_id", 400);
     }
 
 }
@@ -442,7 +442,7 @@ function deleteWineryReview($controller)
         $db->query($query, "ii", [$data["target"]["user_id"], $data["target"]["winery_id"]]);
 
     } else {
-        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and winery_id");
+        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and winery_id", 400);
     }
 
 }
