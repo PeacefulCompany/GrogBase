@@ -54,6 +54,12 @@ try {
         case "getWineryAverage":
             averagePointsPerWinery($controller);
             return;
+        case "deleteWineReview":
+            deleteWineReview($controller);
+            return;
+        case "deleteWineryReview":
+            deleteWineryReview($controller);
+            return;
         case "insertReviewWines":
             insertReviewWines($controller);
             return;
