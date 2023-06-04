@@ -1,18 +1,22 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" (click)="toggleSidenav()">
   <span>Welcome to GrogBase</span>
 </mat-toolbar>
-<mat-sidenav-container>
-    <mat-sidenav mode="side" opened>
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" #sidenav mode="side" [opened]="isSidenavOpened" opened class="sidenav">
       <mat-nav-list>
         <a mat-list-item routerLink="/">Home</a>
-        <a mat-list-item routerLink="/about">Wines</a>
+        <a mat-list-item routerLink="/wines">Wines</a>
         <a mat-list-item routerLink="/wineries">Wineries</a>
         <a mat-list-item routerLink="/admin">Admin</a>
-        <a mat-list-item routerLink="/contact">Contact</a>
-        <a mat-list-item routerLink="/about" id="About">About</a>
+        <div class="bottom-links">
+          <a mat-list-item routerLink="/contact" Class="bottom">Contact</a>
+          <a mat-list-item routerLink="/about" Class="bottom">About</a>
+        </div>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
+    <mat-sidenav-content class="content">
+      <div class="scrollable-content">
+        <router-outlet></router-outlet>
+      </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

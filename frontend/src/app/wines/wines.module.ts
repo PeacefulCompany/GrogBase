@@ -6,12 +6,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule} from '@angular/material/card';
-import { HomeComponent } from './home.component';
+import { WinePage } from './wines.component';
 import { SharedModule } from '../_shared/shared.module';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @NgModule({
     declarations: [
-        HomeComponent
+        WinePage
     ],
     imports: [
       BrowserModule,
@@ -24,8 +26,9 @@ import { SharedModule } from '../_shared/shared.module';
       MatToolbarModule,
       MatSidenavModule,
       MatListModule,
+      MatSelectModule
     ],
     providers: [],
   })
-  export class HomeModule {
+  export class WineModule {
   }

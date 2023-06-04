@@ -27,7 +27,6 @@ const SORT_OPTIONS: { label: string, sortBy: SortBy<Winery> }[] = [
 export class WineriesPage {
   wineries: Winery[] = [];
   sortOptions = SORT_OPTIONS;
-
   constructor(
     private wineryService: WineryService
   ) {

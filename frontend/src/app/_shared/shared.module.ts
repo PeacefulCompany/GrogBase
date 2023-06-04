@@ -12,6 +12,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { WineryEditorComponent } from './winery-editor/winery-editor.component';
 import { WineEditorComponent } from './wine-editor/wine-editor.component';
 import { WineryComponent } from './winery/winery.component';
+import { WineComponent } from './wine/wine.component';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { WineTypeComponent } from './wine-type/wine-type.component';
