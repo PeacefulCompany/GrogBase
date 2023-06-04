@@ -16,7 +16,7 @@
       <div class="grow">
       <mat-form-field>
         <mat-label>Name</mat-label>
-        <input matInput placeholder="Search name">
+        <input matInput placeholder="Search name" #input>
       </mat-form-field>
       </div>
       <app-wine-type (onChange)="wineTypeSelected($event)">

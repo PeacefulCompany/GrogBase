@@ -156,12 +156,12 @@ export class WineService {
       console.log("sort");
     }
     if(search) {
-      console.log(search);
+      console.log("search ", search);
       arr = arr.filter(elem => {
-        return Object.keys(search).some(key => {
+        return !Object.keys(search).some(key => {
           const value = search[key as keyof Wine];
-          if(!value) return true;
-          return elem[key as keyof Wine] == value;
+          if(!value) return false;
+          return elem[key as keyof Wine].toString().indexOf(value.toString()) == -1;
         });
       })
     }
