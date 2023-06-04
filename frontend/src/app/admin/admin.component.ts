@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, of, tap } from 'rxjs';
 import { WineryService } from '../_services/winery.service';
+import { WineEditorComponent } from '../_shared/wine-editor/wine-editor.component';
+import { WineryEditorComponent } from '../_shared/winery-editor/winery-editor.component';
 import { Winery, Wine, WineType, SearchOptions } from '../_types';
 import { WineTableComponent } from './wine-table/wine-table.component';
 
@@ -18,7 +21,8 @@ export class AdminPage implements AfterViewInit {
   @ViewChild(WineTableComponent) wineTable!: WineTableComponent;
 
   constructor(
-    private wineryService: WineryService
+    private wineryService: WineryService,
+    private dialog: MatDialog
   ) {
     this.wineryService.getAll()
     .subscribe(res => this.wineries = res);
@@ -44,10 +48,20 @@ export class AdminPage implements AfterViewInit {
   }
 
   onWineAdd() {
-    alert("Add wine");
   }
 
   onWineryAdd() {
-    alert("Add winery");
+    const ref = this.dialog.open(WineryEditorComponent, {
+      width: "75%",
+      minHeight: "75%",
+      data: {}
+    });
+    ref.afterClosed().subscribe(data => {
+      if(!data) return;
+      data.manager_id = 5;
+      this.wineryService.insert(data)
+        .subscribe(() => this.wineTable.dataSource.getData());
+      console.log(data);
+    })
   }
 }

@@ -84,6 +84,24 @@ export class WineryService {
   }
 
   /**
+    * Adds a new winery to the database
+    * @param winery The winery to add
+    * @return Whether the insert was successful
+    */
+  insert(winery: any): Observable<boolean> {
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'addWinery',
+      wineries: [winery]
+    }).pipe(
+      catchError(e => {
+        throw e.error;
+      }),
+      map(() => true)
+    );
+  }
+
+  /**
     * Updates the data of a winery
     * @param winery The winery to delete
     * @return Whether the update was successful
