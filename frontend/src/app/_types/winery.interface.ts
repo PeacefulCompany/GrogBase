@@ -1,5 +1,5 @@
 export interface Winery {
-  id: number,
+  winery_id: number,
   name: string,
   description: string,
   established: number,

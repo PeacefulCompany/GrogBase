@@ -1,17 +1,28 @@
-<h2 class="title">Wineries</h2>
-<div class="list">
-  <admin-winery *ngFor="let winery of wineries"
-    (onEdit)="editWinery($event)"
-    (onDelete)="deleteWinery($event)"
-    [winery]="winery"
-    ></admin-winery>
-</div>
-<h2 class="title">Wines</h2>
-<div class="list">
-  <admin-wine
-    *ngFor="let wine of wines"
-    (onEdit)="editWine($event)"
-    (onDelete)="deleteWine($event)"
-    [wine]="wine"
-    ></admin-wine>
-</div>
+<mat-tab-group>
+  <mat-tab label="Wineries">
+    <div class="header-bar">
+      <h2 class="title">Wineries</h2>
+      <button mat-raised-button color="primary" (click)="onWineryAdd()">Add</button>
+    </div>
+    <app-winery-table>
+    </app-winery-table>
+  </mat-tab>
+  <mat-tab label="Wines">
+    <div class="header-bar">
+      <h2 class="title">Wines</h2>
+      <button mat-raised-button color="primary" (click)="onWineAdd()">Add</button>
+    </div>
+    <div class="filterList">
+      <div class="grow">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Search name" #input>
+      </mat-form-field>
+      </div>
+      <app-wine-type (onChange)="wineTypeSelected($event)">
+      </app-wine-type>
+    </div>
+    <app-wine-table #wineTable>
+    </app-wine-table>
+  </mat-tab>
+</mat-tab-group>

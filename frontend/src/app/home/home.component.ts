@@ -16,9 +16,9 @@ export class HomeComponent {
     private wineService: WineService,
     private wineryService: WineryService
   ) {
-    this.wineService.getTopWines()
+    this.wineService.getAll()
       .subscribe(res => this.TopWine = res);
-    this.wineryService.getTopWineries()
+    this.wineryService.getAll()
       .subscribe(res => this.Localwiener = res);
   }
 }

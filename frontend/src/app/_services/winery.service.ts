@@ -1,96 +1,18 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Options, SearchOptions, SortBy, Winery } from '../_types';
+import { catchError, map, Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Options, Response, Winery } from '../_types';
 
-const WINERIES: Winery[]  = [
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerOne',
-      established: 2019,
-      location: 'Wien',
-      country: 'South Africa',
-      region: 'Africa',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerTwo',
-      established: 2019,
-      location: 'Wien',
-      country: 'Austria',
-      region: 'Europe',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerTwo',
-      established: 2019,
-      location: 'Wien',
-      country: 'Austria',
-      region: 'Europe',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerTwo',
-      established: 2019,
-      location: 'Wien',
-      country: 'Austria',
-      region: 'Europe',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerTwo',
-      established: 2019,
-      location: 'Wien',
-      country: 'Austria',
-      region: 'Europe',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerTwo',
-      established: 2019,
-      location: 'Wien',
-      country: 'Austria',
-      region: 'Europe',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerTwo',
-      established: 2019,
-      location: 'Wien',
-      country: 'Austria',
-      region: 'Europe',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    },
-    {
-      id: Math.floor(Math.random() * 1000),
-      name: 'WienerTwo',
-      established: 2019,
-      location: 'Wien',
-      country: 'Austria',
-      region: 'Europe',
-      website: 'https://www.wiener.com',
-      description: 'Wiener is a company that sells hot dogs.'
-    }
-   ];
 
 @Injectable({
   providedIn: 'root'
 })
 export class WineryService {
 
-  constructor() { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   /**
     * Retrieves all entries from the database with
@@ -99,15 +21,48 @@ export class WineryService {
     * @return The array of wineries
     */
   getAll(options?: Options<Winery>): Observable<Winery[]> {
-    let arr = WINERIES;
     const sortBy = options?.sortBy;
-    if(sortBy) arr = arr.sort((a, b) => {
-      if(a[sortBy.key] < b[sortBy.key]) return -1;
-      if(a[sortBy.key] > b[sortBy.key]) return 1;
-      return 0;
-    });
+    let search = options?.search;
 
-    return of(arr);
+    let params: any = {
+      // should be replaced by actual authenticated API key
+      api_key: "fuck tou",
+      type: "getWineries",
+      return: options?.return || ["*"],
+      search: {}
+    };
+
+    if(sortBy) {
+      params.sort = sortBy.key;
+      params.order = sortBy.order;
+    }
+
+    if(search) {
+      // filter out search paramters containing null values
+      search = Object.fromEntries(
+        Object.entries(search)
+        .filter(([_, value]) => {
+          return ![undefined, null].includes(value as any);
+        }));
+
+      // API doesn't accept empty search objects
+      if(Object.keys(search).length > 0) {
+        params.search = search;
+        params.fuzzy = true;
+      }
+    }
+    params.search.active = "1";
+
+    const obs = this.http.post<Response<Winery[]>>(environment.apiEndpoint, params)
+      .pipe(
+        catchError(e => {
+          console.error(e.error);
+          return of(e.error)
+        }),
+        map((res: Response<any[]>) => {
+          return res.data;
+        }));
+    return obs;
   }
 
   /**
@@ -116,31 +71,51 @@ export class WineryService {
     * @return Whether the update was successful
     */
   update(winery: Winery): Observable<boolean> {
-    alert("update: " + JSON.stringify(winery));
-    return of(true);
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'updateWinery',
+      update: winery
+    }).pipe(
+      catchError(e => {
+        throw e.error;
+      }),
+      map(() => true)
+    );
+  }
+
+  /**
+    * Adds a new winery to the database
+    * @param winery The winery to add
+    * @return Whether the insert was successful
+    */
+  insert(winery: any): Observable<boolean> {
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'addWinery',
+      wineries: [winery]
+    }).pipe(
+      catchError(e => {
+        throw e.error;
+      }),
+      map(() => true)
+    );
   }
 
   /**
     * Updates the data of a winery
-    * @param winery The winery to update
+    * @param winery The winery to delete
     * @return Whether the update was successful
     */
   delete(winery: Winery): Observable<boolean> {
-    alert("delete: " + winery.id);
-    return of(true);
-  }
-
-  /*
-    * @param term The search term
-    * @return The array of wineries
-    */
-  search(search: SearchOptions<Winery>, options?: Options<Winery>): Observable<Winery[]> {
-    let arr = WINERIES;
-    return of(arr);
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'deleteWinery',
+      winery_id: winery.winery_id
+    }).pipe(map(() => true));
   }
 
   getTopWineries(options?: Options<Winery>): Observable<Winery[]> {
-    let arr = WINERIES;
+    let arr: Winery[] = [];
     const sortBy = options?.sortBy;
     if(sortBy) arr = arr.sort((a, b) => {
       if(a[sortBy.key] < b[sortBy.key]) return -1;

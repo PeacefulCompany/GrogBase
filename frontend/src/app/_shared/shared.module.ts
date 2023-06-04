@@ -16,13 +16,14 @@ import { WineComponent } from './wine/wine.component';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { WineTypeComponent } from './wine-type/wine-type.component';
 
 @NgModule({
   declarations: [
     WineryEditorComponent,
     WineEditorComponent,
     WineryComponent,
-    WineComponent
+    WineTypeComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +43,7 @@ import { MatDividerModule } from '@angular/material/divider';
     WineryEditorComponent,
     WineEditorComponent,
     WineryComponent,
-    WineComponent
+    WineTypeComponent
   ],
 })
 export class SharedModule { }
