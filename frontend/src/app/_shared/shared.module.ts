@@ -23,6 +23,7 @@ import { WineTypeComponent } from './wine-type/wine-type.component';
     WineryEditorComponent,
     WineEditorComponent,
     WineryComponent,
+    WineComponent,
     WineTypeComponent
   ],
   imports: [
@@ -43,6 +44,7 @@ import { WineTypeComponent } from './wine-type/wine-type.component';
     WineryEditorComponent,
     WineEditorComponent,
     WineryComponent,
+    WineComponent,
     WineTypeComponent
   ],
 })
