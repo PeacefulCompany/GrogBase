@@ -80,7 +80,8 @@ function getReturnRecords($controller,$return_pars, $sort, $order, $search, $lim
 		"region",
 		"country",
 		"website",
-		"manager_id"
+		"manager_id",
+		"active"
 	);
 	
 	if(isset($sort) && in_array($sort, $sort_fields))	//If sort is not null or doesn't exist it will load the sort conditions
