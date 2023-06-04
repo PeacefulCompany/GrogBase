@@ -56,12 +56,12 @@ export class WineTableDataSource extends DataSource<Wine> {
   }
   updateWine(wine: Wine) {
     this.data.next(this.data.value.map(elem => {
-      if(elem.id != wine.id) return elem;
+      if(elem.wine_id != wine.wine_id) return elem;
       return wine;
     }));
   }
   removeWine(wine: Wine) {
-    this.data.next(this.data.value.filter(elem => elem.id != wine.id));
+    this.data.next(this.data.value.filter(elem => elem.wine_id != wine.wine_id));
   }
 
   /**

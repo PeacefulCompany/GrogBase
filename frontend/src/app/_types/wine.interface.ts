@@ -12,7 +12,7 @@ export enum WineType {
 }
 
 export interface Wine {
-  id: number,
+  wine_id: number,
   name: string,
   description: string,
   type: WineType,
@@ -30,4 +30,10 @@ export namespace WineType {
   export function valueOf(str: string) {
     return reverseMap.get(str);
   }
+}
+export interface WineReview {
+  wine_id: number,
+  drunk: boolean,
+  points: number,
+  review: string
 }
