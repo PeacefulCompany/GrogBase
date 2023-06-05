@@ -28,8 +28,6 @@ export class UserService {
   user = {
     user_id: null,
     email: null,
-    fname: null,
-    lname: null,
     user_type: null,
     api_key: null
   } as user;
