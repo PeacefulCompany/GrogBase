@@ -1,5 +1,7 @@
-export interface signupRequest{
-  type: "Register";
+import { Response } from "./index";
+
+export interface SignupRequest {
+  type: "register";
 
   details:{
     email: string;
@@ -9,12 +11,8 @@ export interface signupRequest{
   }
 }
 
-export interface signupResponse{
-  status: string;
-  timestamp: number;
-  data: string | {
-    user_id: number;
-    api_key: string;
-    user_type: string;
-  };
-}
+export type SignupResponse = Response<{
+  user_id: number;
+  api_key: string;
+  user_type: string;
+}>;

@@ -1,23 +1,20 @@
 import { Injectable } from '@angular/core';
 import {
-  signupRequest,
-  signupResponse
+  SignupRequest,
+  SignupResponse
 } from '../_types/signup.interfaces';
 import {
-  loginRequest,
-  loginResponse
+  LoginRequest,
+  LoginResponse
 } from '../_types/login.interfaces';
 
-import { user } from '../_types/user.interface';
+import { User } from '../_types/user.interface';
 
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { from } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { on } from 'events';
 
 @Injectable({
   providedIn: 'root'
@@ -25,23 +22,20 @@ import { on } from 'events';
 export class UserService {
   constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) { }
 
-  user = {
-    user_id: null,
-    email: null,
-    user_type: null,
-    api_key: null
-  } as user;
+  private user?: User;
 
   //get user
-  get currentUser(): user {
-    return this.user;
+  get currentUser(): User {
+    return this.user!;
   }
-
+  get isLoggedIn(): boolean {
+    return !!this.user;
+  }
 
   signUpUser(email: string, fName: string, lName: string, password: string) {
 
-      const signupRequest: signupRequest = {
-          type: "Register",
+      const signupRequest: SignupRequest = {
+          type: "register",
           details: {
               email: email,
               fname: fName,
@@ -50,9 +44,9 @@ export class UserService {
           }
       }
 
-      this.http.post<signupResponse>(environment.apiEndpoint, signupRequest)
+      this.http.post<SignupResponse>(environment.apiEndpoint, signupRequest)
       .pipe(
-        tap((response: signupResponse) => {
+        tap((response: SignupResponse) => {
           if (response.status === 'success') {
             this.snackBar.open("Signup Succesful", 'Close', {
               duration: 3000,
@@ -64,32 +58,32 @@ export class UserService {
             });
           }
         })
-      );
+      ).subscribe();
   }
 
   logInUser(email: string, password: string) {
 
-    const loginRequest: loginRequest = {
-        type: "Login",
+    const loginRequest: LoginRequest = {
+        type: "login",
         details: {
             email: email,
             password: password
         }
     }
 
-    this.http.post<loginResponse>(environment.apiEndpoint, loginRequest)
+    this.http.post<LoginResponse>(environment.apiEndpoint, loginRequest)
     .pipe(
-      tap((response: loginResponse) => {
+      tap((response: LoginResponse) => {
         if (response.status === 'success') {
           this.snackBar.open("Login Succesful", 'Close', {
             duration: 3000,
           });
 
           if(!(typeof response.data === 'string')){
-            this.currentUser.user_id = response.data.user_id;
-            this.currentUser.email = email;
-            this.currentUser.user_type = response.data.user_type;
-            this.currentUser.api_key = response.data.api_key;
+            this.user = {
+              ...response.data,
+              email
+            }
           }
 
           this.router.navigate(['/home']);
@@ -99,7 +93,7 @@ export class UserService {
           });
         }
       })
-    );
+    ).subscribe();
   }
 
 }

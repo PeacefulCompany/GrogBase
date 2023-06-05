@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Options, Response, Winery, WineryReview } from '../_types';
+import { WineryRequest } from '../_types/request.interface';
+import { UserService } from './user.service';
 
 
 @Injectable({
@@ -11,7 +13,8 @@ import { Options, Response, Winery, WineryReview } from '../_types';
 export class WineryService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private user: UserService
   ) { }
 
   /**
@@ -26,8 +29,8 @@ export class WineryService {
 
     let params: any = {
       // should be replaced by actual authenticated API key
-      api_key: "fuck tou",
-      type: "getWineries",
+      api_key: this.user.currentUser!.api_key,
+      type: WineryRequest.GetAll,
       return: options?.return || ["*"],
       search: {}
     };
@@ -72,8 +75,8 @@ export class WineryService {
     */
   update(winery: Winery): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
-      type: 'updateWinery',
+      api_key: this.user.currentUser!.api_key,
+      type: WineryRequest.Update,
       update: winery
     }).pipe(
       catchError(e => {
@@ -90,8 +93,8 @@ export class WineryService {
     */
   insert(winery: any): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
-      type: 'addWinery',
+      api_key: this.user.currentUser!.api_key,
+      type: WineryRequest.Add,
       wineries: [winery]
     }).pipe(
       catchError(e => {
@@ -108,16 +111,16 @@ export class WineryService {
     */
   delete(winery: Winery): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
-      type: 'deleteWinery',
+      api_key: this.user.currentUser!.api_key,
+      type: WineryRequest.Delete,
       winery_id: winery.winery_id
     }).pipe(map(() => true));
   }
 
   review(rating: WineryReview): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
-      type: 'insertReviewWinery',
+      api_key: this.user.currentUser!.api_key,
+      type: WineryRequest.Review,
       target: {
         user_id: 1,
         winery_id: rating.winery_id
