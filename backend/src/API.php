@@ -1,4 +1,8 @@
 <?php
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once "Config.php"; // definitions of database credentials
 
 //NOTE: The includes for Controller and Database may need to have their filepaths modified

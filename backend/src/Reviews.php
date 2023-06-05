@@ -461,7 +461,7 @@ function getUserID($controller)
     $res = $db->query("SELECT * FROM users WHERE api_key = ?", 's', [$data['api_key']]);
 
     if ($res != null) {
-        return $res["user_id"];
+        return $res[0]["user_id"];
     } else {
         throw new Exception("Nice try but you don't even exist in the database... L", 400);
     }
