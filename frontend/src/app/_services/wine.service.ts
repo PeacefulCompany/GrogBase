@@ -5,6 +5,7 @@ import { Options, Wine, WineReview } from '../_types';
 
 import { environment } from 'src/environments/environment';
 import { Response } from '../_types';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ import { Response } from '../_types';
 export class WineService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private user: UserService
   ) { }
 
   getAll(options?: Options<Wine>): Observable<Wine[]> {
@@ -21,7 +23,7 @@ export class WineService {
 
     let params: any = {
       // should be replaced by actual authenticated API key
-      api_key: "fuck tou",
+      api_key: this.user.currentUser.api_key,
       type: "wines",
       return: ["*"]
     };
@@ -64,7 +66,7 @@ export class WineService {
   }
   review(rating: WineReview): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
+      api_key: this.user.currentUser.api_key,
       type: 'insertReviewWines',
       target: {
         user_id: 1,

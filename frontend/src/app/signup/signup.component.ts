@@ -18,6 +18,7 @@ export class SignupComponent{
   constructor(private userService: UserService, private snackBar: MatSnackBar, private router: Router) { }
 
   signup(){
+    console.log("signup");
     this.userService.signUpUser(this.email, this.fName, this.lName, this.password);
   }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { UserType } from '../_types/user.interface';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -11,7 +12,7 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): boolean {
   if (this.userService.currentUser.api_key !== null) {
       const user = this.userService.currentUser;
-      if(user.user_type === 'admin' || user.user_type === 'manager') {
+      if(user.user_type === UserType.Admin || user.user_type === UserType.Manager) {
         if(route?.routeConfig?.path === 'admin' || route?.routeConfig?.path === 'wineries') {
           return true;
         }

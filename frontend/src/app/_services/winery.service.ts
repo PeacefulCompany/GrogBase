@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Options, Response, Winery, WineryReview } from '../_types';
+import { UserService } from './user.service';
 
 
 @Injectable({
@@ -11,7 +12,8 @@ import { Options, Response, Winery, WineryReview } from '../_types';
 export class WineryService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private user: UserService
   ) { }
 
   /**
@@ -26,7 +28,7 @@ export class WineryService {
 
     let params: any = {
       // should be replaced by actual authenticated API key
-      api_key: "fuck tou",
+      api_key: this.user.currentUser.api_key,
       type: "getWineries",
       return: options?.return || ["*"],
       search: {}
@@ -72,7 +74,7 @@ export class WineryService {
     */
   update(winery: Winery): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
+      api_key: this.user.currentUser.api_key,
       type: 'updateWinery',
       update: winery
     }).pipe(
@@ -90,7 +92,7 @@ export class WineryService {
     */
   insert(winery: any): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
+      api_key: this.user.currentUser.api_key,
       type: 'addWinery',
       wineries: [winery]
     }).pipe(
@@ -108,7 +110,7 @@ export class WineryService {
     */
   delete(winery: Winery): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
+      api_key: this.user.currentUser.api_key,
       type: 'deleteWinery',
       winery_id: winery.winery_id
     }).pipe(map(() => true));
@@ -116,7 +118,7 @@ export class WineryService {
 
   review(rating: WineryReview): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: 'fuck you',
+      api_key: this.user.currentUser.api_key,
       type: 'insertReviewWinery',
       target: {
         user_id: 1,
