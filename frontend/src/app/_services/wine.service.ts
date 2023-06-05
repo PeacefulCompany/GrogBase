@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { Options, Wine } from '../_types';
+import { Options, Wine, WineReview } from '../_types';
 
 import { environment } from 'src/environments/environment';
 import { Response } from '../_types';
@@ -61,6 +61,21 @@ export class WineService {
   }
   delete(wine: Wine) {
     alert("delete wine: " + JSON.stringify(wine));
+  }
+  review(rating: WineReview): Observable<boolean> {
+    return this.http.post(environment.apiEndpoint, {
+      api_key: 'fuck you',
+      type: 'insertReviewWines',
+      target: {
+        user_id: 1,
+        wine_id: rating.wine_id
+      },
+      values: {
+        points: rating.points,
+        review: rating.review,
+        drunk: rating.drunk
+      }
+    }).pipe(map(() => true));
   }
 
   getTopWines(options?: Options<Wine>): Observable<Wine[]> {

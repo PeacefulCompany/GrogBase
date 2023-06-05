@@ -17,6 +17,8 @@
     <mat-divider></mat-divider>
   </mat-card-content>
   <mat-card-footer id="footer">
+    <button mat-stroked-button (click)="reviewMe()">Write a review</button>
+    <span class="spacer"></span>
     <mat-card-subtitle>
       {{winery.location}}, {{winery.region}} {{winery.country}}
     </mat-card-subtitle>
