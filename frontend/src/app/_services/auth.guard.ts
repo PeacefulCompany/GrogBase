@@ -11,21 +11,22 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): boolean {
   if (this.userService.currentUser.api_key !== null) {
       const user = this.userService.currentUser;
-      if (user && user.user_type === 'admin') {
-        return true; // admin can access any page
-      } else {
-        if (route?.routeConfig?.path === 'admin') {
-          this.router.navigate(['/home']);
-          return false;
-        }else{
+      if(user.user_type === 'admin' || user.user_type === 'manager') {
+        if(route?.routeConfig?.path === 'admin' || route?.routeConfig?.path === 'wineries') {
           return true;
         }
-        //implement else ifs for other user types and other pages
+          this.router.navigate(['/admin']);
+          return false;
+      } else {
+        if(route?.routeConfig?.path === 'admin'){
+          this.router.navigate(['/home']);
+          return false;
+        }
+        return true;
       }
     } else {
       this.router.navigate(['/login']);
       return false;
     }
   }
-
 }
