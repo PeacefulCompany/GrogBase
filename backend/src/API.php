@@ -40,7 +40,7 @@ try {
             validateDetails($controller);
             return;
         case "register":
-            registerUser($controller);
+            createUser($controller);
             return;
         case "getWineReviews":
             getWineReviews($controller);
