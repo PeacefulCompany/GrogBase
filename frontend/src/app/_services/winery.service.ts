@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Options, Response, Winery, WineryReview } from '../_types';
+import { WineryRequest } from '../_types/request.interface';
 import { UserService } from './user.service';
 
 
@@ -28,8 +29,8 @@ export class WineryService {
 
     let params: any = {
       // should be replaced by actual authenticated API key
-      api_key: this.user.currentUser.api_key,
-      type: "getWineries",
+      api_key: this.user.currentUser!.api_key,
+      type: WineryRequest.GetAll,
       return: options?.return || ["*"],
       search: {}
     };
@@ -74,8 +75,8 @@ export class WineryService {
     */
   update(winery: Winery): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: this.user.currentUser.api_key,
-      type: 'updateWinery',
+      api_key: this.user.currentUser!.api_key,
+      type: WineryRequest.Update,
       update: winery
     }).pipe(
       catchError(e => {
@@ -92,7 +93,7 @@ export class WineryService {
     */
   insert(winery: any): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: this.user.currentUser.api_key,
+      api_key: this.user.currentUser!.api_key,
       type: 'addWinery',
       wineries: [winery]
     }).pipe(
@@ -110,7 +111,7 @@ export class WineryService {
     */
   delete(winery: Winery): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: this.user.currentUser.api_key,
+      api_key: this.user.currentUser!.api_key,
       type: 'deleteWinery',
       winery_id: winery.winery_id
     }).pipe(map(() => true));
@@ -118,7 +119,7 @@ export class WineryService {
 
   review(rating: WineryReview): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: this.user.currentUser.api_key,
+      api_key: this.user.currentUser!.api_key,
       type: 'insertReviewWinery',
       target: {
         user_id: 1,

@@ -23,7 +23,7 @@ export class WineService {
 
     let params: any = {
       // should be replaced by actual authenticated API key
-      api_key: this.user.currentUser.api_key,
+      api_key: this.user.currentUser!.api_key,
       type: "wines",
       return: ["*"]
     };
@@ -66,7 +66,7 @@ export class WineService {
   }
   review(rating: WineReview): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
-      api_key: this.user.currentUser.api_key,
+      api_key: this.user.currentUser!.api_key,
       type: 'insertReviewWines',
       target: {
         user_id: 1,

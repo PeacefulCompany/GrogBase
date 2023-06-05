@@ -22,11 +22,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UserService {
   constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) { }
 
-  user?: User;
+  private user?: User;
 
   //get user
   get currentUser(): User {
     return this.user!;
+  }
+  get isLoggedIn(): boolean {
+    return !!this.user;
   }
 
   signUpUser(email: string, fName: string, lName: string, password: string) {
