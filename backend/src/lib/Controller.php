@@ -19,6 +19,8 @@ class Controller {
      * modified to include any additional headers that are required
      */
     public function __construct() {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Headers: *");
         header("Content-Type: application/json", true);
     }
 

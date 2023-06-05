@@ -1,5 +1,5 @@
 <?php
-include_once "Config.php"; // definitions of database credentials
+require_once "Config.php"; // definitions of database credentials
 
 //NOTE: The includes for Controller and Database may need to have their filepaths modified
 require_once "lib/Database.php"; // database class: handles db connection and statement execution
@@ -14,25 +14,35 @@ include "Wines.php"; // wines endpoint
 
 $controller = new Controller(); //create controller class
 
+// Angular does an OPTIONS request before sending the actual
+// request. This is added such that the API doesn't bomb
+// when this is request is made
+if($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
+    http_response_code(200);
+    exit(0);
+}
+
 try {
     $controller->allowed_methods(["POST"]); // forces user to use POST
     $controller->assert_params(["api_key", "type"]); // ensures requests contain an API key and request type
-    $input_json = $controller->get_post_json(); // request JSON parsed as associative array
+    $data = $controller->get_post_json(); // request JSON parsed as associative array
 
     /**
-     * 
-     * 
-     * 
-     * 
      * please add the relevant endpoint functions in the switch case below
      * They should all echo the result data out by themselves, it you used Vincent's stuff correctly
      * All error hangling will be done here
-     * 
-     * 
-     * 
      */
     checkPermission($controller);
     switch ($data["type"]) {
+        case "wines":
+            direct($controller);
+            return;
+        case "updateWine":
+            updateWine($controller);
+            return;
+        case "deleteWine":
+            deleteWine($controller);
+            return;
         case "wines":
             direct($controller);
             return;
@@ -102,10 +112,20 @@ function checkPermission($controller)
      * ||---------------------------------------------------------------------------------------------------------||
      * 
      */
+    $perms = [
+        'login' => ['login', 'register'],
+        'view' => ['getWineries', 'wines', 'getWineReviews', 'getWineryReviews', 'getWineryAverage', 'getWineAverage'],
+        'review' => ["insertReviewWinery", "insertReviewWines", "deleteWineryReview", "deleteWineReview"],
+        'util' => ['getCountries'],
+        'admin-winery' => ['updateWinery', 'addWinery'],
+        'admin-wine' => ['updateWine', 'addWine']
+    ];
+
     $permArray = [
-        "Manager" => [],
-        "Critic" => ["insertReviewWinery", "insertReviewWines", "deleteWineryReview", "deleteWineReview", "getWineAverage", "getWineryAverage", "getWineryReviews", "getWineReviews"], 
-        "User" => ["insertReviewWinery", "insertReviewWines", "deleteWineryReview", "deleteWineReview", "getWineAverage", "getWineryAverage", "getWineryReviews", "getWineReviews"]];
+        "Manager" => array_merge($perms['login'], $perms['util'], $perms['admin-winery'], $perms['admin-wine']),
+        "Critic" => array_merge($perms['login'], $perms['util'], $perms['view'], $perms['review']),
+        "User" => array_merge($perms['login'], $perms['util'], $perms['view'], $perms['review'])
+    ];
 
 
     $data = $controller->get_post_json();
