@@ -9,7 +9,7 @@ import { AdminModule } from './admin/admin.module';
 import { WineriesModule } from './wineries/wineries.module';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
-
+import { AuthGuard } from './_services/auth.guard';
 import { LoginModule } from './login/login.module';
 import { SignupModule } from './signup/signup.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -37,12 +37,12 @@ import { WineModule } from './wines/wines.module';
     SignupModule,
     HttpClientModule,
     HomeModule,
-  
+
     MatButtonModule,
     MatToolbarModule,
     MatListModule
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {

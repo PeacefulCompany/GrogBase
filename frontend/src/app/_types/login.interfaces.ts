@@ -1,9 +1,17 @@
 export interface loginRequest{
-  email: string;
-  password: string;
+  type: "Login";
+  details:{
+    email: string;
+    password: string;
+  }
 }
 
-export interface loginResponse<T>{
+export interface loginResponse{
   status: string;
-  data: T | string;
+  timestamp: number;
+  data: string | {
+    user_id: number;
+    api_key: string;
+    user_type: string;
+  };
 }
