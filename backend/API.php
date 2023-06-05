@@ -10,6 +10,8 @@ include "Reviews.php"; // review endpoint
 include "Wineries.php"; // wineries endpoint
 include "Wines.php"; // wines endpoint
 
+
+
 $controller = new Controller(); //create controller class
 
 try {
@@ -32,6 +34,7 @@ try {
      * 
      * 
      */
+    checkPermission($controller);
     switch ($data["type"]) {
         case "wines":
             direct($controller);
@@ -87,15 +90,34 @@ try {
  * fair warning this function is untested and may need changes
  * 
  */
+
+
+
+
 function checkPermission($controller)
 {
+    /**
+     * 
+     * ||---------------------------------------------------------------------------------------------------------||
+     * ||=========================================================================================================||
+     * ||please add the endpoints that specific users types can access in your endpoints to the assoc array below ||
+     * ||=========================================================================================================||
+     * ||---------------------------------------------------------------------------------------------------------||
+     * 
+     */
+    $permArray = [
+        "Manager" => [],
+        "Critic" => ["insertReviewWinery", "insertReviewWines", "deleteWineryReview", "deleteWineReview", "getWineAverage", "getWineryAverage", "getWineryReviews", "getWineReviews"], 
+        "User" => ["insertReviewWinery", "insertReviewWines", "deleteWineryReview", "deleteWineReview", "getWineAverage", "getWineryAverage", "getWineryReviews", "getWineReviews"]];
+
+
     $data = $controller->get_post_json();
     $db = new Database();
 
     $res = $db->query("SELECT * FROM users WHERE api_key = ?", 's', [$data['api_key']]);
 
     if ($res != null) {
-        if ($res[0]["user_type"] == 'Manager') {
+        if (in_array($data['type'],$permArray[$res[0]["user_type"]]) ) {
             return true;
         } else {
 
