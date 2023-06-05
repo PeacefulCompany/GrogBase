@@ -260,29 +260,30 @@ function getWineReviews($controller) //determines the amount of join that will n
  * 
  */
 
-function insertReviewWines($controller)
-{
-    $data = $controller->get_post_json();
-    $controller->assert_params(["target", 'values']);
-
-
-    $query = "INSERT INTO reviews_wine VALUES(?,?,?,?,?)";
-
-    if (isset($data['target']['user_id']) && isset($data['target']['wine_id']) && isset($data['values']['points']) && isset($data['values']['review']) && isset($data['values']['drunk'])) {
-        $arr = [];
-        array_push($arr, $data['target']['user_id']);
-        array_push($arr, $data['target']['wine_id']);
-        array_push($arr, $data['values']['points']);
-        array_push($arr, $data['values']['review']);
-        array_push($arr, $data['values']['drunk']);
-        $db = new Database();
-
-        $db->query($query, 'iiisi', $arr);
-
-    } else {
-        throw new Exception("missing feilds in target or values", 400);
-    }
-}
+ function insertReviewWines($controller)
+ {
+     $data = $controller->get_post_json();
+     $controller->assert_params(["target", 'values']);
+     $userID = getUserID($controller);
+ 
+ 
+     $query = "INSERT INTO reviews_wine VALUES(?,?,?,?,?)";
+ 
+     if (isset($data['target']['wine_id']) && isset($data['values']['points']) && isset($data['values']['review']) && isset($data['values']['drunk'])) {
+         $arr = [];
+         array_push($arr, $userID);
+         array_push($arr, $data['target']['wine_id']);
+         array_push($arr, $data['values']['points']);
+         array_push($arr, $data['values']['review']);
+         array_push($arr, $data['values']['drunk']);
+         $db = new Database();
+ 
+         $db->query($query, 'iiisi', $arr);
+ 
+     } else {
+         throw new Exception("missing feilds in target or values");
+     }
+ }
 
 
 /**
@@ -292,30 +293,31 @@ function insertReviewWines($controller)
  * 
  */
 
-function insertReviewWinery($controller)
-{
-    $data = $controller->get_post_json();
-    $controller->assert_params(["target", 'values']);
-
-    $query = "INSERT INTO reviews_winery VALUES(?,?,?,?)";
-
-    if (isset($data['target']['user_id']) && isset($data['target']['winery_id']) && isset($data['values']['points']) && isset($data['values']['review'])) {
-        $arr = [];
-        array_push($arr, $data['target']['user_id']);
-        array_push($arr, $data['target']['winery_id']);
-        array_push($arr, $data['values']['points']);
-        array_push($arr, $data['values']['review']);
-
-        $db = new Database();
-
-        $data = $db->query($query, 'iiis', $arr);
-        $controller->success($data);
-
-
-    } else {
-        throw new Exception("missing feilds in target or values", 400);
-    }
-}
+ function insertReviewWinery($controller)
+ {
+     $data = $controller->get_post_json();
+     $controller->assert_params(["target", 'values']);
+     $userID = getUserID($controller);
+ 
+     $query = "INSERT INTO reviews_winery VALUES(?,?,?,?)";
+ 
+     if (isset($data['target']['wine_id']) && isset($data['values']['points']) && isset($data['values']['review'])) {
+         $arr = [];
+         array_push($arr, $userID);
+         array_push($arr, $data['target']['wine_id']);
+         array_push($arr, $data['values']['points']);
+         array_push($arr, $data['values']['review']);
+ 
+         $db = new Database();
+ 
+         $data = $db->query($query, 'iiis', $arr);
+         $controller->success($data);
+ 
+ 
+     } else {
+         throw new Exception("missing feilds in target or values");
+     }
+ }
 
 
 /**
@@ -404,23 +406,25 @@ function averagePointsPerWine($controller)
  * 
  */
 
-function deleteWineReview($controller)
-{
-    $data = $controller->get_post_json();
-
-    $controller->assert_params(["target"]);
-
-    if (isset($data["target"]["user_id"]) && isset($data["target"]["wine_id"])) {
-        $query = "DELETE FROM reviews_wine WHERE user_id = ? AND wine_id = ?";
-        $db = new Database();
-
-        $db->query($query, "ii", [$data["target"]["user_id"], $data["target"]["wine_id"]]);
-
-    } else {
-        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and wine_id", 400);
-    }
-
-}
+ function deleteWineReview($controller)
+ {
+     $data = $controller->get_post_json();
+ 
+     $controller->assert_params(["target"]);
+     $userID = getUserID($controller);
+ 
+ 
+     if (isset($data["target"]["wine_id"])) {
+         $query = "DELETE FROM reviews_wine WHERE user_id = ? AND wine_id = ?";
+         $db = new Database();
+ 
+         $db->query($query, "ii", [$userID, $data["target"]["wine_id"]]);
+ 
+     } else {
+         throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and wine_id");
+     }
+ 
+ }
 
 
 /**
@@ -429,25 +433,40 @@ function deleteWineReview($controller)
  * 
  */
 
-function deleteWineryReview($controller)
+ function deleteWineryReview($controller)
+ {
+     $data = $controller->get_post_json();
+ 
+     $controller->assert_params(["target"]);
+     $userID = getUserID($controller);
+ 
+     if (isset($data["target"]["winery_id"])) {
+ 
+         $query = "DELETE FROM reviews_wine WHERE user_id = ? AND winery_id = ?";
+         $db = new Database();
+ 
+         $db->query($query, "ii", [$userID, $data["target"]["winery_id"]]);
+ 
+     } else {
+         throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and winery_id");
+     }
+ 
+ }
+
+function getUserID($controller)
 {
     $data = $controller->get_post_json();
+    $db = new Database();
 
-    $controller->assert_params(["target"]);
+    $res = $db->query("SELECT * FROM users WHERE api_key = ?", 's', [$data['api_key']]);
 
-    if (isset($data["target"]["user_id"]) && isset($data["target"]["winery_id"])) {
-        $query = "DELETE FROM reviews_wine WHERE user_id = ? AND winery_id = ?";
-        $db = new Database();
-
-        $db->query($query, "ii", [$data["target"]["user_id"], $data["target"]["winery_id"]]);
-
+    if ($res != null) {
+        return $res["user_id"];
     } else {
-        throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and winery_id", 400);
+        throw new Exception("Nice try but you don't even exist in the database... L", 400);
     }
 
 }
-
-
 
 
 
