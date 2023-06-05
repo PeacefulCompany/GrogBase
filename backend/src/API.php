@@ -5,10 +5,10 @@ require_once "Config.php"; // definitions of database credentials
 require_once "lib/Database.php"; // database class: handles db connection and statement execution
 require_once "lib/Controller.php"; // handles incoming resp and req calls
 
-include "login_register.php"; // user verification and signup
-include "Reviews.php"; // review endpoint
-include "Wineries.php"; // wineries endpoint
-include "Wines.php"; // wines endpoint
+require_once "LoginRegister.php"; // user verification and signup
+require_once "Reviews.php"; // review endpoint
+require_once "Wineries.php"; // wineries endpoint
+require_once "Wines.php"; // wines endpoint
 
 
 
