@@ -22,18 +22,25 @@ if($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     exit(0);
 }
 
+define("PERM_NOAUTH", ['register', 'login']);
+
 try {
     $controller->allowed_methods(["POST"]); // forces user to use POST
-    $controller->assert_params(["api_key", "type"]); // ensures requests contain an API key and request type
+    $controller->assert_params(["type"]); // ensures requests contain an API key and request type
     $data = $controller->get_post_json(); // request JSON parsed as associative array
+
+    if(!in_array($data['type'], PERM_NOAUTH)) {
+        $controller->assert_params(["api_key"]);
+        checkPermission($controller);
+    }
 
     /**
      * please add the relevant endpoint functions in the switch case below
      * They should all echo the result data out by themselves, it you used Vincent's stuff correctly
      * All error hangling will be done here
      */
-    checkPermission($controller);
     switch ($data["type"]) {
+    // Wine CRUD
         case "wines":
             direct($controller);
             return;
@@ -43,44 +50,63 @@ try {
         case "deleteWine":
             deleteWine($controller);
             return;
-        case "wines":
-            direct($controller);
+
+    // Wine Reviews
+        case "getWineAverage":
+            averagePointsPerWine($controller);
             return;
+        case "getWineReviews":
+            getWineReviews($controller);
+            return;
+        case "deleteWineReview":
+            deleteWineReview($controller);
+            return;
+        case "insertReviewWines":
+            insertReviewWines($controller);
+            return;
+
+    // Login & Register
         case "login":
             validateDetails($controller);
             return;
         case "register":
             createUser($controller);
             return;
-        case "getWineReviews":
-            getWineReviews($controller);
+
+    // Winery CRUD
+        case "getWineries":
+            getWineries($controller);
             return;
+        case "addWinery":
+            addWineries($controller);
+            return;
+        case "updateWinery":
+            updateWinery($controller);
+            return;
+        case "deleteWinery":
+            deleteWinery($controller);
+            return;
+        
+    // Winery review
         case "getWineryReviews":
             getWineryReviews($controller);
-            return;
-        case "getWineAverage":
-            averagePointsPerWine($controller);
             return;
         case "getWineryAverage":
             averagePointsPerWinery($controller);
             return;
-        case "deleteWineReview":
-            deleteWineReview($controller);
-            return;
         case "deleteWineryReview":
             deleteWineryReview($controller);
-            return;
-        case "insertReviewWines":
-            insertReviewWines($controller);
             return;
         case "insertReviewWinery":
             insertReviewWinery($controller);
             return;
+
+    // Utilities
         case "getCountries":
             getCountries($controller);
             return;
         default:
-            throw new Exception("not a valid type, you are dom >:|");
+            throw new Exception($data['type'] . " is not a valid type, you are dom >:|", 400);
     }
 
     //handle endpoints according to request type here
