@@ -7,6 +7,8 @@ function getWineries($controller)
 	$input_json = $controller->get_post_json();
 	$controller->assert_params(['return']);
 
+    $limit = 20;
+
 	if(isset($input_json['search'])){ //Check if the search param is specified
 		$search = $input_json['search']; //stores the array of inputted search fields
 	}

@@ -141,7 +141,7 @@ class Database {
      *
      * @return array An array with all distinct column values
      */
-    protected function get_column_distinct($table, $col, $limit = 0) {
+    public function get_column_distinct($table, $col, $limit = 0) {
         $query = "SELECT DISTINCT $col FROM $table ";
         $params = [];
         $types = '';
