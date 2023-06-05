@@ -1,6 +1,6 @@
 
 export enum WineryRequest {
-  GetAll = "getWinery",
+  GetAll = "getWineries",
   Add = "addWinery",
   Update = "updateWinery",
   Delete = "deleteWinery",

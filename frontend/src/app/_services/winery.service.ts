@@ -94,7 +94,7 @@ export class WineryService {
   insert(winery: any): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
-      type: 'addWinery',
+      type: WineryRequest.Add,
       wineries: [winery]
     }).pipe(
       catchError(e => {
@@ -112,7 +112,7 @@ export class WineryService {
   delete(winery: Winery): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
-      type: 'deleteWinery',
+      type: WineryRequest.Delete,
       winery_id: winery.winery_id
     }).pipe(map(() => true));
   }
@@ -120,7 +120,7 @@ export class WineryService {
   review(rating: WineryReview): Observable<boolean> {
     return this.http.post(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
-      type: 'insertReviewWinery',
+      type: WineryRequest.Review,
       target: {
         user_id: 1,
         winery_id: rating.winery_id
