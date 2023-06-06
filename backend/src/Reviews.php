@@ -279,9 +279,10 @@ function getWineReviews($controller) //determines the amount of join that will n
          $db = new Database();
  
          $db->query($query, 'iiisi', $arr);
+        $controller->success("Review successful");
  
      } else {
-         throw new Exception("missing feilds in target or values");
+         throw new Exception("missing feilds in target or values", 400);
      }
  }
 
@@ -301,21 +302,26 @@ function getWineReviews($controller) //determines the amount of join that will n
  
      $query = "INSERT INTO reviews_winery VALUES(?,?,?,?)";
  
-     if (isset($data['target']['wine_id']) && isset($data['values']['points']) && isset($data['values']['review'])) {
-         $arr = [];
-         array_push($arr, $userID);
-         array_push($arr, $data['target']['wine_id']);
-         array_push($arr, $data['values']['points']);
-         array_push($arr, $data['values']['review']);
+     if (
+        isset($data['target']['winery_id']) &&
+        isset($data['values']['points']) &&
+        isset($data['values']['review']))
+    {
+         $arr = [
+             $data['target']['winery_id'],
+             $userID,
+             $data['values']['points'],
+             $data['values']['review'],
+         ];
  
          $db = new Database();
  
          $data = $db->query($query, 'iiis', $arr);
-         $controller->success($data);
+         $controller->success("Review successful");
  
  
      } else {
-         throw new Exception("missing feilds in target or values");
+         throw new Exception("missing feilds in target or values", 400);
      }
  }
 
@@ -421,7 +427,7 @@ function averagePointsPerWine($controller)
          $db->query($query, "ii", [$userID, $data["target"]["wine_id"]]);
  
      } else {
-         throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and wine_id");
+         throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and wine_id", 400);
      }
  
  }
@@ -448,7 +454,7 @@ function averagePointsPerWine($controller)
          $db->query($query, "ii", [$userID, $data["target"]["winery_id"]]);
  
      } else {
-         throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and winery_id");
+         throw new Exception("huh, your json is missing a couple of things... double check that you have user_id and winery_id", 400);
      }
  
  }

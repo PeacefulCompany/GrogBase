@@ -108,11 +108,6 @@ function getReturnRecords($controller,$return_pars, $sort, $order, $search, $lim
 	$db = new Database();
 	$result = $db->query($query,$types,$search_pars);
 
-	if(!$result)
-	{
-		throw new Exception('Error: Wineries SQL Error',400);
-	}
-
 	$controller->success($result);
 }
 function addWineries($controller){
