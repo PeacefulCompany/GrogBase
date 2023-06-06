@@ -247,9 +247,7 @@ require_once "lib/Controller.php";
         $statement.=$updates.$where;
         $db = new Database;
         $db->query($statement,$types,$params);
-        $res = array();
-        $res['details'] = "Update successful";
-        $controller->success($res);
+        $controller->success("Update successful");
     }
 
     function deleteWine($controller)
@@ -266,9 +264,7 @@ require_once "lib/Controller.php";
         $query = "UPDATE wines SET active=false WHERE `wine_id` = ?";
         $db = new Database;
         $db->query($query, 'i', $params);
-        $res = array();
-        $res['details'] = "Deletion successful";
-        $controller->success($res);
+        $controller->success("Deletion successful");
 
     }
 
@@ -287,9 +283,7 @@ require_once "lib/Controller.php";
         }
         $db = new Database;
         $db->query($query,'sssiii',$params);
-        $res = array();
-        $res['details'] = "Successfully inserted a new wine into the database!";
-        $controller->success($res);
+        $controller->success("Successfully inserted a new wine into the database!");
     }
 
     function asset_nulls($details)

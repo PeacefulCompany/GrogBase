@@ -267,7 +267,7 @@ function getWineReviews($controller) //determines the amount of join that will n
      $userID = getUserID($controller);
  
  
-     $query = "INSERT INTO reviews_wine VALUES(?,?,?,?,?)";
+     $query = "REPLACE INTO reviews_wine VALUES(?,?,?,?,?)";
  
      if (isset($data['target']['wine_id']) && isset($data['values']['points']) && isset($data['values']['review']) && isset($data['values']['drunk'])) {
          $arr = [];
@@ -300,7 +300,7 @@ function getWineReviews($controller) //determines the amount of join that will n
      $controller->assert_params(["target", 'values']);
      $userID = getUserID($controller);
  
-     $query = "INSERT INTO reviews_winery VALUES(?,?,?,?)";
+     $query = "REPLACE INTO reviews_winery VALUES(?,?,?,?)";
  
      if (
         isset($data['target']['winery_id']) &&

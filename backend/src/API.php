@@ -50,7 +50,7 @@ try {
         case "deleteWine":
             deleteWine($controller);
             return;
-        case "insertWine":
+        case "addWine":
             insertWine($controller);
             return;
     // Wine Reviews
@@ -145,18 +145,17 @@ function checkPermission($controller)
         'view' => ['getWineries', 'wines', 'getWineReviews', 'getWineryReviews', 'getWineryAverage', 'getWineAverage'],
         'review' => ["insertReviewWinery", "insertReviewWines", "deleteWineryReview", "deleteWineReview"],
         'util' => ['getCountries'],
-        'admin-winery' => ['updateWinery', 'addWinery'],
-        'admin-wine' => ['updateWine', 'addWine']
+        'admin-winery' => ['updateWinery', 'addWinery', 'deleteWinery'],
+        'admin-wine' => ['updateWine', 'addWine', 'deleteWine']
     ];
 
     $permArray = [
-        "Manager" => array_merge($perms['login'], $perms['util'], $perms['admin-winery'], $perms['admin-wine']),
+        "Manager" => array_merge($perms['login'], $perms['util'], $perms['admin-winery'], $perms['admin-wine'], ['getWineries']),
         "Critic" => array_merge($perms['login'], $perms['util'], $perms['view'], $perms['review']),
         "User" => array_merge($perms['login'], $perms['util'], $perms['view'], $perms['review']),
         "Admin" => array_merge(
             $perms['login'] ,
             $perms['view'] ,
-            $perms['review'] ,
             $perms['util'] ,
             $perms['admin-winery'] ,
             $perms['admin-wine'] ,
@@ -174,7 +173,7 @@ function checkPermission($controller)
             return true;
         } else {
 
-            throw new Exception("YOU don't have permission FOR THAT ACTION, now get outa here and DON'T COME BACK!", 400);
+            throw new Exception($data['type']." YOU don't have permission FOR THAT ACTION, now get outa here and DON'T COME BACK!", 400);
         }
     } else {
         throw new Exception("Nice try but you don't even exist in the database... L", 400);
