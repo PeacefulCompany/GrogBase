@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
 import { WineryService } from '../_services/winery.service';
-import { SortBy, SortOrder, Winery } from '../_types';
+import { SearchOptions, SortBy, SortOrder, Winery } from '../_types';
 
 const SORT_OPTIONS: { label: string, sortBy: SortBy<Winery> }[] = [
   {
@@ -27,10 +28,31 @@ const SORT_OPTIONS: { label: string, sortBy: SortBy<Winery> }[] = [
 export class WineriesPage {
   wineries: Winery[] = [];
   sortOptions = SORT_OPTIONS;
+
+  filters: SearchOptions<Winery> = {};
+  sort?: SortBy<Winery>;
+
   constructor(
     private wineryService: WineryService
   ) {
     this.wineryService.getAll()
       .subscribe(res => this.wineries = res);
+  }
+
+  sortSelected(sort: MatSelectChange) {
+    this.sort = sort.value;
+    this.getData();
+  }
+
+  countrySelected(country: string) {
+    this.filters.country = country;
+    this.getData();
+  }
+  getData() {
+    this.wineryService.getAll({
+      search: this.filters,
+      sortBy: this.sort
+    })
+    .subscribe(res => this.wineries = res);
   }
 }

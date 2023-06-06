@@ -1,0 +1,13 @@
+<mat-form-field>
+  <mat-label>Country</mat-label>
+  <mat-select (selectionChange)="selectChanged($event)">
+
+    <mat-option
+      [value]="undefined" selected
+      >Any</mat-option>
+    <mat-option
+      *ngFor="let c of countries"
+      [value]="c"
+      >{{c}}</mat-option>
+  </mat-select>
+</mat-form-field>
