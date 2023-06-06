@@ -2,10 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Options, Response, Winery, WineryReview } from '../_types';
+import { Options, Response, Wine, Winery, WineryReview } from '../_types';
 import { WineryRequest } from '../_types/request.interface';
 import { UiService } from './ui.service';
 import { UserService } from './user.service';
+
+import { WineryReviewRequest, WineryReviewResponse } from '../_types';
 import { handleResponse } from './util';
 
 
@@ -152,5 +154,25 @@ export class WineryService {
     });
 
     return of(arr);
+  }
+
+  getWineryReviews(winery_id: number): Observable<WineryReview[]>{
+
+    const rqst : WineryReviewRequest = {
+      api_key: this.user.currentUser!.api_key,
+      type: "getWineryReviews",
+      return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "name"],
+      search: {"winery_id": winery_id.toString()},
+      fuzzy: false
+    }
+
+    return this.http.post<WineryReviewResponse>(environment.apiEndpoint, rqst)
+    .pipe(
+      catchError(e => {
+        console.error(e.error);
+        return of(e.error)
+      }),
+      map(res => res.data)
+    );
   }
 }

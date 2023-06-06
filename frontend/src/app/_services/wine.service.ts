@@ -6,6 +6,7 @@ import { Options, Wine, WineReview } from '../_types';
 import { environment } from 'src/environments/environment';
 import { Response } from '../_types';
 import { UserService } from './user.service';
+import { WineReviewRequest, WineReviewResponse } from '../_types/wine.interface';
 import { UiService } from './ui.service';
 import { handleResponse } from './util';
 
@@ -93,5 +94,26 @@ export class WineService {
     });
 
     return of(arr);
+  }
+
+  getWineReviews(wine_id: number): Observable<WineReview[]>{
+
+    const rqst: WineReviewRequest = {
+      api_key: this.user.currentUser!.api_key,
+      type: "getWineReviews",
+      return: ["wine_id", "user_id", "points", "review", "drunk", "first_name", "last_name", "email", "name", "type"],
+      search: {"wine_id": wine_id.toString()},
+      fuzzy: false
+    }
+
+    return this.http.post<WineReviewResponse>(environment.apiEndpoint, rqst)
+    .pipe(
+      catchError(e => {
+        console.error(e.error);
+        return of(e.error)
+      }),
+      map(res => res.data)
+      );
+
   }
 }
