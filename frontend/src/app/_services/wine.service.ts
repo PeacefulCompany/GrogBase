@@ -79,6 +79,26 @@ export class WineService {
     );
   }
 
+  insert(wine: Wine): Observable<boolean> {
+    return this.http.post(environment.apiEndpoint, {
+      api_key: this.user.currentUser!.api_key,
+      type: 'insertWine',
+      details: {
+        name: wine.name,
+        description: wine.description,
+        type: wine.type,
+        year: wine.year,
+        price: wine.price,
+        winery: wine.winery
+      }
+    }).pipe(
+      catchError(e => {
+        throw e.error;
+      }),
+      map(() => true)
+    );
+  }
+
   delete(wine: Wine) : Observable<boolean>{
     return this.http.post(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
