@@ -32,7 +32,7 @@ require_once "lib/Controller.php";
         if(checkManager($controller))
         {
             $wineryID = getWinery($controller);
-            $wString.=" AND wines.winery=`$wineryID`";
+            $wString.=" AND wines.winery='$wineryID'";
         }
         $specs = null;
             if(key_exists('search', $jsonObj))
@@ -90,7 +90,7 @@ require_once "lib/Controller.php";
                 $typeO = $jsonObj['order'];
                 if(!key_exists('sort',$jsonObj))
                 {
-                    $stmt.=" ORDER BY `make` ".$typeO;
+                    $stmt.=" ORDER BY `name` ".$typeO;
                 }
                 else{
                     $stmt.=" ".$typeO;
@@ -127,8 +127,8 @@ require_once "lib/Controller.php";
         array_push($params,$api);
         $db = new Database;
         $res = $db->query($query,'s',$params);
-        $manID = $res[0]['winery'];
-        $query2 = "SELECT winery_id FROM wineries WHERE manager_id=`$manID`";
+        $manID = $res[0]['user_id'];//change this to user_id since I am actually retardo
+        $query2 = "SELECT winery_id FROM wineries WHERE manager_id='$manID'";
         $res2 = $db->query($query2);
         return $res2[0]['winery_id'];
     }
@@ -181,7 +181,7 @@ require_once "lib/Controller.php";
         if(checkManager($controller))
         {
             $wineryID = getWinery($controller);
-            $where_clause.="AND wines.winery=`$wineryID` ";
+            $where_clause.="AND wines.winery='$wineryID' ";
         }
         $types = null;//this is just to ensure binding goes smoothly for SQL prepared statements i.e: ssss or iiii or sisisi etc.
         $params = array();//an array to store the parameters we are going to bind
