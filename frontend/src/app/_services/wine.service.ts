@@ -58,12 +58,55 @@ export class WineService {
     return obs;
   }
 
-  update(wine: Wine) {
-    alert("update wine: " + JSON.stringify(wine));
+  update(wine: Wine): Observable<boolean> {
+    return this.http.post(environment.apiEndpoint, {
+      api_key: this.user.currentUser!.api_key,
+      type:'updateWine',
+      id:wine.wine_id,
+      details: {
+        name: wine.name,
+        description: wine.description,
+        type: wine.type,
+        year: wine.year,
+        price: wine.price,
+        winery: wine.winery
+      }
+    }).pipe(
+      catchError(e => {
+        throw e.error;
+      }),
+      map(() => true)
+    );
   }
-  delete(wine: Wine) {
-    alert("delete wine: " + JSON.stringify(wine));
+
+  insert(wine: Wine): Observable<boolean> {
+    return this.http.post(environment.apiEndpoint, {
+      api_key: this.user.currentUser!.api_key,
+      type: 'insertWine',
+      details: {
+        name: wine.name,
+        description: wine.description,
+        type: wine.type,
+        year: wine.year,
+        price: wine.price,
+        winery: wine.winery
+      }
+    }).pipe(
+      catchError(e => {
+        throw e.error;
+      }),
+      map(() => true)
+    );
   }
+
+  delete(wine: Wine) : Observable<boolean>{
+    return this.http.post(environment.apiEndpoint, {
+      api_key: this.user.currentUser!.api_key,
+      type: 'deleteWine',
+      id: wine.wine_id 
+    }).pipe(map(() => true));
+  }
+
   review(rating: WineReview): Observable<string> {
     return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
