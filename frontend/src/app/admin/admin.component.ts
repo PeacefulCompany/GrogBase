@@ -8,6 +8,7 @@ import { Winery, Wine, WineType, SearchOptions } from '../_types';
 import { WineryTableComponent } from './winery-table/winery-table.component';
 import { WineTableComponent } from './wine-table/wine-table.component';
 import { WineEditorComponent } from '../_shared/wine-editor/wine-editor.component';
+import { WineService } from '../_services/wine.service';
 
 @Component({
   selector: 'app-admin',
@@ -25,7 +26,7 @@ export class AdminPage implements AfterViewInit {
   @ViewChild(WineryTableComponent) wineryTable!: WineryTableComponent;
 
   constructor(
-    private wineService: WineryService,
+    private wineService: WineService,
     private wineryService: WineryService,
     private dialog: MatDialog,
     private ui: UiService

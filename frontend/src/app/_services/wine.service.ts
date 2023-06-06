@@ -6,7 +6,7 @@ import { Options, Wine, WineReview } from '../_types';
 import { environment } from 'src/environments/environment';
 import { Response } from '../_types';
 import { UserService } from './user.service';
-import { WineReviewRequest, WineReviewResponse, WineType } from '../_types/wine.interface';
+import { WineReviewRequest } from '../_types/wine.interface';
 import { UiService } from './ui.service';
 import { handleResponse } from './util';
 
@@ -59,7 +59,7 @@ export class WineService {
   }
 
   update(wine: Wine): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type:'updateWine',
       id:wine.wine_id,
@@ -72,17 +72,15 @@ export class WineService {
         winery: wine.winery
       }
     }).pipe(
-      catchError(e => {
-        throw e.error;
-      }),
+      handleResponse(this.ui),
       map(() => true)
     );
   }
 
   insert(wine: Wine): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
-      type: 'insertWine',
+      type: 'addWine',
       details: {
         name: wine.name,
         description: wine.description,
@@ -92,19 +90,20 @@ export class WineService {
         winery: wine.winery
       }
     }).pipe(
-      catchError(e => {
-        throw e.error;
-      }),
+      handleResponse(this.ui),
       map(() => true)
     );
   }
 
   delete(wine: Wine) : Observable<boolean>{
-    return this.http.post(environment.apiEndpoint, {
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: 'deleteWine',
-      id: wine.wine_id 
-    }).pipe(map(() => true));
+      id: wine.wine_id
+    }).pipe(
+      handleResponse(this.ui),
+      map(() => true)
+    );
   }
 
   review(rating: WineReview): Observable<string> {

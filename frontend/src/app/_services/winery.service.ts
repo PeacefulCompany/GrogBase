@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Options, Response, Wine, Winery, WineryReview } from '../_types';
+import { Options, Response, Winery, WineryReview } from '../_types';
 import { WineryRequest } from '../_types/request.interface';
 import { UiService } from './ui.service';
 import { UserService } from './user.service';
 
-import { WineryReviewRequest, WineryReviewResponse } from '../_types';
+import { WineryReviewRequest } from '../_types';
 import { handleResponse } from './util';
 
 
@@ -86,14 +86,12 @@ export class WineryService {
     * @return Whether the update was successful
     */
   update(winery: Winery): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: WineryRequest.Update,
       update: winery
     }).pipe(
-      catchError(e => {
-        throw e.error;
-      }),
+      handleResponse(this.ui),
       map(() => true)
     );
   }
@@ -104,14 +102,12 @@ export class WineryService {
     * @return Whether the insert was successful
     */
   insert(winery: any): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: WineryRequest.Add,
       wineries: [winery]
     }).pipe(
-      catchError(e => {
-        throw e.error;
-      }),
+      handleResponse(this.ui),
       map(() => true)
     );
   }
@@ -166,13 +162,9 @@ export class WineryService {
       fuzzy: false
     }
 
-    return this.http.post<WineryReviewResponse>(environment.apiEndpoint, rqst)
+    return this.http.post<Response<WineryReview[]>>(environment.apiEndpoint, rqst)
     .pipe(
-      catchError(e => {
-        console.error(e.error);
-        return of(e.error)
-      }),
-      map(res => res.data)
+      handleResponse(this.ui)
     );
   }
 }
