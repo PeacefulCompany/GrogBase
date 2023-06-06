@@ -6,6 +6,7 @@ import { MatSidenav } from '@angular/material/sidenav';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
+
 export class AppComponent {
   title = 'frontend';
   @ViewChild('sidenav') sidenav!: MatSidenav;

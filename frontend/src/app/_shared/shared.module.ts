@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReviewWineComponent } from './review-wine/review-wine.component';
+import { MatChipsModule } from '@angular/material/chips'
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ReviewWineComponent } from './review-wine/review-wine.component';
     MatIconModule,
     MatSliderModule,
     MatCheckboxModule,
+    MatChipsModule
   ],
 
   exports: [
