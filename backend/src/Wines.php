@@ -20,7 +20,6 @@ require_once "lib/Controller.php";
 
     function getAllWines($controller){
         $jsonObj = $controller->get_post_json();
-        $wines = array();
         $stmt = "SELECT wines.*, COALESCE(AVG(reviews_wine.points), NULL) AS Avg_rating FROM `wines` LEFT JOIN reviews_wine ON wines.wine_id = reviews_wine.wine_id " ;
         $params = array();
         if(key_exists("fuzzy",$jsonObj))
@@ -28,7 +27,13 @@ require_once "lib/Controller.php";
             $fuzzy = $jsonObj['fuzzy'];
         }
         $typeString = null;
+
         $wString = " WHERE wines.active=true";
+        if(checkManager($controller))
+        {
+            $wineryID = getWinery($controller);
+            $wString.=" AND wines.winery=`$wineryID`";
+        }
         $specs = null;
             if(key_exists('search', $jsonObj))
             {
@@ -113,6 +118,34 @@ require_once "lib/Controller.php";
         }
     }
 
+    function getWinery($controller)
+    {
+        $jsonObj = $controller->get_post_json();
+        $api = $jsonObj['api_key'];
+        $query = "SELECT winery FROM users WHERE api_key=?";
+        $params = array();
+        array_push($params,$api);
+        $db = new Database;
+        $res = $db->query($query,'s',$params);
+        return $res[0]['winery'];
+    }
+
+    function checkManager($controller)
+    {
+        $jsonObj = $controller->get_post_json();
+        $api = $jsonObj['api_key'];
+        $query = "SELECT user_type FROM users WHERE api_key=?";
+        $params = array();
+        array_push($params,$api);
+        $db = new Database;
+        $res = $db->query($query,'s',$params);
+        if($res[0]['user_type']=='Manager')
+        {
+            return true;
+        }
+        return false;
+    }
+
     function getWines($controller)
     {
         $jsonObj = $controller->get_post_json();//assuming a json object is passed in, we turn it into an asssociative array.
@@ -142,6 +175,11 @@ require_once "lib/Controller.php";
             $statement .= "SELECT ".$select_clause." FROM `wines`";//to be changed but the select is put in here.
         }
         $where_clause = " WHERE wines.active=true ";//where clause used if search is specified
+        if(checkManager($controller))
+        {
+            $wineryID = getWinery($controller);
+            $where_clause.="AND wines.winery=`$wineryID` ";
+        }
         $types = null;//this is just to ensure binding goes smoothly for SQL prepared statements i.e: ssss or iiii or sisisi etc.
         $params = array();//an array to store the parameters we are going to bind
         $fuzzy = false;//to fuzzy search the db or not
@@ -306,3 +344,4 @@ require_once "lib/Controller.php";
     }
 
 ?>
+
