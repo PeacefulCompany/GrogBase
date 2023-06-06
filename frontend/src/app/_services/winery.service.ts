@@ -21,6 +21,18 @@ export class WineryService {
   ) { }
 
   /**
+    * Retrieves a list of all countries with
+    * wineries in the database
+    */
+  getCountries(): Observable<string[]> {
+    return this.http.post<Response<string[]>>(environment.apiEndpoint, {
+      type: 'getCountries',
+      api_key: this.user.currentUser!.api_key,
+      limit: 500
+    }).pipe(handleResponse(this.ui));
+  }
+
+  /**
     * Retrieves all entries from the database with
     * no filtering applied
     * @param options Optional return parameters

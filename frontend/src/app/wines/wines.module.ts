@@ -9,6 +9,7 @@ import { MatCardModule} from '@angular/material/card';
 import { WinePage } from './wines.component';
 import { SharedModule } from '../_shared/shared.module';
 import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { MatSelectModule } from '@angular/material/select';
       MatToolbarModule,
       MatSidenavModule,
       MatListModule,
-      MatSelectModule
+      MatSelectModule,
+      MatFormFieldModule
     ],
     providers: [],
   })

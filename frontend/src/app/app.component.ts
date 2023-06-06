@@ -1,5 +1,6 @@
 import { Component,ViewChild  } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { UserService } from './_services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,18 @@ export class AppComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   isSidenavOpened = true;
 
+  constructor(
+    private user: UserService
+  ) {
+  }
+
   toggleSidenav(): void {
     this.sidenav.toggle();
     this.isSidenavOpened = !this.isSidenavOpened;
+  }
+
+  signout() {
+    this.user.logout();
+
   }
 }

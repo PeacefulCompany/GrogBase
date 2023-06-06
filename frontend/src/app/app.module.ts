@@ -39,6 +39,7 @@ import { MatIconModule } from '@angular/material/icon';
     SignupModule,
     HttpClientModule,
     HomeModule,
+    WineModule,
 
     MatButtonModule,
     MatToolbarModule,
