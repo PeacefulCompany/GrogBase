@@ -56,10 +56,11 @@ function getReturnRecords($controller,$return_pars, $sort, $order, $search, $lim
 	$placeholders = implode(", ", $return_pars);
 	$query = "SELECT " . $placeholders . " FROM wineries";
 	$types = "";
-
+	
 	if (isset($search)) {
 		$search_pars = array();
 		$query .= ' WHERE ';
+
 		foreach ($search as $key => $value) {
 			if ($fuzzy === true) {
 				$query .= $key . ' LIKE ? AND ';
@@ -71,6 +72,13 @@ function getReturnRecords($controller,$return_pars, $sort, $order, $search, $lim
 			array_push($search_pars, $value); //Add parameters for when stmnt is preapred
 		}
 		$query = substr($query, 0, strlen($query) - 4); //Remove the final extra AND clause
+	} 
+
+	if(getUserType($controller) === "Manager")//check to append manager field to "filter" using manager_id
+	{
+		$query .= 'AND manager_id LIKE ? ';
+		$types .= 's';
+		array_push($search_pars, getUserID($controller));
 	}
 
 	$sort_fields = array(
@@ -244,6 +252,21 @@ function getUserID($controller)
 
     if ($res != null) {
         return $res[0]["user_id"];
+    } else {
+        throw new Exception("Nice try but you don't even exist in the database... L", 400);
+    }
+
+}
+
+function getUserType($controller)
+{
+    $data = $controller->get_post_json();
+    $db = new Database();
+
+    $res = $db->query("SELECT * FROM users WHERE api_key = ?", 's', [$data['api_key']]);
+
+    if ($res != null) {
+        return $res[0]["user_type"];
     } else {
         throw new Exception("Nice try but you don't even exist in the database... L", 400);
     }

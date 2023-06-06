@@ -50,7 +50,9 @@ try {
         case "deleteWine":
             deleteWine($controller);
             return;
-
+        case "insertWine":
+            insertWine($controller);
+            return;
     // Wine Reviews
         case "getWineAverage":
             averagePointsPerWine($controller);
