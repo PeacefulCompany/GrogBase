@@ -23,7 +23,7 @@ import { SortBy } from "./sort.interface";
 export interface WineryReviewRequest{
   api_key: string | null,
   type: "getWineryReviews",
-  return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "winery_name"],
+  return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "name"],
   limit?: number,
   sort?: SortBy<WineryReview>,
   order?: SortOrder,

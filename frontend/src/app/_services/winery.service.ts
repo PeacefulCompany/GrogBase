@@ -149,7 +149,7 @@ export class WineryService {
     const rqst : WineryReviewRequest = {
       api_key: this.user.currentUser!.api_key,
       type: "getWineryReviews",
-      return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "winery_name"],
+      return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "name"],
       search: {"winery_id": winery_id.toString()},
       fuzzy: false
     }
