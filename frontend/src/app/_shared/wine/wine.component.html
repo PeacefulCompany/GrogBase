@@ -3,10 +3,27 @@
     <mat-card-header>
         <mat-card-title>{{ wine.name }}</mat-card-title>
     </mat-card-header>
-    <mat-chip>Type:{{ wine.type }}</mat-chip>
-    <mat-chip>From:{{ wine.year }}</mat-chip>
-    <mat-chip>Price${{ wine.price }}</mat-chip>
     <mat-card-content>
+        <mat-chip-list>
+          <mat-chip color="primary">
+            <mat-chip-avatar>
+              <mat-icon>wine_bar</mat-icon>
+            </mat-chip-avatar>
+            {{ wine.type }}
+          </mat-chip>
+          <mat-chip>
+            <mat-chip-avatar>
+              <mat-icon>today</mat-icon>
+            </mat-chip-avatar>
+            {{ wine.year }}
+          </mat-chip>
+          <mat-chip>
+            <mat-chip-avatar>
+              <mat-icon>payments</mat-icon>
+            </mat-chip-avatar>
+            ${{ wine.price }}
+          </mat-chip>
+        </mat-chip-list>
         <p>{{ wine.description}}</p>
     </mat-card-content>
     <mat-card-actions>
