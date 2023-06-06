@@ -10,7 +10,7 @@ const SORT_OPTIONS: { label: string, sortBy: SortBy<Winery> }[] = [
       key: "name",
       order: SortOrder.Ascending
     }
-  },
+  }, 
   {
     label: "Alphabetical (Z-A)",
     sortBy: {

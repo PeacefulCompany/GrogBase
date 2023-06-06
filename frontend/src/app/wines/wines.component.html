@@ -2,30 +2,22 @@
   <h1 class="title">Our Celestial Symphony of Grapes</h1>
   <mat-form-field>
     <mat-label>Sort By</mat-label>
-    <mat-select>
+    <mat-select (selectionChange)="sortSelected($event)">
       <mat-option
         *ngFor="let opt of sortOptions"
         [value]="opt.sortBy"
         >
-        {{opt.label}}
+        {{opt.label}} 
+
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field>
-    <mat-label>Type</mat-label>
-    <mat-select>
-      <mat-option
-        *ngFor="let opt of sortOptions"
-        [value]="opt.sortBy"
-        >
-        {{opt.label}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <app-wine-type (onChange)="TypeSelected($event)">
+  </app-wine-type>
   <div class="Wines">
       <app-wine
         *ngFor="let wine of WineList"
-      [wine]="wine"
+      [wine]="wine" 
       ></app-wine>
   </div>
 </div>
