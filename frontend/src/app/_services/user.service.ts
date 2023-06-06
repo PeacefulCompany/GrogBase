@@ -20,7 +20,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {
+    const value = localStorage.getItem('user');
+    if(value) {
+      this.user = JSON.parse(value);
+    }
+  }
 
   private user?: User;
 
@@ -30,6 +39,12 @@ export class UserService {
   }
   get isLoggedIn(): boolean {
     return !!this.user;
+  }
+
+  logout() {
+    this.user = undefined;
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 
   signUpUser(email: string, fName: string, lName: string, password: string) {
@@ -84,6 +99,7 @@ export class UserService {
               ...response.data,
               email
             }
+            localStorage.setItem('user', JSON.stringify(this.user));
           }
 
           this.router.navigate(['/home']);
