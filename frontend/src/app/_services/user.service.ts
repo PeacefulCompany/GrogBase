@@ -18,13 +18,13 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UiService } from './ui.service';
 import { handleResponse } from './util';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private userSubject = new Subject<User | undefined>();
+  private userSubject = new BehaviorSubject<User | undefined>(undefined);
 
   public readonly onUser = this.userSubject.asObservable();
 
@@ -36,6 +36,7 @@ export class UserService {
     const value = localStorage.getItem('user');
     if(value) {
       this.user = JSON.parse(value);
+      this.userSubject.next(this.user);
     }
   }
 
