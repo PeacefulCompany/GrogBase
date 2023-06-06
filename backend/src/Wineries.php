@@ -235,6 +235,20 @@ function getCountries($controller)//returns a list of distinct countries in whic
 	$controller->success($result);
 }
 
+function getUserID($controller)
+{
+    $data = $controller->get_post_json();
+    $db = new Database();
+
+    $res = $db->query("SELECT * FROM users WHERE api_key = ?", 's', [$data['api_key']]);
+
+    if ($res != null) {
+        return $res[0]["user_id"];
+    } else {
+        throw new Exception("Nice try but you don't even exist in the database... L", 400);
+    }
+
+}
 // $input = file_get_contents('php://input');
 
 // $servername = "wheatley.cs.up.ac.za";
