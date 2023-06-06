@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReviewWineComponent } from './review-wine/review-wine.component';
+import { SeeReviewsComponent } from './see-reviews/see-reviews.component';
+import { SeeWineryReviewsComponent } from './see-winery-reviews/see-winery-reviews.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { ReviewWineComponent } from './review-wine/review-wine.component';
     WineComponent,
     WineTypeComponent,
     ReviewWineryComponent,
-    ReviewWineComponent
+    ReviewWineComponent,
+    SeeReviewsComponent,
+    SeeWineryReviewsComponent
   ],
   imports: [
     CommonModule,
