@@ -21,7 +21,6 @@ export class WineService {
     private ui: UiService
   ) { }
 
-
   getAll(options?: Options<Wine>): Observable<Wine[]> {
     const sortBy = options?.sortBy;
     let search = options?.search;
@@ -100,7 +99,7 @@ export class WineService {
     const rqst: WineReviewRequest = {
       api_key: this.user.currentUser!.api_key,
       type: "getWineReviews",
-      return: ["wine_id", "user_id", "points", "review", "drunk", "first_name", "last_name", "email", "name", "type"],
+      return: ["wine_id", "user_id", "points", "review", "drunk", "first_name", "last_name", "email", "name", "user_type"],
       search: {"wine_id": wine_id.toString()},
       fuzzy: false
     }

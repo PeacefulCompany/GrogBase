@@ -18,6 +18,10 @@
         >{{type}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Price</mat-label>
+    <input matInput type="number" [(ngModel)]="data.winery">
+  </mat-form-field>
   <mat-form-field appearance="fill" class="span">
     <mat-label>Winery</mat-label>
     <input matInput type="number" [(ngModel)]="data.winery">

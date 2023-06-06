@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { WineReview} from 'src/app/_types';
+import { UserType } from "src/app/_types/user.interface";
 
 interface DialogData {
   title: string;
@@ -14,6 +15,7 @@ interface DialogData {
 })
 export class SeeReviewsComponent{
 
+
   constructor(
     public dialogRef: MatDialogRef<SeeReviewsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
@@ -21,5 +23,8 @@ export class SeeReviewsComponent{
 
     closeDialog(): void {
       this.dialogRef.close();
+    }
+    isCritic(type: UserType) {
+      return type == UserType.Critic;
     }
 }
