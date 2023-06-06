@@ -78,7 +78,7 @@ function getReturnRecords($controller,$return_pars, $sort, $order, $search, $lim
 	{
 		$query .= 'AND manager_id LIKE ? ';
 		$types .= 's';
-		array_push($search_pars, getUserID($controller));
+		array_push($search_pars, getUserID2($controller));
 	}
 
 	$sort_fields = array(
@@ -243,7 +243,7 @@ function getCountries($controller)//returns a list of distinct countries in whic
 	$controller->success($result);
 }
 
-function getUserID($controller)
+function getUserID2($controller)
 {
     $data = $controller->get_post_json();
     $db = new Database();
