@@ -16,9 +16,10 @@ import { WineEditorComponent } from '../_shared/wine-editor/wine-editor.componen
 })
 export class AdminPage implements AfterViewInit {
   @ViewChild('input') wineSearch!: ElementRef;
+  @ViewChild('winerySearch') winerySearch!: ElementRef;
 
-  wineries: Winery[] = [];
   wineFilters: SearchOptions<Wine> = {};
+  wineryFilters: SearchOptions<Winery> = {};
 
   @ViewChild(WineTableComponent) wineTable!: WineTableComponent;
   @ViewChild(WineryTableComponent) wineryTable!: WineryTableComponent;
@@ -29,11 +30,11 @@ export class AdminPage implements AfterViewInit {
     private dialog: MatDialog,
     private ui: UiService
   ) {
-    this.wineryService.getAll()
-    .subscribe(res => this.wineries = res);
   }
 
   ngAfterViewInit(): void {
+    this.wineTable.dataSource.getData();
+
     fromEvent(this.wineSearch.nativeElement, 'keyup')
       .pipe(
         filter(Boolean),
@@ -41,6 +42,13 @@ export class AdminPage implements AfterViewInit {
         map(() => this.wineSearch.nativeElement.value)
       )
       .subscribe(val => this.wineSearched(val));
+    fromEvent(this.winerySearch.nativeElement, 'keyup')
+      .pipe(
+        filter(Boolean),
+        debounceTime(500),
+        map(() => this.winerySearch.nativeElement.value)
+      )
+      .subscribe(val => this.winerySearched(val));
   }
 
   wineTypeSelected(type?: WineType) {
@@ -50,6 +58,15 @@ export class AdminPage implements AfterViewInit {
   wineSearched(term: string) {
     this.wineFilters.name = term;
     this.wineTable.dataSource.setFilter(this.wineFilters);
+  }
+  countrySelected(c: string) {
+    this.wineryFilters.country = c;
+    this.wineryTable.dataSource.setFilter(this.wineryFilters);
+
+  }
+  winerySearched(term: string) {
+    this.wineryFilters.name = term;
+    this.wineryTable.dataSource.setFilter(this.wineryFilters);
   }
 
   onWineAdd() {
