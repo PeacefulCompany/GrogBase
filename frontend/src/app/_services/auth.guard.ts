@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { UserType } from '../_types/user.interface';
 import { UserService } from './user.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UiService } from './ui.service';
 
 @Injectable({
@@ -23,7 +22,7 @@ export class AuthGuard implements CanActivate {
     }
     const user = this.userService.currentUser;
     if(user.user_type === UserType.Admin || user.user_type === UserType.Manager) {
-      if(route?.routeConfig?.path === 'admin' || route?.routeConfig?.path === 'wineries') {
+      if(route?.routeConfig?.path === 'admin') {
         this.ui.showError('You do not have permission to access this page');
         return true;
       }
