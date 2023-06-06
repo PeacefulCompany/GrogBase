@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiEndpoint: "http://localhost/GrogBase/backend/src/API.php"
+  apiEndpoint: "http://localhost/COS221/API.php"
 };
 
 /*

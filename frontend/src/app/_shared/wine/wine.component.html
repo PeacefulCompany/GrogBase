@@ -3,10 +3,10 @@
     <mat-card-header>
         <mat-card-title>{{ wine.name }}</mat-card-title>
     </mat-card-header>
+    <mat-chip>Type:{{ wine.type }}</mat-chip>
+    <mat-chip>From:{{ wine.year }}</mat-chip>
+    <mat-chip>Price${{ wine.price }}</mat-chip>
     <mat-card-content>
-        <p>{{ wine.type }}</p>
-        <p>{{ wine.year }}</p>
-        <p>{{ wine.price }}</p>
         <p>{{ wine.description}}</p>
     </mat-card-content>
     <mat-card-actions>

@@ -7,6 +7,7 @@ import { UserService } from './_services/user.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
+
 export class AppComponent {
   title = 'frontend';
   @ViewChild('sidenav') sidenav!: MatSidenav;

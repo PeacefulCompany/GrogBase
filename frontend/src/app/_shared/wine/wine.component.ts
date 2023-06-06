@@ -14,7 +14,7 @@ export class WineComponent{
 
   constructor(
     private dialog: MatDialog,
-    private wineService: WineService
+    private wineService: WineService,
   ) { }
   reviewMe() {
     this.dialog.open(ReviewWineComponent, {

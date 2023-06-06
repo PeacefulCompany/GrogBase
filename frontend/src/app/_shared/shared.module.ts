@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReviewWineComponent } from './review-wine/review-wine.component';
+import { MatChipsModule } from '@angular/material/chips';
 import { WineryCountryComponent } from './winery-country/winery-country.component';
 
 @NgModule({
@@ -50,6 +51,7 @@ import { WineryCountryComponent } from './winery-country/winery-country.componen
     MatIconModule,
     MatSliderModule,
     MatCheckboxModule,
+    MatChipsModule,
     MatIconModule
   ],
 
