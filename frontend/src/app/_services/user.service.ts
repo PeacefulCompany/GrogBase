@@ -54,9 +54,9 @@ export class UserService {
     const signupRequest: SignupRequest = {
       type: "register",
       details: {
-        email: email,
         fname: fName,
         lname: lName,
+        email: email,
         password: password
       }
     }
