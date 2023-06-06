@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { Options, Wine, WineReview } from '../_types';
 
 import { environment } from 'src/environments/environment';
 import { Response } from '../_types';
 import { UserService } from './user.service';
+import { WineReviewRequest, WineReviewResponse, WineType } from '../_types/wine.interface';
+import { UiService } from './ui.service';
+import { handleResponse } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +17,8 @@ export class WineService {
 
   constructor(
     private http: HttpClient,
-    private user: UserService
+    private user: UserService,
+    private ui: UiService
   ) { }
 
   getAll(options?: Options<Wine>): Observable<Wine[]> {
@@ -22,7 +26,6 @@ export class WineService {
     let search = options?.search;
 
     let params: any = {
-      // should be replaced by actual authenticated API key
       api_key: this.user.currentUser!.api_key,
       type: "wines",
       return: ["*"]
@@ -50,11 +53,8 @@ export class WineService {
 
     const obs = this.http.post<Response<Wine[]>>(environment.apiEndpoint, params)
       .pipe(
-        catchError(e => {
-          console.error(e.error);
-          return of(e.error)
-        }),
-        map(res => res.data));
+        handleResponse(this.ui)
+      );
     return obs;
   }
 
@@ -107,12 +107,11 @@ export class WineService {
     }).pipe(map(() => true));
   }
 
-  review(rating: WineReview): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+  review(rating: WineReview): Observable<string> {
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: 'insertReviewWines',
       target: {
-        user_id: 1,
         wine_id: rating.wine_id
       },
       values: {
@@ -120,7 +119,10 @@ export class WineService {
         review: rating.review,
         drunk: rating.drunk
       }
-    }).pipe(map(() => true));
+    })
+    .pipe(
+      handleResponse(this.ui)
+    );
   }
 
   getTopWines(options?: Options<Wine>): Observable<Wine[]> {
@@ -133,5 +135,20 @@ export class WineService {
     });
 
     return of(arr);
+  }
+
+  getWineReviews(wine_id: number): Observable<WineReview[]>{
+
+    const rqst: WineReviewRequest = {
+      api_key: this.user.currentUser!.api_key,
+      type: "getWineReviews",
+      return: ["wine_id", "user_id", "points", "review", "drunk", "first_name", "last_name", "email", "name", "user_type"],
+      search: {"wine_id": wine_id.toString()},
+      fuzzy: false
+    }
+
+    return this.http.post<Response<WineReview[]>>(environment.apiEndpoint, rqst)
+      .pipe(handleResponse(this.ui));
+
   }
 }

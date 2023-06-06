@@ -23,6 +23,13 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReviewWineComponent } from './review-wine/review-wine.component';
 
+import { SeeReviewsComponent } from './see-reviews/see-reviews.component';
+import { SeeWineryReviewsComponent } from './see-winery-reviews/see-winery-reviews.component';
+
+import { MatChipsModule } from '@angular/material/chips';
+import { WineryCountryComponent } from './winery-country/winery-country.component';
+
+
 @NgModule({
   declarations: [
     WineryEditorComponent,
@@ -31,7 +38,10 @@ import { ReviewWineComponent } from './review-wine/review-wine.component';
     WineComponent,
     WineTypeComponent,
     ReviewWineryComponent,
-    ReviewWineComponent
+    ReviewWineComponent,
+    SeeReviewsComponent,
+    SeeWineryReviewsComponent,
+    WineryCountryComponent
   ],
   imports: [
     CommonModule,
@@ -48,6 +58,8 @@ import { ReviewWineComponent } from './review-wine/review-wine.component';
     MatIconModule,
     MatSliderModule,
     MatCheckboxModule,
+    MatChipsModule,
+    MatIconModule
   ],
 
   exports: [
@@ -56,6 +68,7 @@ import { ReviewWineComponent } from './review-wine/review-wine.component';
     WineryComponent,
     WineComponent,
     WineTypeComponent,
+    WineryCountryComponent
 
   ],
 })

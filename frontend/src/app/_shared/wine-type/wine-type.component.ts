@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { WineType } from 'src/app/_types';
+import {  WineType } from 'src/app/_types';
 
 @Component({
   selector: 'app-wine-type',
@@ -17,5 +17,6 @@ export class WineTypeComponent {
     if(!event.value) this.onChange.emit(undefined);
     else this.onChange.emit(WineType.valueOf(event.value));
   }
-  constructor() { }
+  constructor() {
+  }
 }

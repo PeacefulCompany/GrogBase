@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<div mat-dialog-content>
+  <p *ngIf="data.reviews.length == 0">
+  There aren't any reviews yet... Be the first!!
+  </p>
+
+  <ng-container *ngFor="let review of data.reviews">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{review.first_name}} {{review.last_name}}</mat-card-title>
+        <mat-chip-list>
+          <mat-chip *ngIf="review.drunk">Drunk</mat-chip>
+          <mat-chip color="primary" *ngIf="isCritic(review.user_type!)">Critic</mat-chip>
+        </mat-chip-list>
+      </mat-card-header>
+      <mat-card-content>
+        {{review.review}}
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-card-subtitle align="end">
+        {{review.points}}/10
+        </mat-card-subtitle>
+      </mat-card-footer>
+    </mat-card>
+    <mat-divider></mat-divider>
+  </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Close</button>
+</div>

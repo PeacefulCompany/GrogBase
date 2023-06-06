@@ -2,9 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Options, Response, Winery, WineryReview } from '../_types';
+import { Options, Response, Wine, Winery, WineryReview } from '../_types';
 import { WineryRequest } from '../_types/request.interface';
+import { UiService } from './ui.service';
 import { UserService } from './user.service';
+
+import { WineryReviewRequest, WineryReviewResponse } from '../_types';
+import { handleResponse } from './util';
 
 
 @Injectable({
@@ -14,8 +18,21 @@ export class WineryService {
 
   constructor(
     private http: HttpClient,
-    private user: UserService
+    private user: UserService,
+    private ui: UiService
   ) { }
+
+  /**
+    * Retrieves a list of all countries with
+    * wineries in the database
+    */
+  getCountries(): Observable<string[]> {
+    return this.http.post<Response<string[]>>(environment.apiEndpoint, {
+      type: 'getCountries',
+      api_key: this.user.currentUser!.api_key,
+      limit: 500
+    }).pipe(handleResponse(this.ui));
+  }
 
   /**
     * Retrieves all entries from the database with
@@ -58,13 +75,8 @@ export class WineryService {
 
     const obs = this.http.post<Response<Winery[]>>(environment.apiEndpoint, params)
       .pipe(
-        catchError(e => {
-          console.error(e.error);
-          return of(e.error)
-        }),
-        map((res: Response<any[]>) => {
-          return res.data;
-        }));
+        handleResponse(this.ui)
+      );
     return obs;
   }
 
@@ -117,19 +129,19 @@ export class WineryService {
     }).pipe(map(() => true));
   }
 
-  review(rating: WineryReview): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+  review(rating: WineryReview): Observable<string> {
+    console.log(rating);
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: WineryRequest.Review,
       target: {
-        user_id: 1,
         winery_id: rating.winery_id
       },
       values: {
         points: rating,
         review: rating.review
       }
-    }).pipe(map(() => true));
+    }).pipe(handleResponse(this.ui));
   }
 
   getTopWineries(options?: Options<Winery>): Observable<Winery[]> {
@@ -142,5 +154,25 @@ export class WineryService {
     });
 
     return of(arr);
+  }
+
+  getWineryReviews(winery_id: number): Observable<WineryReview[]>{
+
+    const rqst : WineryReviewRequest = {
+      api_key: this.user.currentUser!.api_key,
+      type: "getWineryReviews",
+      return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "name"],
+      search: {"winery_id": winery_id.toString()},
+      fuzzy: false
+    }
+
+    return this.http.post<WineryReviewResponse>(environment.apiEndpoint, rqst)
+    .pipe(
+      catchError(e => {
+        console.error(e.error);
+        return of(e.error)
+      }),
+      map(res => res.data)
+    );
   }
 }

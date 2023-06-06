@@ -2,7 +2,7 @@
   <h2 class="title">Sort</h2>
   <mat-form-field>
     <mat-label>Sort By</mat-label>
-    <mat-select>
+    <mat-select (selectionChange)="sortSelected($event)">
       <mat-option
         *ngFor="let opt of sortOptions"
         [value]="opt.sortBy"
@@ -12,18 +12,9 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Country</mat-label>
-    <mat-select>
-      <mat-option
-        *ngFor="let opt of sortOptions"
-        [value]="opt.sortBy"
-        >
-        {{opt.label}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <h2 class="title">Filter</h2>
+  <app-winery-country (onChange)="countrySelected($event)">
+  </app-winery-country>
+  <h2 class="title">Wineries</h2>
 </div>
 <div class="list">
   <app-winery

@@ -4,7 +4,17 @@
       <h2 class="title">Wineries</h2>
       <button mat-raised-button color="primary" (click)="onWineryAdd()">Add</button>
     </div>
-    <app-winery-table>
+    <div class="filterList">
+      <div class="grow">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput [autocomplete]="false" placeholder="Search name" #winerySearch>
+      </mat-form-field>
+      </div>
+      <app-winery-country (onChange)="countrySelected($event)">
+      </app-winery-country>
+    </div>
+    <app-winery-table #wineryTable>
     </app-winery-table>
   </mat-tab>
   <mat-tab label="Wines">
@@ -16,7 +26,7 @@
       <div class="grow">
       <mat-form-field>
         <mat-label>Name</mat-label>
-        <input matInput placeholder="Search name" #input>
+        <input matInput [autocomplete]="false" placeholder="Search name" #input>
       </mat-form-field>
       </div>
       <app-wine-type (onChange)="wineTypeSelected($event)">
