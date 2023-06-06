@@ -4,7 +4,9 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Options, Response, Winery, WineryReview } from '../_types';
 import { WineryRequest } from '../_types/request.interface';
+import { UiService } from './ui.service';
 import { UserService } from './user.service';
+import { handleResponse } from './util';
 
 
 @Injectable({
@@ -14,7 +16,8 @@ export class WineryService {
 
   constructor(
     private http: HttpClient,
-    private user: UserService
+    private user: UserService,
+    private ui: UiService
   ) { }
 
   /**
@@ -58,13 +61,8 @@ export class WineryService {
 
     const obs = this.http.post<Response<Winery[]>>(environment.apiEndpoint, params)
       .pipe(
-        catchError(e => {
-          console.error(e.error);
-          return of(e.error)
-        }),
-        map((res: Response<any[]>) => {
-          return res.data;
-        }));
+        handleResponse(this.ui)
+      );
     return obs;
   }
 
