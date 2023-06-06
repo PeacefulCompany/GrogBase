@@ -1,0 +1,28 @@
+<mat-card class="winery">
+  <img mat-card-lg-image src="../assets/winery.png" alt="image not loading">
+  <mat-card-title-group>
+    <mat-card-title>
+      {{winery.name}}
+    </mat-card-title>
+    <mat-card-subtitle>
+      Est. {{winery.established}}
+    </mat-card-subtitle>
+  </mat-card-title-group>
+  <mat-card-content>
+    <p>
+      <strong>Website: </strong>
+      <a mat-button [href]="winery.website">{{winery.website}}</a>
+    </p>
+    <mat-divider></mat-divider>
+    <p id="main">{{winery.description}}</p>
+    <mat-divider></mat-divider>
+  </mat-card-content>
+  <mat-card-footer id="footer">
+    <button mat-stroked-button (click)="reviewMe()">Write a review</button>
+    <button mat-stroked-button (click)="viewReviews()">See Reviews</button>
+    <span class="spacer"></span>
+    <mat-card-subtitle>
+      {{winery.location}}, {{winery.region}} {{winery.country}}
+    </mat-card-subtitle>
+  </mat-card-footer>
+</mat-card>

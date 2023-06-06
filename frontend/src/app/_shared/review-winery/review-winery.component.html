@@ -1,0 +1,25 @@
+<div class="dialog">
+  <div class="top-bar">
+    <h2 mat-dialog-title>Review {{data.name}}</h2>
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="content">
+    <h3>Rating</h3>
+    <mat-slider thumbLabel min="1" max="20" step="1">
+      <input matSliderThumb [(ngModel)]="rating">
+    </mat-slider>
+    <h3>Review</h3>
+    <mat-form-field appearance="fill">
+      <mat-label>Review</mat-label>
+      <textarea matInput [(ngModel)]="review"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="actions" mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="onReview()">Review</button>
+  </div>
+
+</div>

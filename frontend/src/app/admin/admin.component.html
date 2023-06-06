@@ -1,0 +1,38 @@
+<mat-tab-group>
+  <mat-tab label="Wineries">
+    <div class="header-bar">
+      <h2 class="title">Wineries</h2>
+      <button mat-raised-button color="primary" (click)="onWineryAdd()">Add</button>
+    </div>
+    <div class="filterList">
+      <div class="grow">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput [autocomplete]="false" placeholder="Search name" #winerySearch>
+      </mat-form-field>
+      </div>
+      <app-winery-country (onChange)="countrySelected($event)">
+      </app-winery-country>
+    </div>
+    <app-winery-table #wineryTable>
+    </app-winery-table>
+  </mat-tab>
+  <mat-tab label="Wines">
+    <div class="header-bar">
+      <h2 class="title">Wines</h2>
+      <button mat-raised-button color="primary" (click)="onWineAdd()">Add</button>
+    </div>
+    <div class="filterList">
+      <div class="grow">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput [autocomplete]="false" placeholder="Search name" #input>
+      </mat-form-field>
+      </div>
+      <app-wine-type (onChange)="wineTypeSelected($event)">
+      </app-wine-type>
+    </div>
+    <app-wine-table #wineTable>
+    </app-wine-table>
+  </mat-tab>
+</mat-tab-group>

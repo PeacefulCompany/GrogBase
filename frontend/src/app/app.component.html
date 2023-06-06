@@ -1,0 +1,36 @@
+<mat-toolbar (click)="toggleSidenav()">
+  <img src="../assets/grogbase_logo.png">
+  <span>Welcome to GrogBase</span>
+</mat-toolbar>
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" #sidenav mode="side" [opened]="isSidenavOpened" opened class="sidenav">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/">
+          <mat-icon>home</mat-icon>Home
+          </a>
+        <a mat-list-item routerLink="/wines">
+          <mat-icon>wine_bar</mat-icon>Wines
+        </a>
+        <a mat-list-item routerLink="/wineries">
+          <mat-icon>store</mat-icon>
+          Wineries
+        </a>
+        <a mat-list-item routerLink="/admin">
+          <mat-icon>menu_book</mat-icon>Admin
+        </a>
+        <div class="bottom-links">
+          <a mat-list-item routerLink="/contact" Class="bottom">
+            <mat-icon>alternate_email</mat-icon>Contact
+          </a>
+          <a mat-list-item routerLink="/about" Class="bottom">
+            <mat-icon>info</mat-icon>About</a>
+          <button mat-list-item (click)="signout()" Class="bottom">Sign Out</button>
+        </div>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="content">
+      <div class="scrollable-content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

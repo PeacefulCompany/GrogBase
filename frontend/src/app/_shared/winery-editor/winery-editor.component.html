@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Edit Winery</h2>
+<div mat-dialog-content class="dialog">
+
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Established</mat-label>
+    <input matInput type="number" [(ngModel)]="data.established">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Country</mat-label>
+    <input matInput type="text" [(ngModel)]="data.country">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Region</mat-label>
+    <input matInput type="text" [(ngModel)]="data.region">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="span">
+    <mat-label>Location</mat-label>
+    <input matInput type="text" [(ngModel)]="data.location">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="span">
+    <mat-label>Website</mat-label>
+    <input matInput type="text" [(ngModel)]="data.website">
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="span">
+    <mat-label>Description</mat-label>
+    <textarea matInput placeholder="Description" [(ngModel)]="data.description">
+
+    </textarea>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="onSave()">Save</button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+</div>
+

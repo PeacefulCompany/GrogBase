@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Edit Wine</h2>
+<div mat-dialog-content class="dialog">
+
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Year</mat-label>
+    <input matInput type="number" [(ngModel)]="data.year">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Type</mat-label>
+    <mat-select [(value)]="data.type">
+      <mat-option
+        *ngFor="let type of wineTypes"
+        [value]="type"
+        >{{type}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Price</mat-label>
+    <input matInput type="number" [(ngModel)]="data.price">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="span">
+    <mat-label>Winery</mat-label>
+    <input matInput type="number" [(ngModel)]="data.winery">
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="span">
+    <mat-label>Description</mat-label>
+    <textarea matInput placeholder="Description" [(ngModel)]="data.description">
+
+    </textarea>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="onSave()">Save</button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+</div>
+
