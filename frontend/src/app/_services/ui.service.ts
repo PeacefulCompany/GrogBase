@@ -13,6 +13,7 @@ export class UiService {
   ) { }
 
   public showError(msg: string="Unknown") {
+    this.errorNoise.currentTime = 0;
     this.errorNoise.play();
     this.snackBar.open("An error occured: " + msg, "Close", {
       panelClass: ["snack-error"],
@@ -20,6 +21,7 @@ export class UiService {
     });
   }
   public showMessage(msg: string) {
+    this.successNoise.currentTime = 0;
     this.successNoise.play();
     this.snackBar.open(msg, "Close", {
       duration: 3000
