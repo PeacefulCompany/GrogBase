@@ -20,7 +20,7 @@ export class WineryTableComponent implements AfterViewInit {
   dataSource: WineryTableDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['name', 'established', 'location', 'region', 'country', 'website', 'actions'];
+  displayedColumns = ['id', 'name', 'established', 'location', 'region', 'country', 'website', 'actions'];
 
   constructor(
     private wineryService: WineryService,

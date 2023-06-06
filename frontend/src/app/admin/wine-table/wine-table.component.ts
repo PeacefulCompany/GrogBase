@@ -20,7 +20,7 @@ export class WineTableComponent implements AfterViewInit {
   dataSource: WineTableDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['name', 'type', 'year', 'price', 'winery', 'actions'];
+  displayedColumns = ['id', 'name', 'type', 'year', 'price', 'winery', 'actions'];
 
   wineTypes = Object.values(WineType);
 

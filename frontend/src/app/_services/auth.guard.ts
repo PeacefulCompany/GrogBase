@@ -17,22 +17,18 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): boolean {
     if(!this.userService.isLoggedIn) {
       this.router.navigate(['/login']);
-      this.ui.showMessage('You do not have permission to access this page');
       return false;
     }
     const user = this.userService.currentUser;
     if(user.user_type === UserType.Admin || user.user_type === UserType.Manager) {
       if(route?.routeConfig?.path === 'admin') {
-        this.ui.showError('You do not have permission to access this page');
         return true;
       }
       this.router.navigate(['/admin']);
-      this.ui.showError('You do not have permission to access this page');
       return false;
     } else {
       if(route?.routeConfig?.path === 'admin'){
         this.router.navigate(['/home']);
-        this.ui.showError('You do not have permission to access this page');
         return false;
       }
       return true;

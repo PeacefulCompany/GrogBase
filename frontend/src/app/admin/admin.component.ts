@@ -93,7 +93,6 @@ export class AdminPage implements AfterViewInit {
     });
     ref.afterClosed().subscribe(data => {
       if(!data) return;
-      data.manager_id = 5;
       this.wineryService.insert(data)
       .subscribe(() => {
         this.wineTable.dataSource.getData();
