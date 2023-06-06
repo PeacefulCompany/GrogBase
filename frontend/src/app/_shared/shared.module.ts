@@ -40,7 +40,7 @@ import { WineryCountryComponent } from './winery-country/winery-country.componen
     ReviewWineryComponent,
     ReviewWineComponent,
     SeeReviewsComponent,
-    SeeWineryReviewsComponent
+    SeeWineryReviewsComponent,
     WineryCountryComponent
   ],
   imports: [

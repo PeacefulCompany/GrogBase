@@ -106,14 +106,8 @@ export class WineService {
       fuzzy: false
     }
 
-    return this.http.post<WineReviewResponse>(environment.apiEndpoint, rqst)
-    .pipe(
-      catchError(e => {
-        console.error(e.error);
-        return of(e.error)
-      }),
-      map(res => res.data)
-      );
+    return this.http.post<Response<WineReview[]>>(environment.apiEndpoint, rqst)
+      .pipe(handleResponse(this.ui));
 
   }
 }
