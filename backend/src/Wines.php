@@ -64,6 +64,7 @@ require_once "lib/Controller.php";
             {
                 throw new Exception("Cannot sort when there is nothing to order by. Check request body.", 400);
             }
+            $stmt.= " GROUP BY wines.wine_id";
             if(key_exists('sort',$jsonObj))
             {
                 $sorts = null;
@@ -95,7 +96,6 @@ require_once "lib/Controller.php";
             {
                 $stmt.=" LIMIT ".$jsonObj['limit'];
             }
-            $stmt.= " GROUP BY wines.wine_id";
             $db = new Database;
             $res = $db->query($stmt,$typeString,$params);
             return $controller->success($res);

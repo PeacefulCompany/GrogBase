@@ -154,7 +154,15 @@ function checkPermission($controller)
     $permArray = [
         "Manager" => array_merge($perms['login'], $perms['util'], $perms['admin-winery'], $perms['admin-wine']),
         "Critic" => array_merge($perms['login'], $perms['util'], $perms['view'], $perms['review']),
-        "User" => array_merge($perms['login'], $perms['util'], $perms['view'], $perms['review'])
+        "User" => array_merge($perms['login'], $perms['util'], $perms['view'], $perms['review']),
+        "Admin" => array_merge(
+            $perms['login'] ,
+            $perms['view'] ,
+            $perms['review'] ,
+            $perms['util'] ,
+            $perms['admin-winery'] ,
+            $perms['admin-wine'] ,
+        )
     ];
 
 
