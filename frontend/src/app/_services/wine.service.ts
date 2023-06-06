@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { Options, Wine, WineReview } from '../_types';
 
 import { environment } from 'src/environments/environment';
 import { Response } from '../_types';
 import { UserService } from './user.service';
+import { UiService } from './ui.service';
+import { handleResponse } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,8 @@ export class WineService {
 
   constructor(
     private http: HttpClient,
-    private user: UserService
+    private user: UserService,
+    private ui: UiService
   ) { }
 
   getAll(options?: Options<Wine>): Observable<Wine[]> {
@@ -22,7 +25,6 @@ export class WineService {
     let search = options?.search;
 
     let params: any = {
-      // should be replaced by actual authenticated API key
       api_key: this.user.currentUser!.api_key,
       type: "wines",
       return: ["*"]
@@ -50,11 +52,8 @@ export class WineService {
 
     const obs = this.http.post<Response<Wine[]>>(environment.apiEndpoint, params)
       .pipe(
-        catchError(e => {
-          console.error(e.error);
-          return of(e.error)
-        }),
-        map(res => res.data));
+        handleResponse(this.ui)
+      );
     return obs;
   }
 
@@ -65,7 +64,7 @@ export class WineService {
     alert("delete wine: " + JSON.stringify(wine));
   }
   review(rating: WineReview): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: 'insertReviewWines',
       target: {
@@ -77,7 +76,11 @@ export class WineService {
         review: rating.review,
         drunk: rating.drunk
       }
-    }).pipe(map(() => true));
+    })
+    .pipe(
+      handleResponse(this.ui),
+      map(() => true)
+    );
   }
 
   getTopWines(options?: Options<Wine>): Observable<Wine[]> {
