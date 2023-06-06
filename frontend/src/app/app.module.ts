@@ -37,6 +37,7 @@ import { WineModule } from './wines/wines.module';
     SignupModule,
     HttpClientModule,
     HomeModule,
+    WineModule,
 
     MatButtonModule,
     MatToolbarModule,

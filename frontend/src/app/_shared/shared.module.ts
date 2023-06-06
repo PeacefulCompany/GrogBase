@@ -50,6 +50,7 @@ import { WineryCountryComponent } from './winery-country/winery-country.componen
     MatIconModule,
     MatSliderModule,
     MatCheckboxModule,
+    MatIconModule
   ],
 
   exports: [
