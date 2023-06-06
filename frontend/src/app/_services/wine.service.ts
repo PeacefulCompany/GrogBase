@@ -21,17 +21,7 @@ export class WineService {
     private ui: UiService
   ) { }
 
-  /**
-   * Retrieves all entries from the database with
-  **/
-  getWineTypes(): Observable<WineType[]> {
-    return this.http.post<Response<WineType[]>>(environment.apiEndpoint, {
-      type: 'getWineTypes',
-      api_key: this.user.currentUser!.api_key,
-      limit: 500
-    }).pipe(handleResponse(this.ui));
-  }
-  
+
   getAll(options?: Options<Wine>): Observable<Wine[]> {
     const sortBy = options?.sortBy;
     let search = options?.search;
