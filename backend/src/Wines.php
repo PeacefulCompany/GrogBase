@@ -122,12 +122,15 @@ require_once "lib/Controller.php";
     {
         $jsonObj = $controller->get_post_json();
         $api = $jsonObj['api_key'];
-        $query = "SELECT winery FROM users WHERE api_key=?";
+        $query = "SELECT user_id FROM users WHERE api_key=?";
         $params = array();
         array_push($params,$api);
         $db = new Database;
         $res = $db->query($query,'s',$params);
-        return $res[0]['winery'];
+        $manID = $res[0]['winery'];
+        $query2 = "SELECT winery_id FROM wineries WHERE manager_id=`$manID`";
+        $res2 = $db->query($query2);
+        return $res2[0]['winery_id'];
     }
 
     function checkManager($controller)
