@@ -4,8 +4,12 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Options, Response, Wine, Winery, WineryReview } from '../_types';
 import { WineryRequest } from '../_types/request.interface';
+import { UiService } from './ui.service';
 import { UserService } from './user.service';
+
 import { WineryReviewRequest, WineryReviewResponse } from '../_types';
+import { handleResponse } from './util';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +18,21 @@ export class WineryService {
 
   constructor(
     private http: HttpClient,
-    private user: UserService
+    private user: UserService,
+    private ui: UiService
   ) { }
+
+  /**
+    * Retrieves a list of all countries with
+    * wineries in the database
+    */
+  getCountries(): Observable<string[]> {
+    return this.http.post<Response<string[]>>(environment.apiEndpoint, {
+      type: 'getCountries',
+      api_key: this.user.currentUser!.api_key,
+      limit: 500
+    }).pipe(handleResponse(this.ui));
+  }
 
   /**
     * Retrieves all entries from the database with
@@ -58,13 +75,8 @@ export class WineryService {
 
     const obs = this.http.post<Response<Winery[]>>(environment.apiEndpoint, params)
       .pipe(
-        catchError(e => {
-          console.error(e.error);
-          return of(e.error)
-        }),
-        map((res: Response<any[]>) => {
-          return res.data;
-        }));
+        handleResponse(this.ui)
+      );
     return obs;
   }
 

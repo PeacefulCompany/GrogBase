@@ -7,8 +7,8 @@ export interface LoginRequest{
     password: string;
   }
 }
-export type LoginResponse = Response<{
+export type LoginResponse = {
   user_id: number;
   api_key: string;
   user_type: UserType;
-}>;
+};

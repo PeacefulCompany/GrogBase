@@ -17,6 +17,8 @@ import { HomeModule } from './home/home.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { WineModule } from './wines/wines.module';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -37,10 +39,13 @@ import { WineModule } from './wines/wines.module';
     SignupModule,
     HttpClientModule,
     HomeModule,
+    WineModule,
 
     MatButtonModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    WineModule,
+    MatIconModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
