@@ -18,11 +18,16 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UiService } from './ui.service';
 import { handleResponse } from './util';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  private userSubject = new Subject<User | undefined>();
+
+  public readonly onUser = this.userSubject.asObservable();
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -48,6 +53,7 @@ export class UserService {
     this.user = undefined;
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
+    this.userSubject.next(undefined);
   }
 
   signUpUser(email: string, fName: string, lName: string, password: string) {
@@ -87,6 +93,7 @@ export class UserService {
         email
       }
       localStorage.setItem('user', JSON.stringify(this.user));
+      this.userSubject.next(this.user);
       this.router.navigate(['/home']);
     });
   }

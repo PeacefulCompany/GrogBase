@@ -5,26 +5,11 @@
 <mat-sidenav-container class="container">
     <mat-sidenav mode="side" #sidenav mode="side" [opened]="isSidenavOpened" opened class="sidenav">
       <mat-nav-list>
-        <a mat-list-item routerLink="/">
-          <mat-icon>home</mat-icon>Home
-          </a>
-        <a mat-list-item routerLink="/wines">
-          <mat-icon>wine_bar</mat-icon>Wines
-        </a>
-        <a mat-list-item routerLink="/wineries">
-          <mat-icon>store</mat-icon>
-          Wineries
-        </a>
-        <a mat-list-item routerLink="/admin">
-          <mat-icon>menu_book</mat-icon>Admin
+        <a mat-list-item [routerLink]="link.route" *ngFor="let link of links">
+          <mat-icon>{{link.icon}}</mat-icon>{{link.label}}
         </a>
         <div class="bottom-links">
-          <a mat-list-item routerLink="/contact" Class="bottom">
-            <mat-icon>alternate_email</mat-icon>Contact
-          </a>
-          <a mat-list-item routerLink="/about" Class="bottom">
-            <mat-icon>info</mat-icon>About</a>
-          <button mat-list-item (click)="signout()" Class="bottom">Sign Out</button>
+          <button *ngIf="showSignout" mat-list-item (click)="signout()" Class="bottom">Sign Out</button>
         </div>
       </mat-nav-list>
     </mat-sidenav>
