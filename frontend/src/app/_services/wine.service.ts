@@ -64,12 +64,11 @@ export class WineService {
   delete(wine: Wine) {
     alert("delete wine: " + JSON.stringify(wine));
   }
-  review(rating: WineReview): Observable<boolean> {
+  review(rating: WineReview): Observable<string> {
     return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: 'insertReviewWines',
       target: {
-        user_id: 1,
         wine_id: rating.wine_id
       },
       values: {
@@ -79,8 +78,7 @@ export class WineService {
       }
     })
     .pipe(
-      handleResponse(this.ui),
-      map(() => true)
+      handleResponse(this.ui)
     );
   }
 

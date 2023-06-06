@@ -129,19 +129,19 @@ export class WineryService {
     }).pipe(map(() => true));
   }
 
-  review(rating: WineryReview): Observable<boolean> {
-    return this.http.post(environment.apiEndpoint, {
+  review(rating: WineryReview): Observable<string> {
+    console.log(rating);
+    return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: WineryRequest.Review,
       target: {
-        user_id: 1,
         winery_id: rating.winery_id
       },
       values: {
         points: rating,
         review: rating.review
       }
-    }).pipe(map(() => true));
+    }).pipe(handleResponse(this.ui));
   }
 
   getTopWineries(options?: Options<Winery>): Observable<Winery[]> {

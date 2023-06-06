@@ -7,9 +7,10 @@ export function handleResponse<T>(ui: UiService):
 {
   return (source$: Observable<Response<T>>) =>
   source$.pipe(
-    catchError(e => {
-      ui.showError(e.error.data);
-      return of(e.error);
+    catchError(({ error }) => {
+      console.error(error.data);
+      ui.showError(error.data);
+      return of(error);
     }),
     filter((res: any) => res.status == "success"),
       map((res: any) => res.data)

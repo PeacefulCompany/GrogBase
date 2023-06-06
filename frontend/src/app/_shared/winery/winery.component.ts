@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { UiService } from 'src/app/_services/ui.service';
 import { WineryService } from 'src/app/_services/winery.service';
 import { Winery, WineryReview } from 'src/app/_types';
 import { ReviewWineryComponent } from '../review-winery/review-winery.component';
@@ -15,14 +16,16 @@ export class WineryComponent {
 
   constructor(
     private dialog: MatDialog,
-    private wineryService: WineryService
+    private wineryService: WineryService,
+    private ui: UiService
   ) { }
   reviewMe() {
     this.dialog.open(ReviewWineryComponent, {
       data: this.winery
     }).afterClosed().subscribe(data => {
       if(!data) return;
-      this.wineryService.review(data).subscribe();
+      this.wineryService.review(data)
+        .subscribe(res => this.ui.showMessage(res));
     });
   }
 
