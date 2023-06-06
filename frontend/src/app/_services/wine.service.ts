@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
-import { Options, Wine, WineReview } from '../_types';
+import { map, Observable, tap } from 'rxjs';
+import { Options, SortOrder, Wine, WineReview } from '../_types';
 
 import { environment } from 'src/environments/environment';
 import { Response } from '../_types';
@@ -35,6 +35,9 @@ export class WineService {
       params.sort = sortBy.key;
       params.order = sortBy.order;
     }
+    if(options?.limit) {
+      params.limit = options.limit;
+    }
 
     if(search) {
       // filter out search paramters containing null values
@@ -53,7 +56,8 @@ export class WineService {
 
     const obs = this.http.post<Response<Wine[]>>(environment.apiEndpoint, params)
       .pipe(
-        handleResponse(this.ui)
+        handleResponse(this.ui),
+        tap(res => console.log(res)),
       );
     return obs;
   }
@@ -124,16 +128,14 @@ export class WineService {
     );
   }
 
-  getTopWines(options?: Options<Wine>): Observable<Wine[]> {
-    let arr: any[] = [];
-    const sortBy = options?.sortBy;
-    if(sortBy) arr = arr.sort((a, b) => {
-      if(a[sortBy.key] < b[sortBy.key]) return -1;
-      if(a[sortBy.key] > b[sortBy.key]) return 1;
-      return 0;
+  getTopWines(): Observable<Wine[]> {
+    return this.getAll({
+      limit: 10,
+      sortBy: {
+        key: "Avg_rating",
+        order: SortOrder.Descending
+      }
     });
-
-    return of(arr);
   }
 
   getWineReviews(wine_id: number): Observable<WineReview[]>{

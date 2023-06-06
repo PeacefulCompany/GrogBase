@@ -23,7 +23,8 @@ export interface Wine {
   type: WineType,
   year: number,
   price: number,
-  winery: number
+  winery: number,
+  Avg_rating?: number
 }
 
 export namespace WineType {

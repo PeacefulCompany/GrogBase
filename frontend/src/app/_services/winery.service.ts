@@ -52,6 +52,10 @@ export class WineryService {
       search: {}
     };
 
+    if(options?.limit) {
+      params.limit = options.limit;
+    }
+
     if(sortBy) {
       params.sort = sortBy.key;
       params.order = sortBy.order;
@@ -140,16 +144,10 @@ export class WineryService {
     }).pipe(handleResponse(this.ui));
   }
 
-  getTopWineries(options?: Options<Winery>): Observable<Winery[]> {
-    let arr: Winery[] = [];
-    const sortBy = options?.sortBy;
-    if(sortBy) arr = arr.sort((a, b) => {
-      if(a[sortBy.key] < b[sortBy.key]) return -1;
-      if(a[sortBy.key] > b[sortBy.key]) return 1;
-      return 0;
+  getTopWineries(): Observable<Winery[]> {
+    return this.getAll({
+      limit: 5
     });
-
-    return of(arr);
   }
 
   getWineryReviews(winery_id: number): Observable<WineryReview[]>{
