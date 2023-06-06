@@ -1,4 +1,5 @@
-<mat-card class="Wines" >
+<mat-card class="Wines">
+    <img mat-card-lg-image src="../assets/wine_bottle.png" alt="credit: Markus Spiske">
     <mat-card-header>
         <mat-card-title>{{ wine.name }}</mat-card-title>
     </mat-card-header>
@@ -9,6 +10,6 @@
         <p>{{ wine.description}}</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-stroked-button (click)="reviewMe()">Write a review</button>
+    <button mat-stroked-button (click)="reviewMe()">Write a review</button>
     </mat-card-actions>
 </mat-card>
