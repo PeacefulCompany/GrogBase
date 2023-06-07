@@ -18,9 +18,10 @@
     <mat-divider></mat-divider>
   </mat-card-content>
   <mat-card-footer id="footer">
-    <button mat-stroked-button (click)="reviewMe()">Write a review</button>
-    <button mat-stroked-button (click)="viewReviews()">See Reviews</button>
-    <span class="spacer"></span>
+    <div id="actions">
+      <button mat-stroked-button (click)="reviewMe()">Write a review</button>
+      <button mat-stroked-button (click)="viewReviews()">See Reviews</button>
+    </div>
     <mat-card-subtitle>
       {{winery.location}}, {{winery.region}} {{winery.country}}
     </mat-card-subtitle>

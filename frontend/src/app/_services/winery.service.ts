@@ -109,7 +109,10 @@ export class WineryService {
     return this.http.post<Response<string>>(environment.apiEndpoint, {
       api_key: this.user.currentUser!.api_key,
       type: WineryRequest.Add,
-      wineries: [winery]
+      wineries: [{
+        ...winery,
+        manager_id: 5
+      }]
     }).pipe(
       handleResponse(this.ui),
       map(() => true)
@@ -155,7 +158,7 @@ export class WineryService {
     const rqst : WineryReviewRequest = {
       api_key: this.user.currentUser!.api_key,
       type: "getWineryReviews",
-      return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "name"],
+      return: ["winery_id", "user_id", "points", "review", "first_name", "last_name", "email", "name", "user_type"],
       search: {"winery_id": winery_id.toString()},
       fuzzy: false
     }

@@ -1,15 +1,41 @@
 .winery
   margin: 1rem
   position: relative
+  padding: 0
+  overflow: hidden
 
-img 
+mat-card-title-group
+  padding-top: 1rem
+
+mat-card-content,
+mat-card-title-group
+  padding-left: 1rem
+  padding-right: 1rem
+
+
+mat-card-actions
+  padding: 1rem
+  display: flex
+
+#footer button
+  margin-bottom: 1rem
+
+
+img
   position:absolute
   width: 100%
   top: 0
-  
+
 #main
   padding-top: 1rem
   padding-bottom: 1rem
+
+#footer > *
+  margin-right: 1rem
+
+#actions
+  display: flex
+  gap: 1rem
 
 #footer
   padding: 1rem
@@ -18,7 +44,7 @@ img
   justify-content: end
   flex-wrap: wrap
   gap: 1rem
-img 
+img
   align-items: center
 #footer button
   width: fit-content

@@ -1,6 +1,7 @@
 import { Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { WineryReview} from 'src/app/_types';
+import { UserType } from 'src/app/_types/user.interface';
 
 interface DialogData {
   title: string;
@@ -19,5 +20,8 @@ export class SeeWineryReviewsComponent {
 
     closeDialog(): void {
       this.dialogRef.close();
+    }
+    isCritic(type: UserType) {
+      return type == UserType.Critic;
     }
 }
